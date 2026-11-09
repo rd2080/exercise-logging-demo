@@ -32,9 +32,8 @@ Changes move dev -> staging -> prod, never skipping a step.
 1. One-shot analysis of the Nike Training Club video (frames only, no audio). Find all trends, with frame evidence -> `docs/observations/`.
 2. Map each trend to keep / change / drop / add and review the table -> `docs/trend-map.md`.
 3. Apply the tracking-type text rules as context, after the observations.
-4. Build the screens with the design skill (frontend-design as the base; Impeccable if installed).
-5. Compare a functional version against a better-looking, slightly more complex one, using screenshots in `screenshots/`.
-6. When output is wrong, fix the prompt rather than patching code -> log in `docs/prompt-log.md`.
+4. Build the screens using the stack from the reel (`docs/observations/reel-design-stack.md`): three design skills (Emil Kowalski's design skills, Impeccable, Taste) and two tools (Figma MCP, Playwright). Review the result in phone-width Playwright screenshots in `screenshots/`.
+5. When output is wrong, fix the prompt rather than patching code -> log in `docs/prompt-log.md`.
 
 The tech stack is deliberately **undecided**. It will come from the skill recommendation (see `docs/decisions.md`).
 
@@ -49,5 +48,5 @@ docs/
   frames/             frames extracted from the video
 fixtures/             fixture data (no live data)
 tests/                Playwright checks (phone width)
-screenshots/          functional/ vs polished/ comparison
+screenshots/          Playwright phone-width screenshots for review
 ```
