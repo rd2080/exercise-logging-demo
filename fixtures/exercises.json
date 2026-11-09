@@ -1,0 +1,9 @@
+{
+  "_note": "Placeholder fixture data. Not real user data. Tracking types are illustrative until the tracking-type rules are supplied.",
+  "exercises": [
+    { "id": "ex-pushup", "name": "Push-up", "trackingType": "reps" },
+    { "id": "ex-plank", "name": "Plank", "trackingType": "time" },
+    { "id": "ex-squat", "name": "Goblet squat", "trackingType": "weight_reps" }
+  ],
+  "user": { "id": "fixture-user", "isNew": true, "history": [] }
+}
