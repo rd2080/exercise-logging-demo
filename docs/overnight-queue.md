@@ -3,7 +3,7 @@
 Rules: one commit per feature, push after each, tests after each feature, one review per batch (plus a verdict pass), no prompts that need approval, no Google Sheet writes, no new packages, only branch `claude/bold-lamport-j6wmkw`. Tick a feature when it is committed and pushed. At the end write `docs/overnight-report.md` with 390px screenshots.
 
 ## Batch A: Programme and Today
-- [ ] Stage-move popup with "Cancel" and "Switch to stage 2" (sheet row 61)
+- [x] Stage-move popup with "Cancel" and "Switch to stage 2" (sheet row 61)
 - [ ] Muscles on exercises, shown on the Today session card (row 43)
 - [ ] Clear-all and restart for entries and programme, with a confirm
 - [ ] Batch A review and fixes

@@ -1,5 +1,6 @@
 import { ArrowLeft } from 'lucide-react'
 import { useState, type CSSProperties } from 'react'
+import { ConfirmSheet } from '../components/ConfirmSheet'
 import { EmptySlots } from '../components/EmptySlots'
 import { EmptyState } from '../components/EmptyState'
 import { WeekDots } from '../components/WeekDots'
@@ -187,40 +188,28 @@ export function MyProgrammeScreen({ programme, chosen, entries, now, onBack, onS
             <h2 id="advance-heading" className="font-display m-0 text-2xl leading-tight font-bold">
               Ready to move on?
             </h2>
-            {!confirming ? (
-              <>
-                <p className="m-0 text-lg text-pretty text-muted">
-                  Next is Stage {pr.stages.indexOf(pr.next) + 1}: {pr.next.name}. The {stage.size - stage.done} sessions
-                  left in this stage will count as done.
-                </p>
-                <button
-                  type="button"
-                  className="press h-14 w-full rounded-full bg-surface-2 text-xl font-semibold"
-                  onClick={() => setConfirming(true)}
-                  data-testid="advance"
-                >
-                  Move to stage {pr.stages.indexOf(pr.next) + 1}
-                </button>
-              </>
-            ) : (
-              <div className="flex flex-col gap-3" role="group" aria-label="Confirm moving to the next stage" data-testid="advance-confirm">
-                <p className="m-0 text-lg text-pretty">This cannot be undone. Move on to {pr.next.name}?</p>
-                <button
-                  type="button"
-                  className="press h-14 w-full rounded-full bg-(--tape) text-xl font-bold text-on-tape"
-                  onClick={() => {
-                    onAdvance()
-                    setConfirming(false)
-                  }}
-                  data-testid="advance-yes"
-                >
-                  Move to stage {pr.stages.indexOf(pr.next) + 1}
-                </button>
-                <button type="button" className="press h-14 w-full rounded-full text-xl font-semibold" onClick={() => setConfirming(false)}>
-                  Stay on this stage
-                </button>
-              </div>
-            )}
+            <p className="m-0 text-lg text-pretty text-muted">
+              Next is Stage {pr.stages.indexOf(pr.next) + 1}: {pr.next.name}. The {stage.size - stage.done} sessions left
+              in this stage will count as done.
+            </p>
+            <button
+              type="button"
+              className="press h-14 w-full rounded-full bg-surface-2 text-xl font-semibold"
+              onClick={() => setConfirming(true)}
+              data-testid="advance"
+            >
+              Move to stage {pr.stages.indexOf(pr.next) + 1}
+            </button>
+            <ConfirmSheet
+              open={confirming}
+              onOpenChange={setConfirming}
+              title={`Switch to stage ${pr.stages.indexOf(pr.next) + 1}?`}
+              why={`${pr.next.name} starts now. The ${stage.size - stage.done} sessions left in this stage count as done, and this cannot be undone.`}
+              confirmLabel={`Switch to stage ${pr.stages.indexOf(pr.next) + 1}`}
+              onConfirm={onAdvance}
+              tape="var(--color-tape-reps)"
+              testId="advance-confirm"
+            />
           </section>
         )}
 
