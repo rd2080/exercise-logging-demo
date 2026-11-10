@@ -1,5 +1,5 @@
 import type { Exercise, SetValues } from '../types'
-import { TYPE_META, formatValues } from '../lib/tracking'
+import { SUMMARY_MIN, TYPE_META, formatValues } from '../lib/tracking'
 
 interface SummaryProps {
   exercises: Exercise[]
@@ -30,14 +30,21 @@ export function Summary({ exercises, logs, onRestart }: SummaryProps) {
                 style={{ '--tape': meta.tape } as React.CSSProperties}
               >
                 <div className="flex items-baseline justify-between gap-3">
-                  <h2 className="font-display m-0 text-2xl font-semibold">{ex.name}</h2>
-                  <span className="num text-[17px] text-muted">
+                  <h2 className="font-display m-0 line-clamp-2 min-w-0 text-2xl font-semibold" title={ex.name}>
+                    {ex.name}
+                  </h2>
+                  <span className="num shrink-0 text-[17px] whitespace-nowrap text-muted">
                     {logs[i].length} of {ex.sets}
                   </span>
                 </div>
                 <ol
-                  className="m-0 flex list-none gap-1 p-0"
-                  style={{ '--cut': '10px' } as React.CSSProperties}
+                  className="m-0 grid list-none gap-1 p-0"
+                  style={
+                    {
+                      '--cut': '10px',
+                      gridTemplateColumns: `repeat(auto-fit, minmax(${SUMMARY_MIN[ex.trackingType]}, 1fr))`,
+                    } as React.CSSProperties
+                  }
                   aria-label={`${ex.name} sets`}
                 >
                   {Array.from({ length: ex.sets }, (_, j) => {
@@ -45,14 +52,14 @@ export function Summary({ exercises, logs, onRestart }: SummaryProps) {
                     return v ? (
                       <li
                         key={j}
-                        className="tape-fill tape-cut num flex h-12 min-w-0 flex-1 items-center justify-center px-3 text-lg font-bold whitespace-nowrap text-on-tape"
+                        className="tape-fill tape-cut num flex h-12 min-w-0 items-center justify-center px-3 text-lg font-bold whitespace-nowrap text-on-tape"
                       >
                         {formatValues(ex.trackingType, v)}
                       </li>
                     ) : (
                       <li
                         key={j}
-                        className="tape-cut num flex h-12 min-w-0 flex-1 items-center justify-center bg-surface-2 text-lg font-semibold text-muted"
+                        className="tape-cut num flex h-12 min-w-0 items-center justify-center bg-surface-2 text-lg font-semibold text-muted"
                         aria-label={`Set ${j + 1}: not logged`}
                       >
                         {j + 1}

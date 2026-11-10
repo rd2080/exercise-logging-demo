@@ -106,7 +106,7 @@ components:
 
 The session is a strip of gym route tape and every logged set is a tick on the send list. The screen is a warm brown-black wall (red sits above green in every surface) with ivory text and one workhorse condensed grotesk. Colour is not decoration: each tracking type owns one tape colour, and that colour is the only saturated thing on screen. Logging is the one job, so everything else is quiet, large and close to the thumb.
 
-Density is low and targets are big (48 to 64px). Depth is tonal, not lifted. The single signature gesture is the tape roll: when a set is logged, a strip of grain-textured tape sweeps across its slot on a slanted leading edge in about 220ms and the session strip fills.
+Density is low and targets are big (48 to 64px). Depth is tonal, not lifted. The single signature gesture is the tape roll: when a set is logged, a strip of grain-textured tape sweeps across its slot on a slanted leading edge in about 150ms and the session strip fills.
 
 **Key Characteristics:**
 - Dark only, warm near-black, ivory ink, no pure black or white.
@@ -160,7 +160,7 @@ A brown-black ground and three warm surface steps, with four tape colours that e
 ### Named Rules
 **The Tabular Number Rule.** Any value that changes or is compared (reps, kg, seconds, clock, set index) uses the `.num` class.
 
-**The Sentence Case Rule.** All labels and button text are sentence case and name the result ("Log set", "Go to push-up"). There is no uppercase styling anywhere in the build.
+**The Sentence Case Rule.** All labels and button text are sentence case and name the result ("Log set", "Next exercise"). There is no uppercase styling anywhere in the build.
 
 ## Layout
 
@@ -177,7 +177,7 @@ Soft-cornered slabs with pill-ended primaries. Radii: 24px for cards and the dem
 ## Components
 
 ### Buttons
-- **Primary:** pinned, full width, 64px tall, pill, tape colour fill with Tape Ink 20px bold text. One per screen. The label changes with phase: Log set, Skip rest, End hold, Go to [next exercise], Finish workout. On the summary it is ivory (#f2f1ea) fill with Tape Ink text.
+- **Primary:** pinned, full width, 64px tall, pill, tape colour fill with Tape Ink 20px bold text. One per screen. The label changes with phase: Log set, Skip rest, End hold, Next exercise, Finish workout. On the summary it is ivory (#f2f1ea) fill with Tape Ink text.
 - **Secondary:** Worn Mat Brown, 16px radius, 56px (Start hold) or 48px (Add 15 seconds) tall, 18px semibold ivory text.
 - **Icon close:** 48px circle, Worn Mat Brown, 24px lucide X at 2.5 stroke.
 - **States:** all use `.press` (160ms ease-out-expo; scale 0.97 on active; brightness 1.08 on hover). Reduced motion removes the transition and transform. Focus is a 3px outline in the tape colour, 3px offset.
@@ -186,13 +186,13 @@ Soft-cornered slabs with pill-ended primaries. Radii: 24px for cards and the dem
 Label above (15px muted), 44px tabular readout, minus and plus as 56px Worn Mat Brown squares. Full width variant puts the readout between the buttons; compact variant stacks readout over two flex buttons so two fit side by side. Buttons disable at min and max. Weight steps 2.5, hold time 5, reps 1.
 
 ### Set slots
-A row of 56px slots (48px on short phones), equal flex, cut on a 10px slant with a 4px gap. Empty: Worn Mat Brown with the set number in muted. Current: the number in the tape colour plus a 4px tape bar along the bottom. Logged: grain tape fill with the value in Tape Ink, revealed by the slanted clip-path wipe (220ms, ease-out-expo; instant under reduced motion).
+A grid of 56px slots (48px on short phones) that shows the value in a short form (for example 12/15, 285s, 142.5×12). Slots have a per-type minimum width and wrap to a second row instead of clipping. They are cut on a 10px slant with a 4px gap. Empty: Worn Mat Brown with the set number in muted. Current: the number in the tape colour plus a 4px tape bar along the bottom. Logged: grain tape fill with the value in Tape Ink, revealed by the slanted clip-path wipe (150ms, ease-out-expo; instant under reduced motion).
 
 ### Session strip (signature)
-One parallelogram segment per exercise. Unstarted: Worn Mat Brown. Current: Seam Brown (one step lighter than unstarted) with a short 4px tape-colour bar under it. Fill is a grain tape bar scaled on X (300ms) to logged over total sets, in that exercise's own colour, so logged tape keeps its colour.
+One parallelogram segment per exercise. Unstarted: Worn Mat Brown. Current: Seam Brown (one step lighter than unstarted) with a short 4px tape-colour bar under it. Fill is a grain tape bar scaled on X (150ms) to logged over total sets, in that exercise's own colour, so logged tape keeps its colour.
 
 ### Cards / Containers
-24px radius, Chalkboard Brown, 16px padding, 16px internal gap, no border or shadow. Used for the input panel, rest panel, hold panel and done panel. The rest bar inside is an 8px pill track with a tape fill.
+24px radius, Chalkboard Brown, 16px padding, 16px internal gap, no border or shadow. Used for the input panel, rest panel, hold panel and done panel. The rest bar inside is an 8px pill track whose tape fill drains with one linear scaleX animation (no per-frame updates).
 
 ### Empty state (template)
 For any page with nothing to show yet: an authored illustration (five empty parallelogram slots in Worn Mat Brown with a short grain tape tail entering the first), a 36px bold headline, one sentence in muted text saying where the data will appear, and one full-width 64px pill in the tape colour that names the result. It is the one place the main button sits inline instead of pinned, because the page scrolls and a pinned button would cover the content below.

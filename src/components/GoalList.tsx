@@ -1,3 +1,4 @@
+import { TAPE_S } from '../lib/motion'
 import { Check, Lock } from 'lucide-react'
 import { motion, useReducedMotion } from 'motion/react'
 import type { CSSProperties } from 'react'
@@ -28,7 +29,7 @@ function GoalSlot({ unlocked, next }: { unlocked: boolean; next: boolean }) {
           className="tape-fill absolute inset-0 grid place-items-center text-on-tape"
           initial={{ clipPath: 'polygon(0% 0%, 0% 0%, -15% 100%, 0% 100%)' }}
           animate={{ clipPath: 'polygon(0% 0%, 115% 0%, 100% 100%, 0% 100%)' }}
-          transition={{ duration: reduce ? 0 : 0.22, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: reduce ? 0 : TAPE_S, ease: [0.16, 1, 0.3, 1] }}
         >
           <Check size={22} strokeWidth={3} />
         </motion.span>
@@ -51,7 +52,7 @@ export function GoalList({ goals, progress }: GoalListProps) {
         return (
           <li
             key={g.id}
-            className="flex min-h-[72px] items-center gap-3 border-t border-line py-3 first:border-t-0"
+            className="flex min-h-[72px] items-start gap-3 border-t border-line py-3 first:border-t-0"
             aria-label={`${g.title}: ${g.requirement}. ${unlocked ? 'Unlocked' : 'Locked'}, ${count} of ${g.target}`}
           >
             <GoalSlot unlocked={unlocked} next={i === firstLocked} />
@@ -59,9 +60,14 @@ export function GoalList({ goals, progress }: GoalListProps) {
               <span className="font-display text-xl leading-tight font-semibold">{g.title}</span>
               <span className="text-[17px] text-pretty text-muted">{g.requirement}</span>
             </span>
-            {g.target > 1 && (
+            {g.target > 5 && (
+              <span className="num shrink-0 pt-1 text-lg font-semibold whitespace-nowrap text-muted" aria-hidden="true">
+                {count} of {g.target}
+              </span>
+            )}
+            {g.target > 1 && g.target <= 5 && (
               <span
-                className="flex w-20 shrink-0 gap-1"
+                className="flex w-20 shrink-0 gap-1 pt-3"
                 style={{ '--cut': '4px' } as CSSProperties}
                 aria-hidden="true"
               >

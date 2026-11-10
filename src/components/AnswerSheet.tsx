@@ -38,7 +38,7 @@ export function AnswerSheet({
               {why}
             </Drawer.Description>
           </div>
-          <div className="flex-1 overflow-y-auto px-4 pt-2 pb-4 [mask-image:linear-gradient(to_bottom,transparent,black_14px)]">
+          <div className="flex-1 overflow-y-auto px-4 pt-2 pb-4 [mask-image:linear-gradient(to_bottom,transparent,black_28px)]">
             {children}
           </div>
           {saveLabel && (

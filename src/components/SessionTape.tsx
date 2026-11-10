@@ -26,7 +26,7 @@ export function SessionTape({ exercises, current, loggedCounts }: SessionTapePro
               className={`tape-cut h-3 overflow-hidden ${isCurrent ? 'bg-line' : 'bg-surface-2'}`}
             >
               <div
-                className="tape-fill h-full origin-left transition-transform duration-300 ease-(--ease-out-expo) motion-reduce:transition-none"
+                className="tape-fill h-full origin-left transition-transform duration-150 ease-(--ease-out-expo) motion-reduce:transition-none"
                 style={{ '--tape': tape, transform: `scaleX(${fill})` } as CSSProperties}
               />
             </div>

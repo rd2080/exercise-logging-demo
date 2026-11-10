@@ -1,3 +1,4 @@
+import { TAPE_S } from '../lib/motion'
 import { motion, useReducedMotion } from 'motion/react'
 import { Check } from 'lucide-react'
 import type { CSSProperties } from 'react'
@@ -25,7 +26,7 @@ export function Slot({ n, filled, rank }: SlotProps) {
           className="tape-fill absolute inset-0 grid place-items-center text-on-tape"
           initial={{ clipPath: 'polygon(0% 0%, 0% 0%, -15% 100%, 0% 100%)' }}
           animate={{ clipPath: 'polygon(0% 0%, 115% 0%, 100% 100%, 0% 100%)' }}
-          transition={{ duration: reduce ? 0 : 0.22, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: reduce ? 0 : TAPE_S, ease: [0.16, 1, 0.3, 1] }}
         >
           {rank ? (
             <span className="num text-xl font-bold">{rank}</span>

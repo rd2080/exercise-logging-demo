@@ -31,7 +31,7 @@ function Screen() {
     )
   if (stage === 'reminders') return <RemindersScreen onDone={() => setStage('progress')} />
   if (stage === 'progress') return <ProgressScreen onStart={() => setStage('player')} />
-  return <PlayerScreen session={session} />
+  return <PlayerScreen session={session} onExit={() => setStage('progress')} />
 }
 
 export default function App() {

@@ -39,7 +39,7 @@ export function Stepper({ label, unit, value, min, max, step, compact, onChange 
   )
   const readout = (
     <output
-      className={`num text-center text-[44px] leading-none font-bold short:text-[36px] ${compact ? 'block' : 'min-w-[3.2ch]'}`}
+      className={`num text-center text-[44px] leading-none font-bold max-[360px]:text-[32px] short:text-[36px] ${compact ? 'block' : 'min-w-[3.2ch]'}`}
       aria-live="polite"
     >
       {value}

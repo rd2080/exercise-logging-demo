@@ -1,3 +1,4 @@
+import { TAPE_S } from '../lib/motion'
 import { ArrowLeft } from 'lucide-react'
 import { motion, useReducedMotion } from 'motion/react'
 import { useState, type CSSProperties } from 'react'
@@ -37,7 +38,7 @@ function WeekStrip({ programme, on }: { programme: Programme; on: boolean }) {
           className="absolute inset-0 block"
           initial={{ clipPath: 'polygon(0% 0%, 0% 0%, -6% 100%, 0% 100%)' }}
           animate={{ clipPath: 'polygon(0% 0%, 106% 0%, 100% 100%, 0% 100%)' }}
-          transition={{ duration: reduce ? 0 : 0.22, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: reduce ? 0 : TAPE_S, ease: [0.16, 1, 0.3, 1] }}
         >
           {row(true)}
         </motion.span>
@@ -73,8 +74,12 @@ export function ProgrammeScreen({ answers, onBack, onStart }: ProgrammeScreenPro
             Choose your programme
           </h1>
           <div className="text-[17px] text-muted" data-testid="recap">
-            <p className="m-0">{summaryText(answers, 'goals')}</p>
-            <p className="m-0">{others.join(' · ')}</p>
+            <p className="m-0 line-clamp-1" title={summaryText(answers, 'goals') ?? ''}>
+              {summaryText(answers, 'goals')}
+            </p>
+            <p className="m-0 line-clamp-1" title={others.join(' · ')}>
+              {others.join(' · ')}
+            </p>
           </div>
         </header>
 
@@ -121,7 +126,7 @@ export function ProgrammeScreen({ answers, onBack, onStart }: ProgrammeScreenPro
           onClick={() => onStart(chosen.id)}
           data-testid="start-programme"
         >
-          Start {chosen.name.toLowerCase()}
+          Start programme
         </button>
       </footer>
     </div>
