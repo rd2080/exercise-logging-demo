@@ -32,5 +32,5 @@ Rules: one commit per feature, push after each, tests after each feature, one re
 - [x] Batch E review and fixes
 
 ## Last
-- [ ] Update DESIGN.md, README.md and docs/sheets CSV statuses
-- [ ] Write docs/overnight-report.md with screenshots
+- [x] Update DESIGN.md, README.md and docs/sheets CSV statuses
+- [x] Write docs/overnight-report.md with screenshots
