@@ -10,6 +10,8 @@ interface AnswerSheetProps {
   /** Label of the button that saves and closes. Omit when a single tap answers. */
   saveLabel?: string
   canSave?: boolean
+  /** Tape colour for the pinned button, focus ring and anything else inside the sheet. */
+  tape?: string
   /** Runs when the save button is tapped. */
   onSave?: () => void
   /** Close the sheet after saving. Set false when the button moves to a next step. */
@@ -24,6 +26,7 @@ export function AnswerSheet({
   children,
   saveLabel,
   canSave = true,
+  tape,
   onSave,
   closeOnSave = true,
 }: AnswerSheetProps) {
@@ -34,13 +37,18 @@ export function AnswerSheet({
         <Drawer.Content
           className="fixed inset-x-0 bottom-0 z-50 mx-auto flex max-h-[92dvh] w-full max-w-[480px] flex-col rounded-t-3xl bg-surface outline-none"
           aria-describedby="sheet-why"
+          style={tape ? ({ '--tape': tape } as React.CSSProperties) : undefined}
         >
           <div className="mx-auto mt-3 h-1.5 w-12 shrink-0 rounded-full bg-line" aria-hidden="true" />
           <div className="flex flex-col gap-1 px-4 pt-4 pb-3">
-            <Drawer.Title className="font-display m-0 text-[30px] leading-[1.1] font-bold">
+            <Drawer.Title
+              id="sheet-title"
+              tabIndex={-1}
+              className="font-display m-0 text-[30px] leading-[1.1] font-bold outline-none [overflow-wrap:anywhere]"
+            >
               {title}
             </Drawer.Title>
-            <Drawer.Description id="sheet-why" className="m-0 text-[17px] text-muted">
+            <Drawer.Description id="sheet-why" className="m-0 text-[17px] text-pretty text-muted">
               {why}
             </Drawer.Description>
           </div>

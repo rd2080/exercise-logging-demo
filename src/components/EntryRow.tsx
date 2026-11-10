@@ -2,6 +2,14 @@ import { Slot } from './Slot'
 import type { Entry } from '../entries'
 import { TYPE_META, formatValues } from '../lib/tracking'
 
+/** Entry values with the sides labelled, so 8 and 8 read as left and right. */
+function show(entry: Entry): string {
+  const v = entry.values
+  return entry.trackingType === 'reps_per_side'
+    ? `L ${v.left ?? 0} · R ${v.right ?? 0}`
+    : formatValues(entry.trackingType, v)
+}
+
 /** One logged-by-hand set: a tape slot, the exercise, the values and where it came from. */
 export function EntryRow({ entry }: { entry: Entry }) {
   const meta = TYPE_META[entry.trackingType]
@@ -16,11 +24,11 @@ export function EntryRow({ entry }: { entry: Entry }) {
           {entry.name}
         </span>
         <span className="text-[17px] text-pretty text-muted">
-          {meta.label} · Added by hand
+          {meta.label}
         </span>
       </span>
       <span className="num shrink-0 pt-0.5 text-xl font-bold whitespace-nowrap">
-        {formatValues(entry.trackingType, entry.values)}
+        {show(entry)}
       </span>
     </li>
   )

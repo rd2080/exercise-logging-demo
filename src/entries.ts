@@ -13,7 +13,7 @@ export interface Entry {
 export const MAX_NAME = 60
 
 export const TYPE_CHOICES: { type: TrackingType; label: string; detail: string }[] = [
-  { type: 'reps', label: 'Reps', detail: 'Count the repetitions, like push-ups' },
+  { type: 'reps', label: 'Reps', detail: 'Count the repetitions, like push‑ups' },
   { type: 'reps_per_side', label: 'Reps per side', detail: 'Left and right counted separately, like lunges' },
   { type: 'time', label: 'Timed hold', detail: 'How many seconds, like a plank' },
   { type: 'weight_reps', label: 'Weight and reps', detail: 'Weight in kg and repetitions, like a squat' },

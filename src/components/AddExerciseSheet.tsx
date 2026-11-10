@@ -1,5 +1,5 @@
-import { History } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { ChevronRight, History } from 'lucide-react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { MAX_NAME, TYPE_CHOICES, suggest, type Entry } from '../entries'
 import { SOURCE_NOTE, TYPE_META, targetText } from '../lib/tracking'
 import type { Exercise, PrefillSource, SetValues, TrackingType } from '../types'
@@ -26,16 +26,33 @@ export function AddExerciseSheet({ open, onOpenChange, plan, entries, onAdd }: A
   const [type, setType] = useState<TrackingType>('reps')
   const [values, setValues] = useState<SetValues>({})
   const [source, setSource] = useState<PrefillSource>('default')
+  const saved = useRef(false)
 
   // Start from the first step each time the sheet opens.
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (open) {
       setStep('pick')
       setExercise(null)
       setName('')
       setType('reps')
+      saved.current = false
     }
   }, [open])
+
+  // Move focus to the new step's title so keyboard and screen reader users land in the right place.
+  const first = useRef(true)
+  useEffect(() => {
+    if (!open) {
+      first.current = true
+      return
+    }
+    if (first.current) {
+      first.current = false
+      return
+    }
+    const id = requestAnimationFrame(() => document.getElementById('sheet-title')?.focus())
+    return () => cancelAnimationFrame(id)
+  }, [step, open])
 
   const goLog = (n: string, t: TrackingType, plan: Exercise | undefined) => {
     const s = suggest(n, t, plan, entries)
@@ -61,28 +78,27 @@ export function AddExerciseSheet({ open, onOpenChange, plan, entries, onAdd }: A
         title="What did you do?"
         why="Pick an exercise from your plan, or add something else."
       >
-        <div role="group" aria-label="Exercise">
+        <ul className="m-0 list-none p-0" aria-label="Exercise">
           {plan.map((e) => (
-            <OptionRow
-              key={e.id}
-              role="radio"
-              checked={false}
-              label={e.name}
-              detail={`${TYPE_META[e.trackingType].label} · ${targetText(e)}`}
-              onClick={() => pickPlan(e)}
-            />
+            <li key={e.id}>
+              <PickRow
+                label={e.name}
+                detail={`${TYPE_META[e.trackingType].label} · ${targetText(e)}`}
+                onClick={() => pickPlan(e)}
+              />
+            </li>
           ))}
-          <OptionRow
-            role="radio"
-            checked={false}
-            label="Something else"
-            detail="Name it and choose how it is counted"
-            onClick={() => {
-              setExercise(null)
-              setStep('custom')
-            }}
-          />
-        </div>
+          <li>
+            <PickRow
+              label="Something else"
+              detail="Name it and choose how it is counted"
+              onClick={() => {
+                setExercise(null)
+                setStep('custom')
+              }}
+            />
+          </li>
+        </ul>
       </AnswerSheet>
     )
   }
@@ -110,6 +126,12 @@ export function AddExerciseSheet({ open, onOpenChange, plan, entries, onAdd }: A
             autoCapitalize="sentences"
             enterKeyHint="next"
             onChange={(e) => setName(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && trimmed.length > 0) {
+                e.preventDefault()
+                goLog(trimmed, type, undefined)
+              }
+            }}
             className="h-14 w-full rounded-2xl bg-surface-2 px-4 text-xl text-ink placeholder:text-muted"
             placeholder="For example, Burpees"
           />
@@ -139,11 +161,20 @@ export function AddExerciseSheet({ open, onOpenChange, plan, entries, onAdd }: A
       open={open}
       onOpenChange={onOpenChange}
       title={trimmed}
-      why={`${meta.label}${exercise ? ` · ${targetText(exercise)}` : ''}`}
+      why={exercise ? targetText(exercise).replace(/ (kg)/, '\u00a0$1') : 'A new exercise'}
+      tape={meta.tape}
       saveLabel="Log set"
-      onSave={() => onAdd({ name: trimmed, trackingType: type, values, exerciseId: exercise?.id })}
+      onSave={() => {
+        if (saved.current) return
+        saved.current = true
+        onAdd({ name: trimmed, trackingType: type, values, exerciseId: exercise?.id })
+      }}
     >
-      <div className="flex flex-col gap-4" style={{ '--tape': meta.tape } as React.CSSProperties}>
+      <div className="flex flex-col gap-4">
+        <span className="flex w-fit items-center gap-2 rounded-full bg-surface-2 py-1.5 pr-3.5 pl-2.5 text-[17px] font-semibold">
+          <span className="size-3 rounded-full bg-(--tape)" aria-hidden="true" />
+          {meta.label}
+        </span>
         {exercise ? (
           <>
             <DemoFigure exerciseId={exercise.id} name={exercise.name} compact />
@@ -159,7 +190,7 @@ export function AddExerciseSheet({ open, onOpenChange, plan, entries, onAdd }: A
         <div className="flex flex-col gap-4 rounded-3xl border border-line p-4 max-[360px]:p-3" data-testid="manual-inputs">
           <SetFields type={type} values={values} onChange={(p) => setValues((v) => ({ ...v, ...p }))} />
           <p className="m-0 flex items-center gap-2 text-[15px] text-muted" data-testid="manual-note">
-            <History size={18} aria-hidden="true" />
+            {source !== 'default' && <History size={18} aria-hidden="true" />}
             {SOURCE_NOTE[source]}
           </p>
         </div>
@@ -172,5 +203,22 @@ export function AddExerciseSheet({ open, onOpenChange, plan, entries, onAdd }: A
         </button>
       </div>
     </AnswerSheet>
+  )
+}
+
+/** A tappable pick row: tapping moves to the next step, so it is a button with a chevron, not a radio. */
+function PickRow({ label, detail, onClick }: { label: string; detail: string; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="press flex min-h-16 w-full items-center gap-3 border-t border-line py-2.5 text-left first:border-t-0"
+    >
+      <span className="flex min-w-0 flex-1 flex-col">
+        <span className="text-xl leading-tight font-semibold">{label}</span>
+        <span className="text-[15px] text-pretty text-muted">{detail}</span>
+      </span>
+      <ChevronRight size={24} className="shrink-0 text-muted" aria-hidden="true" />
+    </button>
   )
 }

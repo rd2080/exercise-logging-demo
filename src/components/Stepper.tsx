@@ -43,7 +43,7 @@ export function Stepper({ label, unit, value, min, max, step, compact, onChange 
       aria-live="polite"
     >
       {value}
-      {unit && <span className="ml-1 text-lg font-semibold text-muted">{unit}</span>}
+      {unit && <span className="ml-1 text-lg font-semibold whitespace-nowrap text-muted">{unit}</span>}
     </output>
   )
 
