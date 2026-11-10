@@ -27,7 +27,7 @@ test.beforeEach(async ({ page }) => {
 
 test('all four questions are on one screen with a why line and a time estimate', async ({ page }) => {
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Set up your plan')
-  await expect(page.getByText('Four answers, about a minute.')).toBeVisible()
+  await expect(page.getByText('Four answers, about a minute. Two extras are optional.')).toBeVisible()
   for (const why of [
     'Decides which programmes we suggest',
     'Sets how hard your first weeks start',
@@ -207,20 +207,20 @@ test('weight and height are optional, validated, shown in the chosen unit and th
   await openRow(page, /^Weight and height/)
   const sheet = page.getByRole('dialog')
   await page.getByTestId('body-weight').fill('900')
-  await expect(sheet.getByRole('alert')).toContainText('Enter a weight')
+  await expect(sheet.getByText(/Enter a weight between/)).toBeVisible()
   await expect(sheet.getByRole('button', { name: 'Save measurements' })).toBeDisabled()
   await page.getByTestId('body-weight').fill('70')
   await page.getByTestId('body-height').fill('175')
-  await sheet.getByRole('radio', { name: 'lb' }).click()
-  await expect(page.getByTestId('body-weight')).toHaveValue('154')
-  await sheet.getByRole('radio', { name: 'ft' }).click()
+  await sheet.getByRole('button', { name: 'lb' }).click()
+  await expect(page.getByTestId('body-weight')).toHaveValue('154.3')
+  await sheet.getByRole('button', { name: 'ft' }).click()
   await expect(page.getByTestId('body-height')).toHaveValue('5')
   await expect(page.getByTestId('body-inches')).toHaveValue('9')
   await sheet.getByRole('button', { name: 'Save measurements' }).click()
   await expect(page.getByTestId('answer-body')).toHaveText('154 lb, 5 ft 9 in')
   await page.reload()
   await openRow(page, /^Weight and height/)
-  await expect(page.getByRole('dialog').getByRole('radio', { name: 'lb' })).toHaveAttribute('aria-checked', 'true')
+  await expect(page.getByRole('dialog').getByRole('button', { name: 'lb' })).toHaveAttribute('aria-pressed', 'true')
 })
 
 test('saving the measurements blank is fine and plan creation does not need them', async ({ page }) => {
@@ -264,4 +264,48 @@ test('dumbbells and a band each get a follow-up that starts safe and explains th
   await sheet.getByRole('switch', { name: /anchor the band/ }).click()
   await expect(page.getByTestId('band-consequence')).toContainText('can include anchored band exercises')
   for (const b of await sheet.getByRole('switch').all()) expect((await b.boundingBox())!.height).toBeGreaterThanOrEqual(48)
+})
+
+
+test('unit switches never drift, pasted text is cleaned, and edge values are judged in the canonical unit', async ({ page }) => {
+  await page.goto('/?stage=setup')
+  await openRow(page, /^Weight and height/)
+  const sheet = page.getByRole('dialog')
+  const w = page.getByTestId('body-weight')
+  const h = page.getByTestId('body-height')
+  await w.fill('70.5 kg')
+  await expect(w).toHaveValue('70.5')
+  await sheet.getByRole('button', { name: 'lb' }).click()
+  await sheet.getByRole('button', { name: 'kg' }).click()
+  await expect(w).toHaveValue('70.5')
+  await w.fill('200')
+  await sheet.getByRole('button', { name: 'lb' }).click()
+  await w.fill('200')
+  await sheet.getByRole('button', { name: 'kg' }).click()
+  await sheet.getByRole('button', { name: 'lb' }).click()
+  await expect(w).toHaveValue('200')
+  await h.fill('171')
+  await sheet.getByRole('button', { name: 'ft' }).click()
+  await sheet.getByRole('button', { name: 'cm' }).click()
+  await expect(h).toHaveValue('171')
+  await h.fill('100')
+  await sheet.getByRole('button', { name: 'ft' }).click()
+  await expect(sheet.getByRole('button', { name: 'Save measurements' })).toBeEnabled()
+  await page.getByTestId('body-inches').fill('12')
+  await expect(page.getByTestId('body-inches')).toHaveValue('12')
+  await expect(sheet.getByText('Inches go from 0 to 11.')).toBeVisible()
+  await page.getByTestId('body-inches').fill('-5')
+  await expect(page.getByTestId('body-inches')).toHaveValue('5')
+  await w.fill('1e2')
+  await expect(w).toHaveValue('12')
+})
+
+test('with the keyboard open on a small screen the weight field stays in view', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 340 })
+  await page.goto('/?stage=setup')
+  await page.getByRole('button', { name: /^Weight and height/ }).click()
+  await page.getByTestId('body-weight').focus()
+  const box = (await page.getByTestId('body-weight').boundingBox())!
+  const save = (await page.getByRole('button', { name: 'Save measurements' }).boundingBox())!
+  expect(box.y + box.height).toBeLessThanOrEqual(save.y + 1)
 })

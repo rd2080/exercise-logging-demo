@@ -47,7 +47,7 @@ export function SetupScreen({ answers, onChange, onCreate }: SetupScreenProps) {
           <h1 className="font-display m-0 text-[40px] leading-[1.05] font-bold text-balance short:text-[32px]">
             Set up your plan
           </h1>
-          <p className="m-0 text-lg text-muted">Four answers, about a minute.</p>
+          <p className="m-0 text-lg text-muted">Four answers, about a minute. Two extras are optional.</p>
         </header>
 
         <ul className="m-0 flex list-none flex-col p-0">
@@ -66,7 +66,7 @@ export function SetupScreen({ answers, onChange, onCreate }: SetupScreenProps) {
                     <span className="font-display text-2xl leading-tight font-semibold">{row.label}</span>
                     <span className="text-[15px] text-muted">{row.why}</span>
                     <span
-                      className={`truncate text-lg ${value ? 'text-ink' : 'font-semibold text-(--tape)'}`}
+                      className={`line-clamp-2 text-lg [overflow-wrap:anywhere] ${value ? 'text-ink' : 'font-semibold text-(--tape)'}`}
                       data-testid={`answer-${row.id}`}
                     >
                       {value ?? (row.id === 'body' || row.id === 'style' ? 'Add' : 'Choose')}

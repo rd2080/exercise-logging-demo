@@ -12,6 +12,8 @@ interface AnswerSheetProps {
   /** Label of the button that saves and closes. Omit when a single tap answers. */
   saveLabel?: string
   canSave?: boolean
+  /** Hide the lead and reason on short screens (a phone with its keyboard open) so the fields stay visible. They stay for screen readers. */
+  compactWhenShort?: boolean
   /** An action shown at the right of the title row, outside the scrolling area (for example Reset). */
   headerAction?: ReactNode
   /** Tape colour for the pinned button, focus ring and anything else inside the sheet. */
@@ -28,6 +30,7 @@ export function AnswerSheet({
   title,
   why,
   lead,
+  compactWhenShort = false,
   children,
   saveLabel,
   canSave = true,
@@ -58,11 +61,11 @@ export function AnswerSheet({
               {headerAction}
             </div>
             {lead && (
-              <p className="m-0 text-xl font-semibold text-pretty" data-testid="sheet-lead">
+              <p className={`m-0 text-xl font-semibold text-pretty ${compactWhenShort ? 'short:sr-only' : ''}`} data-testid="sheet-lead">
                 {lead}
               </p>
             )}
-            <Drawer.Description id="sheet-why" className="m-0 text-[17px] text-pretty text-muted">
+            <Drawer.Description id="sheet-why" className={`m-0 text-[17px] text-pretty text-muted ${compactWhenShort ? 'short:sr-only' : ''}`}>
               {why}
             </Drawer.Description>
           </div>

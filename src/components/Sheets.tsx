@@ -230,13 +230,12 @@ const fieldClass =
 
 function UnitToggle<T extends string>({ label, value, options, onChange }: { label: string; value: T; options: { id: T; text: string }[]; onChange: (v: T) => void }) {
   return (
-    <div role="radiogroup" aria-label={label} className="flex rounded-full bg-surface-2 p-1">
+    <div role="group" aria-label={label} className="flex rounded-full bg-surface-2 p-1">
       {options.map((o) => (
         <button
           key={o.id}
           type="button"
-          role="radio"
-          aria-checked={value === o.id}
+          aria-pressed={value === o.id}
           onClick={() => onChange(o.id)}
           className={`press h-12 min-w-16 rounded-full px-4 text-lg font-semibold ${value === o.id ? 'bg-(--tape) text-on-tape' : 'text-muted'}`}
         >
@@ -247,46 +246,101 @@ function UnitToggle<T extends string>({ label, value, options, onChange }: { lab
   )
 }
 
-/** Optional weight and height. Typed in the unit the person chooses, kept in kg and cm. */
+/** Keeps digits and one decimal point, so "70 kg" pasted in becomes "70". */
+function cleanDecimal(text: string): string {
+  const t = text.replace(',', '.').replace(/[^0-9.]/g, '')
+  const i = t.indexOf('.')
+  return (i < 0 ? t : t.slice(0, i + 1) + t.slice(i + 1).replace(/\./g, '')).slice(0, 7)
+}
+const cleanDigits = (text: string) => text.replace(/[^0-9]/g, '').slice(0, 2)
+
+const trim = (n: number, places = 1) => String(Number(n.toFixed(places)))
+const weightShown = (kg: number, unit: Units['weight']) => trim(unit === 'kg' ? kg : kgToLb(kg))
+
+const WEIGHT_LB = { min: Math.ceil(kgToLb(WEIGHT_KG.min)), max: Math.floor(kgToLb(WEIGHT_KG.max)) }
+
+/** Optional weight and height. Typed in the unit the person chooses; the value is kept in kg and cm. */
 export function BodySheet({ open, onOpenChange, answers, onChange, units, onUnits }: BodySheetProps) {
   const [weightText, setWeightText] = useState('')
   const [cmText, setCmText] = useState('')
   const [ftText, setFtText] = useState('')
   const [inText, setInText] = useState('')
+  // The last good value, in kg and cm. A unit switch shows this again, so switching never drifts.
+  const [kg, setKg] = useState<number | null>(null)
+  const [cm, setCm] = useState<number | null>(null)
+  // True while a field still shows the saved value, so a rounded display is never judged in place of it.
+  const [weightFresh, setWeightFresh] = useState(true)
+  const [heightFresh, setHeightFresh] = useState(true)
 
-  // Fill the fields from the saved answers each time the sheet opens.
-  useEffect(() => {
-    if (!open) return
-    const w = answers.weightKg
-    setWeightText(w === null ? '' : String(Math.round(units.weight === 'kg' ? w : kgToLb(w))))
-    const h = answers.heightCm
-    setCmText(h === null ? '' : String(Math.round(h)))
+  const fill = (w: number | null, h: number | null, u: Units) => {
+    setKg(w)
+    setCm(h)
+    setWeightFresh(true)
+    setHeightFresh(true)
+    setWeightText(w === null ? '' : weightShown(w, u.weight))
+    setCmText(h === null ? '' : trim(h))
     const f = h === null ? null : cmToFtIn(h)
     setFtText(f ? String(f.ft) : '')
     setInText(f ? String(f.inch) : '')
+  }
+
+  // Fill the fields from the saved answers each time the sheet opens.
+  useEffect(() => {
+    if (open) fill(answers.weightKg, answers.heightCm, units)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open])
 
-  const weightN = parseNumber(weightText)
-  const weightKg = weightN === null ? null : units.weight === 'kg' ? weightN : lbToKg(weightN)
+  const typedWeight = parseNumber(weightText)
+  const weightKg = weightFresh && kg !== null ? kg : typedWeight === null ? null : units.weight === 'kg' ? typedWeight : lbToKg(typedWeight)
   const weightBad = weightText.trim() !== '' && !inRange(weightKg, WEIGHT_KG)
 
-  const heightCm = (() => {
-    if (units.height === 'cm') return parseNumber(cmText)
-    const ft = parseNumber(ftText)
-    const inch = parseNumber(inText) ?? 0
-    return ft === null ? null : ftInToCm(ft, inch)
-  })()
+  const feet = parseNumber(ftText)
+  const inches = inText.trim() === '' ? 0 : parseNumber(inText)
+  const inchesBad = inches === null || inches > 11
+  const heightCm =
+    heightFresh && cm !== null
+      ? cm
+      : units.height === 'cm'
+        ? parseNumber(cmText)
+        : feet === null || inchesBad
+          ? null
+          : ftInToCm(feet, inches as number)
   const heightTyped = units.height === 'cm' ? cmText.trim() !== '' : ftText.trim() !== '' || inText.trim() !== ''
   const heightBad = heightTyped && !inRange(heightCm, HEIGHT_CM)
   const canSave = !weightBad && !heightBad
 
-  const weightRange = units.weight === 'kg' ? '20 to 300 kg' : '45 to 660 lb'
+  const weightRange = units.weight === 'kg' ? '20 and 300 kg' : `${WEIGHT_LB.min} and ${WEIGHT_LB.max} lb`
+  const heightRange = units.height === 'cm' ? '100 and 250 cm' : '3 ft 4 in and 8 ft 2 in'
+  const hintClass = (bad: boolean) => `m-0 text-[15px] ${bad ? 'font-semibold text-ink' : 'text-muted'}`
+
+  const changeWeight = (text: string) => {
+    setWeightFresh(false)
+    const t = cleanDecimal(text)
+    setWeightText(t)
+    const n = parseNumber(t)
+    setKg(n === null ? null : units.weight === 'kg' ? n : lbToKg(n))
+  }
+  const changeCm = (text: string) => {
+    setHeightFresh(false)
+    const t = cleanDecimal(text)
+    setCmText(t)
+    setCm(parseNumber(t))
+  }
+  const changeFtIn = (ft: string, inch: string) => {
+    setHeightFresh(false)
+    setFtText(ft)
+    setInText(inch)
+    const f = parseNumber(ft)
+    const i = inch === '' ? 0 : parseNumber(inch)
+    setCm(f === null || i === null || i > 11 ? null : ftInToCm(f, i))
+  }
+
   return (
     <AnswerSheet
       open={open}
       onOpenChange={onOpenChange}
       title="Your weight and height"
+      compactWhenShort
       lead="Leave either blank if you would rather not say."
       why="Optional. These stay on this device."
       saveLabel="Save measurements"
@@ -313,9 +367,11 @@ export function BodySheet({ open, onOpenChange, answers, onChange, units, onUnit
                 { id: 'lb', text: 'lb' },
               ]}
               onChange={(weight) => {
-                // Convert what is typed so the same weight shows in the new unit.
-                if (weightKg !== null && !weightBad)
-                  setWeightText(String(Math.round(weight === 'kg' ? weightKg : kgToLb(weightKg))))
+                // Show the same weight in the new unit, from the saved kg value and not from rounded text.
+                if (kg !== null && !weightBad) {
+                  setWeightText(weightShown(kg, weight))
+                  setWeightFresh(true)
+                }
                 onUnits({ ...units, weight })
               }}
             />
@@ -325,17 +381,16 @@ export function BodySheet({ open, onOpenChange, answers, onChange, units, onUnit
             type="text"
             inputMode="decimal"
             autoComplete="off"
-            maxLength={5}
             value={weightText}
-            onChange={(e) => setWeightText(e.target.value)}
+            onChange={(e) => changeWeight(e.target.value)}
             aria-invalid={weightBad}
             aria-describedby="body-weight-hint"
             placeholder={units.weight}
             className={fieldClass}
             data-testid="body-weight"
           />
-          <p id="body-weight-hint" className="m-0 text-[15px] text-muted" role={weightBad ? 'alert' : undefined}>
-            {weightBad ? `Enter a weight from ${weightRange}, or clear the box.` : `Between ${weightRange}.`}
+          <p id="body-weight-hint" className={hintClass(weightBad)} aria-live="polite">
+            {weightBad ? `Enter a weight between ${weightRange}, or clear the box.` : `Between ${weightRange}.`}
           </p>
         </div>
 
@@ -352,11 +407,12 @@ export function BodySheet({ open, onOpenChange, answers, onChange, units, onUnit
                 { id: 'ft', text: 'ft' },
               ]}
               onChange={(height) => {
-                if (heightCm !== null && !heightBad) {
-                  const f = cmToFtIn(heightCm)
-                  setCmText(String(Math.round(heightCm)))
+                if (cm !== null && !heightBad) {
+                  const f = cmToFtIn(cm)
+                  setCmText(trim(cm))
                   setFtText(String(f.ft))
                   setInText(String(f.inch))
+                  setHeightFresh(true)
                 }
                 onUnits({ ...units, height })
               }}
@@ -368,9 +424,8 @@ export function BodySheet({ open, onOpenChange, answers, onChange, units, onUnit
               type="text"
               inputMode="decimal"
               autoComplete="off"
-              maxLength={5}
               value={cmText}
-              onChange={(e) => setCmText(e.target.value)}
+              onChange={(e) => changeCm(e.target.value)}
               aria-invalid={heightBad}
               aria-describedby="body-height-hint"
               placeholder="cm"
@@ -384,9 +439,8 @@ export function BodySheet({ open, onOpenChange, answers, onChange, units, onUnit
                 type="text"
                 inputMode="numeric"
                 autoComplete="off"
-                maxLength={1}
                 value={ftText}
-                onChange={(e) => setFtText(e.target.value)}
+                onChange={(e) => changeFtIn(cleanDigits(e.target.value).slice(0, 1), inText)}
                 aria-label="Feet"
                 aria-invalid={heightBad}
                 aria-describedby="body-height-hint"
@@ -399,9 +453,8 @@ export function BodySheet({ open, onOpenChange, answers, onChange, units, onUnit
                 type="text"
                 inputMode="numeric"
                 autoComplete="off"
-                maxLength={2}
                 value={inText}
-                onChange={(e) => setInText(e.target.value)}
+                onChange={(e) => changeFtIn(ftText, cleanDigits(e.target.value))}
                 aria-label="Inches"
                 aria-invalid={heightBad}
                 aria-describedby="body-height-hint"
@@ -411,10 +464,12 @@ export function BodySheet({ open, onOpenChange, answers, onChange, units, onUnit
               />
             </div>
           )}
-          <p id="body-height-hint" className="m-0 text-[15px] text-muted" role={heightBad ? 'alert' : undefined}>
+          <p id="body-height-hint" className={hintClass(heightBad)} aria-live="polite">
             {heightBad
-              ? `Enter a height from ${units.height === 'cm' ? '100 to 250 cm' : '3 ft 4 in to 8 ft 2 in'}, or clear the box.`
-              : `Between ${units.height === 'cm' ? '100 and 250 cm' : '3 ft 4 in and 8 ft 2 in'}.`}
+              ? units.height === 'ft' && inchesBad
+                ? 'Inches go from 0 to 11.'
+                : `Enter a height between ${heightRange}, or clear the box.`
+              : `Between ${heightRange}.`}
           </p>
         </div>
       </div>
