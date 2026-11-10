@@ -21,12 +21,24 @@ function initialStage(): Stage {
   return STAGES.includes(s as Stage) ? (s as Stage) : 'setup'
 }
 
+/** An id that works without a secure context (randomUUID is missing on plain http over a LAN). */
+function newId(): string {
+  if (typeof crypto !== 'undefined') {
+    if (typeof crypto.randomUUID === 'function') return crypto.randomUUID()
+    if (typeof crypto.getRandomValues === 'function') {
+      return Array.from(crypto.getRandomValues(new Uint8Array(16)), (b) => b.toString(16).padStart(2, '0')).join('')
+    }
+  }
+  return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 12)}${Math.random().toString(36).slice(2, 8)}`
+}
+
 function Screen() {
   const [stage, setStage] = useState<Stage>(initialStage)
   const [answers, setAnswers] = useState<Answers>(EMPTY_ANSWERS)
   const [entries, setEntries] = useState<Entry[]>(loadEntries)
+  const [saveFailed, setSaveFailed] = useState(false)
   const addEntry = (e: Omit<Entry, 'id'>) =>
-    setEntries((list) => [{ ...e, id: crypto.randomUUID?.() ?? `${Date.now()}-${list.length}` }, ...list])
+    setEntries((list) => [{ ...e, id: newId() }, ...list])
 
   const updateEntry = (id: string, values: Entry['values']) =>
     setEntries((list) => list.map((e) => (e.id === id ? { ...e, values } : e)))
@@ -36,13 +48,14 @@ function Screen() {
   const initial = useRef(entries)
   useEffect(() => {
     if (entries === initial.current) return
-    saveEntries(entries)
+    setSaveFailed(!saveEntries(entries))
   }, [entries])
 
   // Another tab changed the saved entries: show them here too.
   useEffect(() => {
     const onStorage = (ev: StorageEvent) => {
-      if (ev.key === ENTRIES_KEY || ev.key === null) {
+      // A cleared or removed key (newValue null) must not write an empty list back.
+      if (ev.key === ENTRIES_KEY && ev.newValue !== null) {
         setEntries(loadEntries())
       }
     }
@@ -82,6 +95,7 @@ function Screen() {
           onStart={() => setStage('player')}
           plan={session.exercises}
           entries={entries}
+          saveFailed={saveFailed}
           onAdd={addEntry}
           onUpdate={updateEntry}
           onDelete={deleteEntry}

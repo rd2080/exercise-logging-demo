@@ -14,12 +14,22 @@ interface ProgressScreenProps {
   onStart: () => void
   plan: Exercise[]
   entries: Entry[]
+  /** True when the browser refused to save the entries. */
+  saveFailed?: boolean
   onAdd: (entry: Omit<Entry, 'id'>) => void
   onUpdate: (id: string, values: SetValues) => void
   onDelete: (id: string) => void
 }
 
-export function ProgressScreen({ onStart, plan, entries, onAdd, onUpdate, onDelete }: ProgressScreenProps) {
+export function ProgressScreen({
+  onStart,
+  plan,
+  entries,
+  saveFailed,
+  onAdd,
+  onUpdate,
+  onDelete,
+}: ProgressScreenProps) {
   const [adding, setAdding] = useState(false)
   const [editing, setEditing] = useState<Entry | null>(null)
   const [editOpen, setEditOpen] = useState(false)
@@ -71,6 +81,12 @@ export function ProgressScreen({ onStart, plan, entries, onAdd, onUpdate, onDele
               ))}
             </ul>
           </section>
+        )}
+
+        {saveFailed && entries.length > 0 && (
+          <p className="m-0 text-[15px] text-muted" role="status" data-testid="save-failed">
+            Not saved on this device. Your entries will be lost when you close this page.
+          </p>
         )}
 
         <section className="flex flex-col gap-1" aria-labelledby="goals-heading">
