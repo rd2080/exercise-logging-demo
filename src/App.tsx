@@ -28,6 +28,10 @@ function Screen() {
   const addEntry = (e: Omit<Entry, 'id'>) =>
     setEntries((list) => [{ ...e, id: crypto.randomUUID?.() ?? `${Date.now()}-${list.length}` }, ...list])
 
+  const updateEntry = (id: string, values: Entry['values']) =>
+    setEntries((list) => list.map((e) => (e.id === id ? { ...e, values } : e)))
+  const deleteEntry = (id: string) => setEntries((list) => list.filter((e) => e.id !== id))
+
   // Save every change, but not the list we just read from storage on load.
   const initial = useRef(entries)
   useEffect(() => {
@@ -79,6 +83,8 @@ function Screen() {
           plan={session.exercises}
           entries={entries}
           onAdd={addEntry}
+          onUpdate={updateEntry}
+          onDelete={deleteEntry}
         />
       )}
       <TabBar current={stage} onChange={setStage} />

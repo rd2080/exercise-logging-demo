@@ -1,23 +1,28 @@
 import { Plus } from 'lucide-react'
 import { useState, type CSSProperties } from 'react'
 import { AddExerciseSheet } from '../components/AddExerciseSheet'
+import { EditEntrySheet } from '../components/EditEntrySheet'
 import { EmptySlots } from '../components/EmptySlots'
 import { EmptyState } from '../components/EmptyState'
 import { EntryRow } from '../components/EntryRow'
 import { GoalList, type Goal } from '../components/GoalList'
 import { goalsData as goalData } from '../data/fixtures'
 import type { Entry } from '../entries'
-import type { Exercise } from '../types'
+import type { Exercise, SetValues } from '../types'
 
 interface ProgressScreenProps {
   onStart: () => void
   plan: Exercise[]
   entries: Entry[]
   onAdd: (entry: Omit<Entry, 'id'>) => void
+  onUpdate: (id: string, values: SetValues) => void
+  onDelete: (id: string) => void
 }
 
-export function ProgressScreen({ onStart, plan, entries, onAdd }: ProgressScreenProps) {
+export function ProgressScreen({ onStart, plan, entries, onAdd, onUpdate, onDelete }: ProgressScreenProps) {
   const [adding, setAdding] = useState(false)
+  const [editing, setEditing] = useState<Entry | null>(null)
+  const [editOpen, setEditOpen] = useState(false)
   const progress = {
     ...(goalData.progress as Record<string, number>),
     'first-set': Math.max(
@@ -62,7 +67,7 @@ export function ProgressScreen({ onStart, plan, entries, onAdd }: ProgressScreen
             </h2>
             <ul className="m-0 flex list-none flex-col p-0" data-testid="entry-list">
               {entries.map((e) => (
-                <EntryRow key={e.id} entry={e} />
+                <EntryRow key={e.id} entry={e} onSelect={(en) => { setEditing(en); setEditOpen(true) }} />
               ))}
             </ul>
           </section>
@@ -82,6 +87,16 @@ export function ProgressScreen({ onStart, plan, entries, onAdd }: ProgressScreen
         plan={plan}
         entries={entries}
         onAdd={onAdd}
+      />
+      <EditEntrySheet
+        open={editOpen}
+        onOpenChange={setEditOpen}
+        entry={editing}
+        onSave={onUpdate}
+        onDelete={(id) => {
+          setEditOpen(false)
+          onDelete(id)
+        }}
       />
     </div>
   )
