@@ -12,7 +12,7 @@ function RoutineList({ items }: { items: Routine[] }) {
     <ul className="m-0 flex list-none flex-col p-0">
       {items.map((r) => (
         <li key={r.id} className="flex min-h-14 items-baseline justify-between gap-3 border-t border-line py-3 first:border-t-0">
-          <span className="min-w-0 text-xl font-semibold [overflow-wrap:anywhere]">{r.name}</span>
+          <span className="line-clamp-2 min-w-0 text-xl font-semibold [overflow-wrap:anywhere]" title={r.name}>{r.name}</span>
           <span className="num shrink-0 text-[17px] whitespace-nowrap text-muted">{r.detail}</span>
         </li>
       ))}

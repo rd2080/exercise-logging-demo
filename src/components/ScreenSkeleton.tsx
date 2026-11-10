@@ -13,9 +13,9 @@ export function ScreenSkeleton() {
       style={{ '--tape': 'var(--color-tape-reps)', '--cut': '6px' } as CSSProperties}
       role="status"
       aria-label="Loading"
-      aria-busy="true"
       data-testid="skeleton"
     >
+      <span className="sr-only">Loading</span>
       <div className="flex flex-1 animate-pulse flex-col gap-6 px-4 pt-[max(2rem,env(safe-area-inset-top))] pb-28 motion-reduce:animate-none">
         <div className="flex flex-col gap-3">
           <div className={`${bar} h-10 w-2/5`} />

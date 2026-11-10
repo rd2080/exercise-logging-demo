@@ -1,35 +1,44 @@
 import { expect, test } from '@playwright/test'
 
-test('a screen that loads on demand shows a skeleton first, then the real screen', async ({ page }) => {
-  // Hold the code for the Exercises screen back so the skeleton can be seen.
+function hold(page: import('@playwright/test').Page, file: RegExp) {
   let release: () => void = () => {}
   const held = new Promise<void>((r) => (release = r))
-  await page.route(/ExercisesScreen/, async (route) => {
+  return page.route(file, async (route) => {
     await held
     await route.continue()
-  })
-  await page.goto('/?stage=today')
-  await page.getByTestId('tab-bar').getByRole('button', { name: 'Exercises' }).click()
+  }).then(() => release)
+}
+
+test('opening a screen by address shows a skeleton while its code loads, then the real screen', async ({ page }) => {
+  const release = await hold(page, /ExercisesScreen/)
+  await page.goto('/?stage=exercises', { waitUntil: 'commit' })
   const sk = page.getByTestId('skeleton')
   await expect(sk).toBeVisible()
-  await expect(sk).toHaveAttribute('aria-busy', 'true')
   await expect(sk).toHaveAccessibleName('Loading')
+  await expect(sk).toContainText('Loading')
   release()
   await expect(page.getByTestId('exercises')).toBeVisible()
   await expect(sk).toHaveCount(0)
 })
 
+test('moving to a screen that is still loading keeps the current screen and the tab bar, with no skeleton', async ({ page }) => {
+  await page.goto('/?stage=today')
+  await expect(page.getByTestId('today')).toBeVisible()
+  const release = await hold(page, /ProgressScreen/)
+  await page.getByTestId('tab-bar').getByRole('button', { name: 'Progress' }).click()
+  await page.waitForTimeout(400)
+  await expect(page.getByTestId('today')).toBeVisible()
+  await expect(page.getByTestId('tab-bar')).toBeVisible()
+  await expect(page.getByTestId('skeleton')).toHaveCount(0)
+  release()
+  await expect(page.getByTestId('progress')).toBeVisible()
+})
+
 test('the skeleton does not pulse when reduced motion is on, and does not overflow at 320', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await page.setViewportSize({ width: 320, height: 640 })
-  let release: () => void = () => {}
-  const held = new Promise<void>((r) => (release = r))
-  await page.route(/ProgressScreen/, async (route) => {
-    await held
-    await route.continue()
-  })
-  await page.goto('/?stage=today')
-  await page.getByRole('button', { name: 'Progress' }).click()
+  const release = await hold(page, /ProgressScreen/)
+  await page.goto('/?stage=progress', { waitUntil: 'commit' })
   const sk = page.getByTestId('skeleton')
   await expect(sk).toBeVisible()
   const name = await sk.locator('div').first().evaluate((e) => getComputedStyle(e).animationName)

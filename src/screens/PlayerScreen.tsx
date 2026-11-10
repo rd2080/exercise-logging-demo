@@ -141,6 +141,15 @@ function Player({
     return () => window.removeEventListener('keydown', onKey)
   }, [confirmEnd])
   const saved = useRef(false)
+  const readyRef = useRef<HTMLHeadingElement>(null)
+  // A tap that lands just as the countdown ends must not also log the first set.
+  const leftReadyAt = useRef(0)
+  useEffect(() => {
+    if (phase.kind !== 'ready') return
+    readyRef.current?.focus()
+    setAnnounce(`Get ready. ${exercises[0].name}. Your first set starts in ${READY_SECONDS} seconds.`)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const ex = exercises[index]
   const meta = TYPE_META[ex.trackingType]
@@ -177,6 +186,7 @@ function Player({
           navigator.vibrate?.(20)
         }
         else if (phase.kind === 'ready') {
+          leftReadyAt.current = Date.now()
           setPhase({ kind: 'log' })
           setAnnounce('Go. Log your first set when you finish it.')
           navigator.vibrate?.(20)
@@ -193,6 +203,7 @@ function Player({
   }, [phase, ex, draft.seconds, finishHold])
 
   const logSet = () => {
+    if (Date.now() - leftReadyAt.current < 400) return
     const values = { ...draft }
     const nextLogs = logs.map((l, i) => (i === index ? [...l, values] : l))
     setLogs(nextLogs)
@@ -259,7 +270,14 @@ function Player({
       case 'log':
         return { label: 'Log set', onClick: logSet }
       case 'ready':
-        return { label: 'Skip countdown', onClick: () => setPhase({ kind: 'log' }) }
+        return {
+          label: 'Skip countdown',
+          onClick: () => {
+            leftReadyAt.current = Date.now()
+            setPhase({ kind: 'log' })
+            setAnnounce('Go. Log your first set when you finish it.')
+          },
+        }
       case 'rest':
         return { label: 'Skip rest', onClick: () => setPhase({ kind: 'log' }) }
       case 'lead':
@@ -334,14 +352,19 @@ function Player({
 
         {phase.kind === 'ready' && (
           <section
-            className="flex flex-col gap-3 rounded-3xl bg-surface p-4"
+            className="flex flex-col gap-2 rounded-3xl bg-surface p-4"
             aria-label="Get ready"
             data-testid="ready"
           >
-            <h2 className="font-display m-0 text-2xl font-semibold">Get ready</h2>
-            <p className="num m-0 text-[72px] leading-none font-bold" data-testid="timer">
-              <Clock endsAt={phase.endsAt} mode="seconds" />
-            </p>
+            <div className="flex items-baseline justify-between gap-3">
+              <h2 ref={readyRef} tabIndex={-1} className="font-display m-0 text-2xl font-semibold outline-none">
+                Workout starts in
+              </h2>
+              <p className="num m-0 text-[44px] leading-none font-bold" data-testid="timer" aria-hidden="true">
+                <Clock endsAt={phase.endsAt} mode="seconds" />
+              </p>
+            </div>
+            <p className="m-0 text-muted">Get set up. Your first set comes next.</p>
           </section>
         )}
 

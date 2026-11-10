@@ -176,6 +176,7 @@ test('finishing a workout lights today in the weekly dots', async ({ page }) => 
   await page.getByTestId('programme-start').click()
   await expect(page.getByTestId('player')).toBeVisible()
   await page.getByTestId('primary').click() // skip the get-ready countdown
+  await page.waitForTimeout(500) // taps right after it ends are ignored
   await page.getByTestId('primary').click() // log one set
   await page.getByRole('button', { name: 'End workout' }).first().click()
   await page.getByTestId('end-confirm').getByRole('button', { name: 'End workout' }).click()

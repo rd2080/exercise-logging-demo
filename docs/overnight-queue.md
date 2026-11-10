@@ -29,7 +29,7 @@ Rules: one commit per feature, push after each, tests after each feature, one re
 - [x] Warm-up and cool-down collapsible sections, placeholder data (row 42)
 - [x] Get-ready 5-4-3-2-1 countdown before the first exercise (row 45)
 - [x] Skeleton loaders for lazily loaded screens and the demo media slot (row 72)
-- [ ] Batch E review and fixes
+- [x] Batch E review and fixes
 
 ## Last
 - [ ] Update DESIGN.md, README.md and docs/sheets CSV statuses

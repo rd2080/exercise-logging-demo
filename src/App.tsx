@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useRef, useState } from 'react'
+import { lazy, startTransition, Suspense, useEffect, useRef, useState } from 'react'
 import { DataToggle } from './components/DataToggle'
 import { library, session } from './data/fixtures'
 import type { Entry } from './entries'
@@ -41,7 +41,9 @@ function newId(): string {
 }
 
 function Screen() {
-  const [stage, setStage] = useState<Stage>(initialStage)
+  const [stage, setStageNow] = useState<Stage>(initialStage)
+  // Moving to a screen that loads on demand keeps the current screen until the new one is ready.
+  const setStage = (s: Stage) => startTransition(() => setStageNow(s))
   // Exercise detail: which exercise, and which tab it was opened from.
   const [detailId, setDetailId] = useState(() => new URLSearchParams(window.location.search).get('id') ?? '')
   const [detailFrom, setDetailFrom] = useState<TabId>(() =>
