@@ -109,6 +109,23 @@
       "forLevels": [
         "sitting",
         "light"
+      ],
+      "level": "Beginner",
+      "tags": [
+        "Strength",
+        "Bodyweight"
+      ],
+      "stages": [
+        {
+          "name": "Lace up",
+          "weeks": 2,
+          "focus": "Learn the movements and find your starting numbers."
+        },
+        {
+          "name": "Build",
+          "weeks": 2,
+          "focus": "Add reps each week and keep your form."
+        }
       ]
     },
     {
@@ -121,6 +138,28 @@
       "forLevels": [
         "moderate",
         "very"
+      ],
+      "level": "Intermediate",
+      "tags": [
+        "Skill",
+        "Strength"
+      ],
+      "stages": [
+        {
+          "name": "Wall holds",
+          "weeks": 3,
+          "focus": "Get comfortable upside down against a wall."
+        },
+        {
+          "name": "Pike push-ups",
+          "weeks": 3,
+          "focus": "Build the pushing strength for the press."
+        },
+        {
+          "name": "Negatives",
+          "weeks": 2,
+          "focus": "Lower slowly from a handstand and own the bottom."
+        }
       ]
     }
   ]

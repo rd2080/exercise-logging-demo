@@ -15,6 +15,9 @@ export interface Programme {
   needs: string
   summary: string
   forLevels: string[]
+  level: string
+  tags: string[]
+  stages: { name: string; weeks: number; focus: string }[]
 }
 
 export const GOALS = data.goals as Option[]

@@ -49,6 +49,7 @@ function cleanEntry(x: unknown): Entry | null {
   if (!values) return null
   if (e.exerciseId !== undefined && (typeof e.exerciseId !== 'string' || e.exerciseId.length > 80)) return null
   if (e.source !== undefined && e.source !== 'workout' && e.source !== 'hand') return null
+  if (e.at !== undefined && !isTimestamp(e.at)) return null
   return { ...(e as unknown as Entry), id: e.id, name, trackingType, values }
 }
 
@@ -59,6 +60,11 @@ function backUp(raw: string) {
   } catch {
     // Nothing more we can do.
   }
+}
+
+/** A plausible time: after the year 2001 and before the year 2100. */
+export function isTimestamp(x: unknown): x is number {
+  return typeof x === 'number' && Number.isFinite(x) && x > 1e12 && x < 4.1e12
 }
 
 /** Reads saved entries. Anything missing, unreadable or from another version becomes an empty list. */

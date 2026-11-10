@@ -2,10 +2,12 @@ import { useEffect, useRef, useState } from 'react'
 import { DataToggle } from './components/DataToggle'
 import { library, session } from './data/fixtures'
 import type { Entry } from './entries'
+import { loadChosen, programmeById, progressFor, saveChosen, type Chosen } from './lib/programme'
 import { loadEntries, saveEntries, ENTRIES_KEY } from './lib/storage'
 import { EMPTY_ANSWERS, type Answers } from './onboarding'
 import { ExerciseDetailScreen } from './screens/ExerciseDetailScreen'
 import { ExercisesScreen } from './screens/ExercisesScreen'
+import { MyProgrammeScreen } from './screens/MyProgrammeScreen'
 import { PlayerScreen } from './screens/PlayerScreen'
 import { ProgrammeScreen } from './screens/ProgrammeScreen'
 import { ProgressScreen } from './screens/ProgressScreen'
@@ -14,8 +16,8 @@ import { SetupScreen } from './screens/SetupScreen'
 import { TodayScreen } from './screens/TodayScreen'
 import { TabBar, type TabId } from './components/TabBar'
 
-type Stage = 'setup' | 'programme' | 'reminders' | TabId | 'player' | 'exercise'
-const STAGES: Stage[] = ['programme', 'reminders', 'today', 'exercises', 'progress', 'player', 'exercise']
+type Stage = 'setup' | 'programme' | 'reminders' | TabId | 'player' | 'exercise' | 'myprogramme'
+const STAGES: Stage[] = ['programme', 'reminders', 'today', 'exercises', 'progress', 'player', 'exercise', 'myprogramme']
 
 function initialStage(): Stage {
   const s = new URLSearchParams(window.location.search).get('stage')
@@ -49,10 +51,18 @@ function Screen() {
   const [answers, setAnswers] = useState<Answers>(EMPTY_ANSWERS)
   const [entries, setEntries] = useState<Entry[]>(loadEntries)
   const [saveFailed, setSaveFailed] = useState(false)
+  const [chosen, setChosen] = useState<Chosen | null>(loadChosen)
+  const chosenProgramme = programmeById(chosen?.id)
+  const now = Date.now()
+  const programmeRow = (() => {
+    if (!chosen || !chosenProgramme) return null
+    const pr = progressFor(chosenProgramme, chosen, entries, now)
+    return { name: chosenProgramme.name, status: pr.finished ? 'Programme finished' : `Week ${pr.week} of ${pr.weeks}` }
+  })()
   // The detail screen can show anything in the plan or the library.
   const allExercises = [...session.exercises, ...library.filter((l) => !session.exercises.some((p) => p.id === l.id))]
   const addEntry = (e: Omit<Entry, 'id'>) =>
-    setEntries((list) => [{ ...e, id: newId() }, ...list])
+    setEntries((list) => [{ ...e, at: e.at ?? Date.now(), id: newId() }, ...list])
 
   const updateEntry = (id: string, values: Entry['values']) =>
     setEntries((list) => list.map((e) => (e.id === id ? { ...e, values } : e)))
@@ -84,7 +94,12 @@ function Screen() {
       <ProgrammeScreen
         answers={answers}
         onBack={() => setStage('setup')}
-        onStart={() => setStage('reminders')}
+        onStart={(id) => {
+          const c = { id, startedAt: Date.now() }
+          setChosen(c)
+          saveChosen(c)
+          setStage('reminders')
+        }}
       />
     )
   if (stage === 'reminders') return <RemindersScreen onDone={() => setStage('progress')} />
@@ -104,7 +119,23 @@ function Screen() {
           onStart={() => setStage('player')}
           onChoose={() => setStage('setup')}
           onOpen={openExercise('today')}
+          programme={programmeRow}
+          onProgramme={() => {
+            setStage(programmeRow ? 'myprogramme' : 'setup')
+            window.scrollTo(0, 0)
+          }}
         />}
+      {stage === 'myprogramme' && (
+        <MyProgrammeScreen
+          programme={chosenProgramme}
+          chosen={chosen}
+          entries={entries}
+          now={now}
+          onBack={() => setStage('today')}
+          onStart={() => setStage('player')}
+          onChange={() => setStage('setup')}
+        />
+      )}
       {stage === 'exercises' && (
         <ExercisesScreen exercises={library} onStart={() => setStage('setup')} onOpen={openExercise('exercises')} />
       )}
@@ -128,7 +159,7 @@ function Screen() {
           onDelete={deleteEntry}
         />
       )}
-      <TabBar current={stage === 'exercise' ? detailFrom : stage} onChange={setStage} />
+      <TabBar current={stage === 'exercise' ? detailFrom : stage === 'myprogramme' ? 'today' : stage} onChange={setStage} />
     </>
   )
 }

@@ -8,6 +8,8 @@ export interface Entry {
   values: SetValues
   /** Plan exercise this came from, if any. */
   exerciseId?: string
+  /** When it was logged (milliseconds since 1970). Older saved entries have none. */
+  at?: number
   /** Where it was logged. Missing on older saved entries, which were all by hand. */
   source?: 'workout' | 'hand'
 }
