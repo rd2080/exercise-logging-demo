@@ -1,5 +1,7 @@
 import { CalendarCheck, ChartNoAxesColumn, Dumbbell } from 'lucide-react'
+import { motion, useReducedMotion } from 'motion/react'
 import type { CSSProperties, ReactNode } from 'react'
+import { TAPE_S } from '../lib/motion'
 
 export type TabId = 'today' | 'exercises' | 'progress'
 
@@ -16,6 +18,7 @@ interface TabBarProps {
 
 /** The one floating element on the main screens. The current tab is marked with a tape bar. */
 export function TabBar({ current, onChange }: TabBarProps) {
+  const reduce = useReducedMotion()
   return (
     <nav
       aria-label="Main"
@@ -31,14 +34,27 @@ export function TabBar({ current, onChange }: TabBarProps) {
               <button
                 type="button"
                 aria-current={on ? 'page' : undefined}
-                onClick={() => !on && onChange(t.id)}
+                onClick={() =>
+                  on
+                    ? window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' })
+                    : onChange(t.id)
+                }
                 className={`press relative flex h-16 w-full flex-col items-center justify-center gap-1 ${on ? 'text-ink' : 'text-muted'}`}
               >
                 {on && (
                   <span
-                    className="absolute top-0 left-1/2 h-1 w-10 -translate-x-1/2 bg-(--tape)"
+                    className="absolute top-0 left-1/2 h-1 w-12 -translate-x-1/2"
+                    style={{ '--cut': '4px' } as CSSProperties}
                     aria-hidden="true"
-                  />
+                  >
+                    <motion.span
+                      key={t.id}
+                      className="tape-cut tape-fill block h-full w-full"
+                      initial={{ clipPath: 'polygon(0% 0%, 0% 0%, -15% 100%, 0% 100%)' }}
+                      animate={{ clipPath: 'polygon(0% 0%, 115% 0%, 100% 100%, 0% 100%)' }}
+                      transition={{ duration: reduce ? 0 : TAPE_S, ease: [0.16, 1, 0.3, 1] }}
+                    />
+                  </span>
                 )}
                 {t.icon}
                 <span className="text-[15px] leading-none font-semibold">{t.label}</span>

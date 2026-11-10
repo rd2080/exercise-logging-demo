@@ -135,7 +135,7 @@ A brown-black ground and three warm surface steps, with four tape colours that e
 - **Tape Ink** (#14150f): text laid on any tape colour.
 
 ### Named Rules
-**The One Tape Rule.** A screen shows one exercise's tape colour at a time through `--tape`. Other tape colours appear only as completed or pending segments in the session strip. Components read `var(--tape)`; they never hard-code a tape hex.
+**The One Tape Rule.** A screen shows one exercise's tape colour at a time through `--tape`. Other tape colours appear only as completed or pending segments in the session strip, in the summary of logged sets, and as the tracking-type key on the Exercises list. Today's rows stay neutral because the Start workout button already owns the tape colour there. Components read `var(--tape)`; they never hard-code a tape hex.
 
 **The Tape Ink Rule.** Text on tape is always Tape Ink (#14150f), never ivory or black.
 
@@ -195,10 +195,10 @@ One parallelogram segment per exercise. Unstarted: Worn Mat Brown. Current: Seam
 24px radius, Chalkboard Brown, 16px padding, 16px internal gap, no border or shadow. Used for the input panel, rest panel, hold panel and done panel. The rest bar inside is an 8px pill track whose tape fill drains with one linear scaleX animation (no per-frame updates).
 
 ### Tab bar
-Three equal tabs (Today, Exercises, Progress), pinned to the bottom, 64px tall plus the safe-area inset, on the ground colour with a Seam Brown top hairline. Each tab is an icon over a 15px semibold sentence-case label. Inactive tabs are muted ivory. The current tab is ivory with a 40 by 4px tape-colour bar on its top edge, the same "you are here" marker used for the current set and current goal. The bar shows only on Today, Exercises and Progress and is hidden in the player, set up, programmes and reminders. On those three screens it is the one floating element, so a main button on them is inline, not pinned, and the page carries 112px of bottom padding to clear the bar.
+Three equal tabs (Today, Exercises, Progress), pinned to the bottom, 64px tall plus the safe-area inset, on the ground colour with a Seam Brown top hairline. Each tab is an icon over a 15px semibold sentence-case label. Inactive tabs are muted ivory. The current tab is ivory with a 48 by 4px grain tape marker on its top edge, cut on a 4px slant and laid with the standard 150ms wipe when the tab changes (instant under reduced motion). It is the same "you are here" idea as the 4px bar on the current set and current goal. Tapping the current tab scrolls the page to the top. The bar shows only on Today, Exercises and Progress and is hidden in the player, set up, programmes and reminders. On those three screens it is the one floating element, so a main button on them is inline, not pinned, and the page carries 112px of bottom padding to clear the bar.
 
 ### Exercise row
-Flat row with hairline separators: a small slanted tape slot in the exercise's tracking-type colour, a 20px semibold name (two lines at most), and a muted line with the type and target. Not tappable yet.
+Flat row with hairline separators: a small slanted slot (neutral on Today, in the tracking-type colour on the Exercises list as a key), a 20px semibold name (two lines at most on Today, full on Exercises), and a muted line with the type and a compact target such as `Reps · 3 × 10`. Not tappable yet.
 
 ### Empty state (template)
 For any page with nothing to show yet: an authored illustration (five empty parallelogram slots in Worn Mat Brown with a short grain tape tail entering the first), a 36px bold headline, one sentence in muted text saying where the data will appear, and one full-width 64px pill in the tape colour that names the result. It is the one place the main button sits inline instead of pinned, because the page scrolls and a pinned button would cover the content below.

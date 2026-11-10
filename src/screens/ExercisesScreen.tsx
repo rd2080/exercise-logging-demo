@@ -35,7 +35,7 @@ export function ExercisesScreen({ session, onStart }: ExercisesScreenProps) {
         ) : (
           <ul className="m-0 flex list-none flex-col p-0" data-testid="exercise-list">
             {session.exercises.map((e) => (
-              <ExerciseRow key={e.id} exercise={e} />
+              <ExerciseRow key={e.id} exercise={e} keyed />
             ))}
           </ul>
         )}

@@ -82,3 +82,18 @@ export const SUMMARY_MIN: Record<TrackingType, string> = {
   time: '5rem',
   weight_reps: '7rem',
 }
+
+/** Compact target for list rows: sets × amount, without repeating the type name. */
+export function rowSummary(ex: Exercise): string {
+  const t = ex.target
+  switch (ex.trackingType) {
+    case 'reps':
+      return `${ex.sets} × ${t.reps}`
+    case 'reps_per_side':
+      return `${ex.sets} × ${t.left} each side`
+    case 'time':
+      return `${ex.sets} × ${t.seconds} s`
+    case 'weight_reps':
+      return `${ex.sets} × ${t.reps} at ${t.kg} kg`
+  }
+}

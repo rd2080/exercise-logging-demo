@@ -2,6 +2,8 @@ import { TAPE_S } from '../lib/motion'
 import { ArrowLeft } from 'lucide-react'
 import { motion, useReducedMotion } from 'motion/react'
 import { useState, type CSSProperties } from 'react'
+import { EmptySlots } from '../components/EmptySlots'
+import { EmptyState } from '../components/EmptyState'
 import { Slot } from '../components/Slot'
 import { PROGRAMMES, recommended, summaryText, type Answers, type Programme } from '../onboarding'
 
@@ -47,8 +49,29 @@ function WeekStrip({ programme, on }: { programme: Programme; on: boolean }) {
   )
 }
 
-export function ProgrammeScreen({ answers, onBack, onStart }: ProgrammeScreenProps) {
-  const best = recommended(answers)
+export function ProgrammeScreen(props: ProgrammeScreenProps) {
+  const best = recommended(props.answers)
+  if (!best) {
+    return (
+      <div
+        className="mx-auto flex min-h-dvh w-full max-w-[480px] flex-col px-4 pt-[max(2rem,env(safe-area-inset-top))]"
+        style={{ '--tape': 'var(--color-tape-reps)' } as CSSProperties}
+        data-testid="programmes-empty"
+      >
+        <EmptyState
+          illustration={<EmptySlots />}
+          title="No programmes yet"
+          body="Programmes will be listed here once they are available."
+          actionLabel="Back to set up"
+          onAction={props.onBack}
+        />
+      </div>
+    )
+  }
+  return <Choice {...props} best={best} />
+}
+
+function Choice({ answers, onBack, onStart, best }: ProgrammeScreenProps & { best: { id: string; reason: string } }) {
   const [selected, setSelected] = useState(best.id)
   const chosen = PROGRAMMES.find((p) => p.id === selected)!
   const others = [summaryText(answers, 'activity'), summaryText(answers, 'equipment')]

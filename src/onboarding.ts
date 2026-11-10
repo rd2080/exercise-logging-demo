@@ -77,7 +77,8 @@ export function pullupConsequence(p: Answers['pullup']): string {
   return 'Your plan will skip hanging and swinging pull-up bar exercises.'
 }
 
-export function recommended(a: Answers): { id: string; reason: string } {
+export function recommended(a: Answers): { id: string; reason: string } | null {
+  if (PROGRAMMES.length === 0) return null
   if (a.goals[0] === 'skill') {
     return { id: 'handstand', reason: 'Matches your first goal: learn a skill' }
   }

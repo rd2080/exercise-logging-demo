@@ -50,7 +50,7 @@ export function TodayScreen({ session, onStart, onChoose }: TodayScreenProps) {
               </h2>
               <ul className="m-0 flex list-none flex-col p-0">
                 {session.exercises.map((e) => (
-                  <ExerciseRow key={e.id} exercise={e} />
+                  <ExerciseRow key={e.id} exercise={e} clamp />
                 ))}
               </ul>
             </section>
