@@ -1,4 +1,4 @@
-import data from '../fixtures/onboarding.json'
+import { onboarding as data } from './data/fixtures'
 
 export interface Option {
   id: string

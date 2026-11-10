@@ -1,0 +1,43 @@
+{
+  "_note": "Worst-case fixture for break-ui. Plausible values, not real user data.",
+  "name": "Full body strength and conditioning, week 6 of 12",
+  "restSeconds": 180,
+  "exercises": [
+    {
+      "id": "push-up",
+      "name": "Single-arm kettlebell Turkish get-up, alternating sides",
+      "trackingType": "reps",
+      "sets": 8,
+      "target": { "reps": 100 },
+      "last": { "reps": 100 },
+      "cue": "Keep your eyes on the weight, your wrist stacked over your elbow and your free arm away from your body at about forty-five degrees throughout the whole movement."
+    },
+    {
+      "id": "reverse-lunge",
+      "name": "Fentes arrière avec haltères (jambe gauche puis droite)",
+      "trackingType": "reps_per_side",
+      "sets": 5,
+      "target": { "left": 12, "right": 15 },
+      "last": null,
+      "cue": "Squeeze."
+    },
+    {
+      "id": "plank",
+      "name": "Plank",
+      "trackingType": "time",
+      "sets": 6,
+      "target": { "seconds": 300 },
+      "last": { "seconds": 285 },
+      "cue": "Squeeze your glutes and keep your hips level."
+    },
+    {
+      "id": "goblet-squat",
+      "name": "Zercher squat",
+      "trackingType": "weight_reps",
+      "sets": 10,
+      "target": { "kg": 142.5, "reps": 12 },
+      "last": { "kg": 142.5, "reps": 12 },
+      "cue": "Keep your elbows inside your knees and your chest tall."
+    }
+  ]
+}

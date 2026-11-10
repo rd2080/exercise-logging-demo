@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react'
-import goalData from '../../fixtures/goals.json'
+import { goalsData as goalData } from '../data/fixtures'
 import { EmptyState } from '../components/EmptyState'
 import { GoalList, type Goal } from '../components/GoalList'
 

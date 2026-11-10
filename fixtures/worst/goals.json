@@ -1,0 +1,10 @@
+{
+  "_note": "Worst-case fixture for break-ui. Plausible values, not real user data.",
+  "goals": [
+    { "id": "first-set", "title": "First set", "requirement": "Log your first set", "target": 1 },
+    { "id": "full-session", "title": "Complete a full-body session from start to finish", "requirement": "Finish every exercise in a workout without skipping a single rest period or ending early", "target": 1 },
+    { "id": "hit-plan", "title": "Hit the plan", "requirement": "Match your target on every set of a session", "target": 10 },
+    { "id": "week-one", "title": "Week one", "requirement": "Complete three sessions in your first week", "target": 3 }
+  ],
+  "progress": { "hit-plan": 7, "week-one": 3 }
+}

@@ -1,12 +1,12 @@
 import { useState } from 'react'
-import session from '../fixtures/session.json'
+import { DataToggle } from './components/DataToggle'
+import { session } from './data/fixtures'
 import { EMPTY_ANSWERS, type Answers } from './onboarding'
 import { PlayerScreen } from './screens/PlayerScreen'
 import { ProgrammeScreen } from './screens/ProgrammeScreen'
 import { ProgressScreen } from './screens/ProgressScreen'
 import { RemindersScreen } from './screens/RemindersScreen'
 import { SetupScreen } from './screens/SetupScreen'
-import type { Session } from './types'
 
 type Stage = 'setup' | 'programme' | 'reminders' | 'progress' | 'player'
 
@@ -15,7 +15,7 @@ function initialStage(): Stage {
   return s === 'player' || s === 'programme' || s === 'reminders' || s === 'progress' ? s : 'setup'
 }
 
-export default function App() {
+function Screen() {
   const [stage, setStage] = useState<Stage>(initialStage)
   const [answers, setAnswers] = useState<Answers>(EMPTY_ANSWERS)
 
@@ -31,5 +31,14 @@ export default function App() {
     )
   if (stage === 'reminders') return <RemindersScreen onDone={() => setStage('progress')} />
   if (stage === 'progress') return <ProgressScreen onStart={() => setStage('player')} />
-  return <PlayerScreen session={session as Session} />
+  return <PlayerScreen session={session} />
+}
+
+export default function App() {
+  return (
+    <>
+      <Screen />
+      <DataToggle />
+    </>
+  )
 }
