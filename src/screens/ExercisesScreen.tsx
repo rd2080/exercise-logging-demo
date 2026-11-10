@@ -34,7 +34,7 @@ export function ExercisesScreen({ exercises, onStart, onOpen }: ExercisesScreenP
           <p className="m-0 text-lg text-muted" role="status" data-testid="result-count">
             {filtered ? `${shown.length} of ${total}` : total} {total === 1 ? 'exercise' : 'exercises'}
           </p>
-          {total > 0 && (
+          {total > 0 && shown.length > 0 && (
             <div
               className="tape-cut mt-2 h-3 overflow-hidden bg-surface-2"
               style={{ '--cut': '5px' } as CSSProperties}
