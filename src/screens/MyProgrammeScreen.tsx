@@ -1,5 +1,5 @@
 import { ArrowLeft } from 'lucide-react'
-import type { CSSProperties } from 'react'
+import { useState, type CSSProperties } from 'react'
 import { EmptySlots } from '../components/EmptySlots'
 import { EmptyState } from '../components/EmptyState'
 import { WeekDots } from '../components/WeekDots'
@@ -15,6 +15,7 @@ interface MyProgrammeScreenProps {
   onBack: () => void
   onStart: () => void
   onChange: () => void
+  onAdvance: () => void
 }
 
 function Back({ onBack }: { onBack: () => void }) {
@@ -34,7 +35,8 @@ function Back({ onBack }: { onBack: () => void }) {
 const shell = 'mx-auto flex min-h-dvh w-full max-w-[480px] flex-col'
 const main = 'flex flex-1 flex-col gap-6 px-4 pt-[max(0.75rem,env(safe-area-inset-top))] pb-28'
 
-export function MyProgrammeScreen({ programme, chosen, entries, now, onBack, onStart, onChange }: MyProgrammeScreenProps) {
+export function MyProgrammeScreen({ programme, chosen, entries, now, onBack, onStart, onChange, onAdvance }: MyProgrammeScreenProps) {
+  const [confirming, setConfirming] = useState(false)
   const tape = { '--tape': 'var(--color-tape-reps)' } as CSSProperties
   if (!programme || !chosen) {
     return (
@@ -88,6 +90,16 @@ export function MyProgrammeScreen({ programme, chosen, entries, now, onBack, onS
           <WeekDots planned={pr.planned} done={pr.done} today={pr.today} />
           <p className="num m-0 text-[17px] text-muted" data-testid="week-summary">
             {pr.sessionsThisWeek} of {pr.plannedThisWeek} sessions this week
+          </p>
+          <p className="num m-0 text-[17px]" data-testid="streak">
+            <span className="font-semibold">
+              {pr.streak > 0 ? `${pr.streak} ${pr.streak === 1 ? 'week' : 'weeks'} in a row` : 'No streak yet'}
+            </span>
+            <span className="text-muted">
+              {pr.streak > 0
+                ? ' with a session'
+                : '. Log a workout this week to start one.'}
+            </span>
           </p>
         </section>
 
@@ -169,6 +181,48 @@ export function MyProgrammeScreen({ programme, chosen, entries, now, onBack, onS
             ))}
           </ol>
         </section>
+
+        {pr.next && stage && (
+          <section className="flex flex-col gap-3" aria-labelledby="advance-heading">
+            <h2 id="advance-heading" className="font-display m-0 text-2xl leading-tight font-bold">
+              Ready to move on?
+            </h2>
+            {!confirming ? (
+              <>
+                <p className="m-0 text-lg text-pretty text-muted">
+                  Next is Stage {pr.stages.indexOf(pr.next) + 1}: {pr.next.name}. The {stage.size - stage.done} sessions
+                  left in this stage will count as done.
+                </p>
+                <button
+                  type="button"
+                  className="press h-14 w-full rounded-full bg-surface-2 text-xl font-semibold"
+                  onClick={() => setConfirming(true)}
+                  data-testid="advance"
+                >
+                  Move to stage {pr.stages.indexOf(pr.next) + 1}
+                </button>
+              </>
+            ) : (
+              <div className="flex flex-col gap-3" role="group" aria-label="Confirm moving to the next stage" data-testid="advance-confirm">
+                <p className="m-0 text-lg text-pretty">This cannot be undone. Move on to {pr.next.name}?</p>
+                <button
+                  type="button"
+                  className="press h-14 w-full rounded-full bg-(--tape) text-xl font-bold text-on-tape"
+                  onClick={() => {
+                    onAdvance()
+                    setConfirming(false)
+                  }}
+                  data-testid="advance-yes"
+                >
+                  Move to stage {pr.stages.indexOf(pr.next) + 1}
+                </button>
+                <button type="button" className="press h-14 w-full rounded-full text-xl font-semibold" onClick={() => setConfirming(false)}>
+                  Stay on this stage
+                </button>
+              </div>
+            )}
+          </section>
+        )}
 
         <section className="flex flex-col gap-3" aria-labelledby="need-heading">
           <h2 id="need-heading" className="font-display m-0 text-2xl leading-tight font-bold">

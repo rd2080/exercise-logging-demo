@@ -134,6 +134,15 @@ function Screen() {
           onBack={() => setStage('today')}
           onStart={() => setStage('player')}
           onChange={() => setStage('setup')}
+          onAdvance={() => {
+            if (!chosen || !chosenProgramme) return
+            const pr = progressFor(chosenProgramme, chosen, entries, now)
+            const cur = pr.stages.find((s) => s.current)
+            if (!cur || !pr.next) return
+            const c = { ...chosen, skipped: (chosen.skipped ?? 0) + (cur.size - cur.done) }
+            setChosen(c)
+            saveChosen(c)
+          }}
         />
       )}
       {stage === 'exercises' && (

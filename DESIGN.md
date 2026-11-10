@@ -251,3 +251,6 @@ Chalkboard Brown 24px-radius figure at 240:104 (240:68 on phones under 700px tal
 - **Don't** use drop shadows or glows to lift surfaces.
 - **Don't** show a work timer for reps or reps per side; countdowns belong only to rest and timed holds.
 - **Don't** add promotion, decoration or interruptions during an exercise.
+
+### Streak and moving to the next stage
+Under the weekly dots, one line: "3 weeks in a row with a session" (weeks with at least one finished workout; a quiet week so far does not break it, a missed full week does), or "No streak yet. Log a workout this week to start one." Before "What you need", when a later stage exists, "Ready to move on?" names the next stage and says the sessions left in this one count as done, with a "Move to stage 2" button. Tapping it swaps in an inline confirm ("This cannot be undone") with a tape-filled "Move to stage 2" and a quiet "Stay on this stage". The credit is saved as `skipped` in `exercise-demo:programme` (validated on read, optional, 1 to 1000). The last stage shows no move on.

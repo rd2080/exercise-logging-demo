@@ -7,6 +7,8 @@ import { addDays, dayIndex, mondayOf, startOfDay, weeksBetween } from './weeks'
 export interface Chosen {
   id: string
   startedAt: number
+  /** Sessions credited by moving on to the next stage early. */
+  skipped?: number
 }
 
 export const PROGRAMME_KEY = 'exercise-demo:programme'
@@ -15,9 +17,13 @@ export function loadChosen(): Chosen | null {
   try {
     const raw = window.localStorage.getItem(PROGRAMME_KEY)
     if (!raw) return null
-    const data = JSON.parse(raw) as { v?: number; id?: unknown; startedAt?: unknown }
+    const data = JSON.parse(raw) as { v?: number; id?: unknown; startedAt?: unknown; skipped?: unknown }
     if (data?.v !== 1 || typeof data.id !== 'string' || data.id.length > 40 || !isTimestamp(data.startedAt)) return null
-    return { id: data.id, startedAt: data.startedAt }
+    const skipped =
+      typeof data.skipped === 'number' && Number.isInteger(data.skipped) && data.skipped > 0 && data.skipped <= 1000
+        ? data.skipped
+        : 0
+    return { id: data.id, startedAt: data.startedAt, ...(skipped ? { skipped } : {}) }
   } catch {
     return null
   }
@@ -74,6 +80,10 @@ export interface ProgrammeProgress {
   today: number
   sessionsThisWeek: number
   plannedThisWeek: number
+  /** Weeks in a row with at least one session. This week counts once it has one. */
+  streak: number
+  /** The stage after the current one, when the user can move on to it. */
+  next: StageProgress | null
 }
 
 /**
@@ -87,7 +97,7 @@ export function progressFor(p: Programme, c: Chosen, entries: Entry[], now: numb
     if (e.source === 'workout' && typeof e.at === 'number' && e.at >= from) days.add(startOfDay(e.at))
   }
   const sessionsTotal = p.weeks * p.perWeek
-  const sessionsDone = Math.min(days.size, sessionsTotal)
+  const sessionsDone = Math.min(days.size + (c.skipped ?? 0), sessionsTotal)
   const week = weeksBetween(c.startedAt, now) + 1
   const finished = week > p.weeks || sessionsDone >= sessionsTotal
 
@@ -122,6 +132,20 @@ export function progressFor(p: Programme, c: Chosen, entries: Entry[], now: numb
     if (first) first.current = true
   }
 
+  const cur = stages.findIndex((st) => st.current)
+  const next = cur >= 0 && cur < stages.length - 1 ? stages[cur + 1] : null
+
+  const weekSet = new Set<number>()
+  for (const d of days) weekSet.add(mondayOf(d))
+  const startMonday = mondayOf(c.startedAt)
+  let cursor = mondayOf(now)
+  if (!weekSet.has(cursor)) cursor = addDays(cursor, -7) // a quiet week so far has not broken it yet
+  let streak = 0
+  while (cursor >= startMonday && weekSet.has(cursor)) {
+    streak++
+    cursor = addDays(cursor, -7)
+  }
+
   const monday = mondayOf(now)
   const done = Array.from({ length: 7 }, (_, i) => days.has(addDays(monday, i)))
   const planned = plannedDays(p.perWeek)
@@ -137,5 +161,7 @@ export function progressFor(p: Programme, c: Chosen, entries: Entry[], now: numb
     today: dayIndex(now),
     sessionsThisWeek: done.filter(Boolean).length,
     plannedThisWeek: planned.filter(Boolean).length,
+    streak,
+    next,
   }
 }

@@ -259,3 +259,47 @@ for (const width of [320, 390]) {
     expect(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth)).toBe(false)
   })
 }
+
+test('the streak counts weeks in a row with a session, and a quiet week so far does not break it', async ({ page }) => {
+  // Programme started 26 Oct; sessions in weeks of 26 Oct, 2 Nov. This week (9 Nov) has none yet.
+  await setup(page, { startedAt: new Date(2026, 9, 26, 9).getTime(), entries: [entry('a', new Date(2026, 9, 27, 11).getTime()), entry('b', new Date(2026, 10, 3, 11).getTime())] })
+  await page.goto('/?stage=myprogramme')
+  await expect(page.getByTestId('streak')).toContainText('2 weeks in a row')
+  await page.getByTestId('programme-back').click()
+})
+
+test('no sessions means no streak, with a way to start one', async ({ page }) => {
+  await setup(page)
+  await page.goto('/?stage=myprogramme')
+  await expect(page.getByTestId('streak')).toContainText('No streak yet')
+})
+
+test('a missed week resets the streak', async ({ page }) => {
+  await setup(page, { startedAt: new Date(2026, 9, 19, 9).getTime(), entries: [entry('a', new Date(2026, 9, 20, 11).getTime()), entry('b', at(10))] })
+  await page.goto('/?stage=myprogramme')
+  await expect(page.getByTestId('streak')).toContainText('1 week in a row')
+})
+
+test('moving to the next stage asks first, credits the rest of the stage and survives a reload', async ({ page }) => {
+  await setup(page)
+  await page.goto('/?stage=myprogramme')
+  await expect(page.getByTestId('programme-status')).toContainText('Stage 1: Lace up')
+  await page.getByTestId('advance').click()
+  await expect(page.getByTestId('advance-confirm')).toBeVisible()
+  await page.getByRole('button', { name: 'Stay on this stage' }).click()
+  await expect(page.getByTestId('programme-status')).toContainText('Stage 1: Lace up')
+  await page.getByTestId('advance').click()
+  await page.getByTestId('advance-yes').click()
+  await expect(page.getByTestId('programme-status')).toContainText('Stage 2')
+  await page.reload()
+  await expect(page.getByTestId('programme-status')).toContainText('Stage 2')
+  const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('exercise-demo:programme')!))
+  expect(saved.skipped).toBeGreaterThan(0)
+})
+
+test('the last stage offers no move on', async ({ page }) => {
+  await setup(page, { entries: [] })
+  await page.addInitScript(() => localStorage.setItem('exercise-demo:programme', JSON.stringify({ v: 1, id: 'foundation', startedAt: Date.now(), skipped: 1000 })))
+  await page.goto('/?stage=myprogramme')
+  await expect(page.getByTestId('advance')).toHaveCount(0)
+})
