@@ -87,7 +87,7 @@ for (const width of [320, 390]) {
       id: `e${i}`,
       name: 'Single-arm kettlebell Turkish get-up, alternating sides',
       trackingType: 'reps',
-      values: { reps: 100 + i },
+      values: { reps: 90 + i },
       exerciseId: 'push-up',
     }))
     await seed(page, entries)
