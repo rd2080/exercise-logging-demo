@@ -2,6 +2,7 @@ import { Bookmark, ChevronRight } from 'lucide-react'
 import type { CSSProperties } from 'react'
 import type { Exercise } from '../types'
 import { CATEGORY_LABELS, EQUIPMENT_LABELS, LEVEL_LABELS } from '../lib/library'
+import { ExerciseThumb } from './DemoFigure'
 import { TYPE_META, rowSummary } from '../lib/tracking'
 
 interface ExerciseRowProps {
@@ -50,6 +51,9 @@ export function ExerciseRow({ exercise, keyed = false, clamp = false, onOpen, sh
           </span>
         )}
       </span>
+      {showAttributes && (
+        <ExerciseThumb exerciseId={exercise.id} caption={exercise.category ? CATEGORY_LABELS[exercise.category] : 'Demo'} />
+      )}
     </>
   )
   const layout = 'flex min-h-[72px] w-full items-start gap-3 py-3'

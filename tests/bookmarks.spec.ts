@@ -53,3 +53,20 @@ test('removing a saved exercise says so', async ({ page }) => {
   const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('exercise-demo:saved')!).ids)
   expect(saved).toEqual([])
 })
+
+test('library rows show a drawn thumbnail where one exists and a marked placeholder tile otherwise', async ({ page }) => {
+  await page.goto('/?stage=exercises')
+  const rows = page.getByTestId('exercise-list').getByRole('listitem')
+  await expect(rows.first().getByTestId('thumb-figure')).toBeVisible() // push-up has a figure
+  await expect(rows.nth(1).getByTestId('thumb-placeholder')).toHaveText('Push') // incline push-up does not
+  const box = (await rows.first().getByTestId('thumb-figure').boundingBox())!
+  expect(box.width).toBeGreaterThanOrEqual(48)
+  expect(await rows.first().evaluate((r) => r.scrollWidth <= r.clientWidth)).toBe(true)
+})
+
+test('thumbnails do not make rows overflow at 320 with long names', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 640 })
+  await page.goto('/?stage=exercises&data=worst')
+  const ok = await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)
+  expect(ok).toBe(true)
+})

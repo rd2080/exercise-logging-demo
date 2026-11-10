@@ -283,3 +283,23 @@ export function DemoFigure({
     </figure>
   )
 }
+
+/** A small still of the start pose for list rows, or a marked placeholder tile with the category when no figure is drawn yet. */
+export function ExerciseThumb({ exerciseId, caption }: { exerciseId: string; caption: string }) {
+  const pair = POSES[exerciseId]
+  return (
+    <span
+      className="mt-0.5 grid h-14 w-16 shrink-0 place-items-center overflow-hidden rounded-xl bg-surface-2"
+      aria-hidden="true"
+      data-testid={pair ? 'thumb-figure' : 'thumb-placeholder'}
+    >
+      {pair ? (
+        <span className="block h-full w-full p-1">
+          <StaticFrame pose={pair.start} prop={pair.prop} view={pair.view} />
+        </span>
+      ) : (
+        <span className="text-[15px] font-semibold text-muted">{caption}</span>
+      )}
+    </span>
+  )
+}
