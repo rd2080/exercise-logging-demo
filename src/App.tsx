@@ -63,6 +63,7 @@ function Screen() {
         session={session}
         onExit={() => setStage('progress')}
         onFinish={() => setStage('today')}
+        onLog={(list) => list.forEach(addEntry)}
       />
     )
   return (

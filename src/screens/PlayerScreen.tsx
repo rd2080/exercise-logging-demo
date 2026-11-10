@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react'
 import { History, X } from 'lucide-react'
+import { useReducedMotion } from 'motion/react'
 import { DemoFigure } from '../components/DemoFigure'
 import { EmptySlots } from '../components/EmptySlots'
 import { EmptyState } from '../components/EmptyState'
@@ -14,6 +15,7 @@ import {
   initialDraft,
   targetText,
 } from '../lib/tracking'
+import type { Entry } from '../entries'
 import type { PrefillSource, SetValues, Session } from '../types'
 
 type Phase =
@@ -39,9 +41,20 @@ function Clock({ endsAt, mode }: { endsAt: number; mode: 'clock' | 'seconds' }) 
 /** A rest bar that drains on the compositor: one linear scaleX animation, no per-frame updates. */
 function RestBar({ endsAt, total }: { endsAt: number; total: number }) {
   const ref = useRef<HTMLDivElement>(null)
+  const reduce = useReducedMotion()
   useEffect(() => {
     const el = ref.current
     if (!el) return
+    if (reduce) {
+      // No animation: show the remaining fraction and update it once a second.
+      const set = () => {
+        const left = Math.max(0, endsAt - Date.now())
+        el.style.transform = `scaleX(${Math.min(1, left / (total * 1000))})`
+      }
+      set()
+      const id = setInterval(set, 1000)
+      return () => clearInterval(id)
+    }
     const remaining = Math.max(0, endsAt - Date.now())
     const from = Math.min(1, remaining / (total * 1000))
     const anim = el.animate(
@@ -49,7 +62,7 @@ function RestBar({ endsAt, total }: { endsAt: number; total: number }) {
       { duration: remaining, easing: 'linear', fill: 'forwards' },
     )
     return () => anim.cancel()
-  }, [endsAt, total])
+  }, [endsAt, total, reduce])
   return (
     <div className="h-2 overflow-hidden rounded-full bg-surface-2">
       <div ref={ref} className="h-full origin-left rounded-full bg-(--tape)" />
@@ -61,10 +74,12 @@ export function PlayerScreen({
   session,
   onExit,
   onFinish,
+  onLog,
 }: {
   session: Session
   onExit?: () => void
   onFinish?: () => void
+  onLog?: (entries: Omit<Entry, 'id'>[]) => void
 }) {
   if (session.exercises.length === 0) {
     return (
@@ -83,10 +98,18 @@ export function PlayerScreen({
       </div>
     )
   }
-  return <Player session={session} onFinish={onFinish} />
+  return <Player session={session} onFinish={onFinish} onLog={onLog} />
 }
 
-function Player({ session, onFinish }: { session: Session; onFinish?: () => void }) {
+function Player({
+  session,
+  onFinish,
+  onLog,
+}: {
+  session: Session
+  onFinish?: () => void
+  onLog?: (entries: Omit<Entry, 'id'>[]) => void
+}) {
   const { exercises } = session
   const [index, setIndex] = useState(0)
   const [logs, setLogs] = useState<SetValues[][]>(() => exercises.map(() => []))
@@ -95,6 +118,8 @@ function Player({ session, onFinish }: { session: Session; onFinish?: () => void
   const [phase, setPhase] = useState<Phase>({ kind: 'log' })
   const [finished, setFinished] = useState(false)
   const [announce, setAnnounce] = useState('')
+  const [confirmEnd, setConfirmEnd] = useState(false)
+  const saved = useRef(false)
 
   const ex = exercises[index]
   const meta = TYPE_META[ex.trackingType]
@@ -108,6 +133,7 @@ function Player({ session, onFinish }: { session: Session; onFinish?: () => void
       setDraft(d.values)
       setSource(d.source)
       setPhase({ kind: 'log' })
+      setAnnounce(`Exercise ${i + 1} of ${exercises.length}: ${exercises[i].name}`)
     },
     [exercises],
   )
@@ -115,6 +141,8 @@ function Player({ session, onFinish }: { session: Session; onFinish?: () => void
   const finishHold = useCallback((seconds: number) => {
     setDraft((d) => ({ ...d, seconds }))
     setSource('hold')
+    setAnnounce(`Hold complete, ${seconds} seconds`)
+    navigator.vibrate?.([30, 40, 30])
     setPhase({ kind: 'log' })
   }, [])
 
@@ -122,7 +150,11 @@ function Player({ session, onFinish }: { session: Session; onFinish?: () => void
     if (phase.kind === 'log' || phase.kind === 'exercise-done') return
     const id = setTimeout(
       () => {
-        if (phase.kind === 'rest') setPhase({ kind: 'log' })
+        if (phase.kind === 'rest') {
+          setPhase({ kind: 'log' })
+          setAnnounce('Rest over')
+          navigator.vibrate?.(20)
+        }
         else if (phase.kind === 'lead') {
           const seconds = draft.seconds ?? ex.target.seconds ?? 30
           setPhase({ kind: 'hold', startedAt: phase.endsAt, endsAt: phase.endsAt + seconds * 1000 })
@@ -155,7 +187,35 @@ function Player({ session, onFinish }: { session: Session; onFinish?: () => void
     }
   }
 
+  /** Ends the session and saves every logged set once, however the user leaves. */
+  const finish = () => {
+    if (!saved.current) {
+      saved.current = true
+      const list: Omit<Entry, 'id'>[] = []
+      logs.forEach((sets, i) =>
+        sets.forEach((values) =>
+          list.push({
+            name: exercises[i].name,
+            trackingType: exercises[i].trackingType,
+            values: { ...values },
+            exerciseId: exercises[i].id,
+            source: 'workout',
+          }),
+        ),
+      )
+      onLog?.(list)
+    }
+    setConfirmEnd(false)
+    setFinished(true)
+  }
+
+  const closeWorkout = () => {
+    if (logs.some((l) => l.length > 0)) setConfirmEnd(true)
+    else finish()
+  }
+
   const restart = () => {
+    saved.current = false
     setLogs(exercises.map(() => []))
     setFinished(false)
     startExercise(0)
@@ -179,7 +239,7 @@ function Player({ session, onFinish }: { session: Session; onFinish?: () => void
       case 'exercise-done':
         return next
           ? { label: 'Next exercise', onClick: () => startExercise(index + 1) }
-          : { label: 'Finish workout', onClick: () => setFinished(true) }
+          : { label: 'Finish workout', onClick: finish }
     }
   })()
 
@@ -195,7 +255,7 @@ function Player({ session, onFinish }: { session: Session; onFinish?: () => void
             type="button"
             className="press grid size-12 place-items-center rounded-full bg-surface-2"
             aria-label="End workout"
-            onClick={() => setFinished(true)}
+            onClick={closeWorkout}
           >
             <X size={24} strokeWidth={2.5} aria-hidden="true" />
           </button>
@@ -321,14 +381,37 @@ function Player({ session, onFinish }: { session: Session; onFinish?: () => void
       </main>
 
       <footer className="fixed inset-x-0 bottom-0 mx-auto w-full max-w-[480px] border-t border-line bg-ground px-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] short:pt-3 short:pb-3">
-        <button
-          type="button"
-          className="press h-16 w-full rounded-full bg-(--tape) text-xl font-bold text-on-tape short:h-14"
-          onClick={primary.onClick}
-          data-testid="primary"
-        >
-          {primary.label}
-        </button>
+        {confirmEnd ? (
+          <div className="flex flex-col gap-3" role="group" aria-labelledby="end-title" data-testid="end-confirm">
+            <p id="end-title" className="font-display m-0 text-2xl font-semibold">
+              End workout?
+            </p>
+            <button
+              type="button"
+              className="press h-16 w-full rounded-full bg-(--tape) text-xl font-bold text-on-tape short:h-14"
+              onClick={() => setConfirmEnd(false)}
+              autoFocus
+            >
+              Keep going
+            </button>
+            <button
+              type="button"
+              className="press h-12 w-full rounded-full bg-surface-2 text-lg font-semibold"
+              onClick={finish}
+            >
+              End workout
+            </button>
+          </div>
+        ) : (
+          <button
+            type="button"
+            className="press h-16 w-full rounded-full bg-(--tape) text-xl font-bold text-on-tape short:h-14"
+            onClick={primary.onClick}
+            data-testid="primary"
+          >
+            {primary.label}
+          </button>
+        )}
       </footer>
 
       <p className="sr-only" role="status" aria-live="polite">

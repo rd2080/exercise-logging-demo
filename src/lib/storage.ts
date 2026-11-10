@@ -20,6 +20,7 @@ function isEntry(x: unknown): x is Entry {
     if (!VALUE_KEYS.includes(k as keyof SetValues)) return false
     if (typeof v !== 'number' || !Number.isFinite(v) || v < 0 || v > 10000) return false
   }
+  if (e.source !== undefined && e.source !== 'workout' && e.source !== 'hand') return false
   return e.exerciseId === undefined || typeof e.exerciseId === 'string'
 }
 
