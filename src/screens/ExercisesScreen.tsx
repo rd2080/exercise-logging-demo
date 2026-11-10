@@ -7,9 +7,10 @@ import type { Session } from '../types'
 interface ExercisesScreenProps {
   session: Session
   onStart: () => void
+  onOpen: (id: string) => void
 }
 
-export function ExercisesScreen({ session, onStart }: ExercisesScreenProps) {
+export function ExercisesScreen({ session, onStart, onOpen }: ExercisesScreenProps) {
   const n = session.exercises.length
   return (
     <div
@@ -35,7 +36,7 @@ export function ExercisesScreen({ session, onStart }: ExercisesScreenProps) {
         ) : (
           <ul className="m-0 flex list-none flex-col p-0" data-testid="exercise-list">
             {session.exercises.map((e) => (
-              <ExerciseRow key={e.id} exercise={e} keyed />
+              <ExerciseRow key={e.id} exercise={e} keyed onOpen={onOpen} />
             ))}
           </ul>
         )}

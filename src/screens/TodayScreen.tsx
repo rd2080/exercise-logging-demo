@@ -8,9 +8,10 @@ interface TodayScreenProps {
   session: Session
   onStart: () => void
   onChoose: () => void
+  onOpen: (id: string) => void
 }
 
-export function TodayScreen({ session, onStart, onChoose }: TodayScreenProps) {
+export function TodayScreen({ session, onStart, onChoose, onOpen }: TodayScreenProps) {
   const sets = session.exercises.reduce((n, e) => n + e.sets, 0)
   return (
     <div
@@ -50,7 +51,7 @@ export function TodayScreen({ session, onStart, onChoose }: TodayScreenProps) {
               </h2>
               <ul className="m-0 flex list-none flex-col p-0">
                 {session.exercises.map((e) => (
-                  <ExerciseRow key={e.id} exercise={e} clamp />
+                  <ExerciseRow key={e.id} exercise={e} clamp onOpen={onOpen} />
                 ))}
               </ul>
             </section>
