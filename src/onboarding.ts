@@ -42,6 +42,8 @@ export interface Answers {
   activity: string | null
   equipment: string[]
   pullup: { hang: boolean; secure: boolean }
+  /** Follow-ups for other equipment. Off unless the person says otherwise. */
+  extras: { heavy: boolean; anchor: boolean }
   limits: string[]
   /** Optional body measurements, always stored in kg and cm. */
   weightKg: number | null
@@ -55,6 +57,7 @@ export const EMPTY_ANSWERS: Answers = {
   activity: null,
   equipment: [],
   pullup: { hang: false, secure: false },
+  extras: { heavy: false, anchor: false },
   limits: [],
   weightKg: null,
   heightCm: null,
@@ -91,6 +94,17 @@ export function summaryText(a: Answers, row: RowId, units: Units = DEFAULT_UNITS
     case 'limits':
       return a.limits.length ? a.limits.map((l) => labelOf(LIMITS, l)).join(', ') : 'No limits'
   }
+}
+
+export const DUMBBELL_CHECK: Option = { id: 'heavy', label: 'I have a pair heavier than 10 kg each' }
+export const BAND_CHECK: Option = { id: 'anchor', label: 'I can anchor the band to a door or a post' }
+
+export function dumbbellConsequence(heavy: boolean): string {
+  return heavy ? 'Your plan can include heavy dumbbell exercises.' : 'Your plan will keep dumbbell exercises light.'
+}
+
+export function bandConsequence(anchor: boolean): string {
+  return anchor ? 'Your plan can include anchored band exercises.' : 'Your plan will skip exercises that need an anchored band.'
 }
 
 export function pullupConsequence(p: Answers['pullup']): string {

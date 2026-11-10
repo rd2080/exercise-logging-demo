@@ -16,6 +16,10 @@ import {
   GOALS,
   LIMITS,
   MAX_GOALS,
+  BAND_CHECK,
+  bandConsequence,
+  DUMBBELL_CHECK,
+  dumbbellConsequence,
   PULLUP_CHECKS,
   STYLES,
   pullupConsequence,
@@ -135,6 +139,32 @@ export function EquipmentSheet({ open, onOpenChange, answers, onChange }: SheetP
           />
         ))}
       </div>
+      {answers.equipment.includes('dumbbells') && (
+        <div className="mt-4 border-t border-line pt-4" data-testid="dumbbells-checks">
+          <h3 className="font-display m-0 text-2xl font-semibold">About your dumbbells</h3>
+          <p className="m-0 pt-1 pb-2 text-[15px] text-muted" data-testid="dumbbells-consequence" role="status">
+            {dumbbellConsequence(answers.extras.heavy)}
+          </p>
+          <Switch
+            checked={answers.extras.heavy}
+            label={DUMBBELL_CHECK.label}
+            onChange={(heavy) => onChange({ ...answers, extras: { ...answers.extras, heavy } })}
+          />
+        </div>
+      )}
+      {answers.equipment.includes('band') && (
+        <div className="mt-4 border-t border-line pt-4" data-testid="band-checks">
+          <h3 className="font-display m-0 text-2xl font-semibold">About your band</h3>
+          <p className="m-0 pt-1 pb-2 text-[15px] text-muted" data-testid="band-consequence" role="status">
+            {bandConsequence(answers.extras.anchor)}
+          </p>
+          <Switch
+            checked={answers.extras.anchor}
+            label={BAND_CHECK.label}
+            onChange={(anchor) => onChange({ ...answers, extras: { ...answers.extras, anchor } })}
+          />
+        </div>
+      )}
       {hasPullup && (
         <div ref={checksRef} className="mt-4 border-t border-line pt-4" data-testid="pullup-checks">
           <h3 className="font-display m-0 text-2xl font-semibold">About your pull-up bar</h3>
