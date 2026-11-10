@@ -24,7 +24,7 @@ export function AnswerSheet({
   return (
     <Drawer.Root open={open} onOpenChange={onOpenChange}>
       <Drawer.Portal>
-        <Drawer.Overlay className="fixed inset-0 z-40 bg-black/65" />
+        <Drawer.Overlay className="fixed inset-0 z-40 bg-ground/80" />
         <Drawer.Content
           className="fixed inset-x-0 bottom-0 z-50 mx-auto flex max-h-[92dvh] w-full max-w-[480px] flex-col rounded-t-3xl bg-surface outline-none"
           aria-describedby="sheet-why"
@@ -38,7 +38,9 @@ export function AnswerSheet({
               {why}
             </Drawer.Description>
           </div>
-          <div className="flex-1 overflow-y-auto px-4 pb-4">{children}</div>
+          <div className="flex-1 overflow-y-auto px-4 pt-2 pb-4 [mask-image:linear-gradient(to_bottom,transparent,black_14px)]">
+            {children}
+          </div>
           {saveLabel && (
             <div className="border-t border-line px-4 pt-3 pb-[max(1rem,env(safe-area-inset-bottom))]">
               <button

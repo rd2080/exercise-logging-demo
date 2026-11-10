@@ -4,7 +4,7 @@ export interface Option {
   id: string
   label: string
   detail?: string
-  icon?: string
+  short?: string
 }
 
 export interface Programme {
@@ -45,7 +45,8 @@ export const EMPTY_ANSWERS: Answers = {
 export type RowId = 'goals' | 'activity' | 'equipment' | 'limits'
 
 export function labelOf(options: Option[], id: string): string {
-  return options.find((o) => o.id === id)?.label ?? id
+  const o = options.find((x) => x.id === id)
+  return o?.short ?? o?.label ?? id
 }
 
 export function missing(a: Answers): string[] {
@@ -76,7 +77,11 @@ export function pullupConsequence(p: Answers['pullup']): string {
   return 'Your plan will skip hanging and swinging pull-up bar exercises.'
 }
 
-export function recommended(a: Answers): string {
+export function recommended(a: Answers): { id: string; reason: string } {
+  if (a.goals[0] === 'skill') {
+    return { id: 'handstand', reason: 'Matches your first goal: learn a skill' }
+  }
   const level = a.activity ?? 'sitting'
-  return PROGRAMMES.find((p) => p.forLevels.includes(level))?.id ?? PROGRAMMES[0].id
+  const p = PROGRAMMES.find((x) => x.forLevels.includes(level)) ?? PROGRAMMES[0]
+  return { id: p.id, reason: `Matches your activity level: ${labelOf(ACTIVITY, level).toLowerCase()}` }
 }

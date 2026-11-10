@@ -112,6 +112,30 @@ test('a lightly active user is recommended foundation strength and can start it'
   await expect(page.getByTestId('start-programme')).toHaveText('Start handstand push-up')
 })
 
+test('a first goal of learning a skill recommends the handstand programme, with the reason', async ({ page }) => {
+  await openRow(page, /Choose goals/)
+  await page.getByRole('checkbox', { name: /Learn a skill/ }).click()
+  await page.getByRole('button', { name: 'Save goals' }).click()
+  await openRow(page, /Choose activity level/)
+  await page.getByRole('radio', { name: /Lightly active/ }).click()
+  await openRow(page, /Choose equipment/)
+  await page.getByRole('checkbox', { name: /None, bodyweight only/ }).click()
+  await page.getByRole('button', { name: 'Save equipment' }).click()
+  await create(page).click()
+  await expect(page.getByRole('radio', { name: /Handstand push-up/ })).toBeChecked()
+  await expect(page.getByText('Matches your first goal: learn a skill')).toBeVisible()
+})
+
+test('an eight week programme draws a strip twice as long as a four week one', async ({ page }) => {
+  await answerAll(page)
+  await create(page).click()
+  const widths = await page.getByRole('img', { name: /weeks$/ }).evaluateAll((els) =>
+    els.map((e) => (e.firstElementChild as HTMLElement).getBoundingClientRect().width),
+  )
+  expect(widths[1] / widths[0]).toBeCloseTo(2, 1)
+  await expect(page.getByText('Sample programmes for this demo.')).toBeVisible()
+})
+
 test('a very active user is recommended the handstand push-up programme', async ({ page }) => {
   await answerAll(page, 'Very active')
   await create(page).click()

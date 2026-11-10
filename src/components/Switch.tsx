@@ -19,7 +19,7 @@ export function Switch({ checked, label, detail, onChange }: SwitchProps) {
         {detail && <span className="text-[15px] text-muted">{detail}</span>}
       </span>
       <span
-        className={`relative h-8 w-14 shrink-0 rounded-full transition-colors duration-150 motion-reduce:transition-none ${checked ? 'bg-(--tape)' : 'bg-surface-2'}`}
+        className={`relative h-8 w-14 shrink-0 rounded-full transition-colors duration-150 motion-reduce:transition-none ${checked ? 'bg-(--tape)' : 'bg-transparent ring-2 ring-muted ring-inset'}`}
         aria-hidden="true"
       >
         <span

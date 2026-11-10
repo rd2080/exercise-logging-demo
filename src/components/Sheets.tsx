@@ -1,5 +1,4 @@
-import { Cable, Dumbbell, GripHorizontal, PersonStanding, Spline, Weight } from 'lucide-react'
-import { useEffect, useRef, type ReactNode } from 'react'
+import { useEffect, useRef } from 'react'
 import {
   ACTIVITY,
   EQUIPMENT,
@@ -19,14 +18,6 @@ interface SheetProps {
   onOpenChange: (open: boolean) => void
   answers: Answers
   onChange: (next: Answers) => void
-}
-
-const ICONS: Record<string, ReactNode> = {
-  none: <PersonStanding size={24} aria-hidden="true" />,
-  dumbbell: <Dumbbell size={24} aria-hidden="true" />,
-  band: <Cable size={24} aria-hidden="true" />,
-  kettlebell: <Weight size={24} aria-hidden="true" />,
-  pullup: <GripHorizontal size={24} aria-hidden="true" />,
 }
 
 export function GoalsSheet({ open, onOpenChange, answers, onChange }: SheetProps) {
@@ -126,17 +117,13 @@ export function EquipmentSheet({ open, onOpenChange, answers, onChange }: SheetP
             role="checkbox"
             checked={answers.equipment.includes(e.id)}
             label={e.label}
-            icon={ICONS[e.icon ?? 'none']}
             onClick={() => pick(e.id)}
           />
         ))}
       </div>
       {hasPullup && (
-        <div ref={checksRef} className="mt-4 rounded-3xl bg-surface-2 px-4 py-2" data-testid="pullup-checks">
-          <p className="m-0 flex items-center gap-2 pt-2 text-lg font-semibold">
-            <Spline size={20} aria-hidden="true" />
-            About your pull-up bar
-          </p>
+        <div ref={checksRef} className="mt-4 border-t border-line pt-4" data-testid="pullup-checks">
+          <h3 className="font-display m-0 text-2xl font-semibold">About your pull-up bar</h3>
           <p className="m-0 pt-1 pb-2 text-[15px] text-muted" data-testid="pullup-consequence" role="status">
             {pullupConsequence(answers.pullup)}
           </p>

@@ -21,6 +21,6 @@ STORY: The user sees four rows and what each is for, answers each in a sheet, se
 
 FIRST VIEWPORT: Title "Set up your plan" and a one-line time estimate. Four tappable rows (Goal, Activity level, Equipment, Limits), each with a slot badge at the left, the question, its why-we-ask line in muted text and the current answer or "Choose" with a chevron at the right. Above the pinned "Create my plan" button, a line naming what is still needed. No header chrome, no close button.
 
-FORM: Summary rows that open bottom sheets, position 4 on my ordered list of 7 (dealt lead of the surface roll, picked by the user), seed: none (unavailable). Signature move: the slot badge fills with a grain tape strip on a slanted leading edge (about 220ms) when its row is answered; the programme rows show their length as a strip of weekly tape segments.
+FORM: Summary rows that open bottom sheets, position 4 on my ordered list of 7 (dealt lead of the surface roll, picked by the user), seed:6da962f31fe52449. Signature move: the slot badge fills with a grain tape strip on a slanted leading edge (about 220ms) when its row is answered; the programme rows show their length as a strip of weekly tape segments.
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance

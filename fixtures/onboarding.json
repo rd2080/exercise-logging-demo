@@ -1,34 +1,102 @@
 {
   "_note": "Fixture data, not real user data. Programme content and copy are authored placeholders.",
   "goals": [
-    { "id": "fitness", "label": "Improve fitness" },
-    { "id": "muscle", "label": "Build muscle" },
-    { "id": "endurance", "label": "Increase endurance" },
-    { "id": "skill", "label": "Learn a skill, like a handstand push-up" },
-    { "id": "fat", "label": "Burn fat" },
-    { "id": "stress", "label": "Relieve stress" }
+    {
+      "id": "fitness",
+      "label": "Improve fitness"
+    },
+    {
+      "id": "muscle",
+      "label": "Build muscle"
+    },
+    {
+      "id": "endurance",
+      "label": "Increase endurance"
+    },
+    {
+      "id": "skill",
+      "label": "Learn a skill, like a handstand push-up"
+    },
+    {
+      "id": "fat",
+      "label": "Burn fat"
+    },
+    {
+      "id": "stress",
+      "label": "Relieve stress"
+    }
   ],
   "activity": [
-    { "id": "sitting", "label": "Mostly sitting", "detail": "Desk or study day, little exercise" },
-    { "id": "light", "label": "Lightly active", "detail": "A walk or one workout most weeks" },
-    { "id": "moderate", "label": "Moderately active", "detail": "Two to four workouts a week" },
-    { "id": "very", "label": "Very active", "detail": "Five or more workouts a week" }
+    {
+      "id": "sitting",
+      "label": "Mostly sitting",
+      "detail": "Desk or study day, little exercise"
+    },
+    {
+      "id": "light",
+      "label": "Lightly active",
+      "detail": "A walk or one workout most weeks"
+    },
+    {
+      "id": "moderate",
+      "label": "Moderately active",
+      "detail": "Two to four workouts a week"
+    },
+    {
+      "id": "very",
+      "label": "Very active",
+      "detail": "Five or more workouts a week"
+    }
   ],
   "equipment": [
-    { "id": "none", "label": "None, bodyweight only", "icon": "none" },
-    { "id": "dumbbells", "label": "Dumbbells", "icon": "dumbbell" },
-    { "id": "band", "label": "Resistance band", "icon": "band" },
-    { "id": "kettlebell", "label": "Kettlebell", "icon": "kettlebell" },
-    { "id": "pullup", "label": "Pull-up bar", "icon": "pullup" }
+    {
+      "id": "none",
+      "label": "None, bodyweight only",
+      "short": "Bodyweight only"
+    },
+    {
+      "id": "dumbbells",
+      "label": "Dumbbells"
+    },
+    {
+      "id": "band",
+      "label": "Resistance band"
+    },
+    {
+      "id": "kettlebell",
+      "label": "Kettlebell"
+    },
+    {
+      "id": "pullup",
+      "label": "Pull-up bar"
+    }
   ],
   "limits": [
-    { "id": "quiet", "label": "Train quietly", "detail": "No jumping or loud landings" },
-    { "id": "space", "label": "Limited space", "detail": "Exercises that fit beside a bed" },
-    { "id": "norun", "label": "No running or sprints", "detail": "Skip runs and sprint intervals" }
+    {
+      "id": "quiet",
+      "label": "Train quietly",
+      "detail": "No jumping or loud landings"
+    },
+    {
+      "id": "space",
+      "label": "Limited space",
+      "detail": "Exercises that fit beside a bed"
+    },
+    {
+      "id": "norun",
+      "label": "No running or sprints",
+      "detail": "Skip runs and sprint intervals"
+    }
   ],
   "pullupChecks": [
-    { "id": "hang", "label": "I can hang from the bar with my body fully extended" },
-    { "id": "secure", "label": "My bar is secure enough for jumps and swings" }
+    {
+      "id": "hang",
+      "label": "I can hang from the bar with my body fully extended"
+    },
+    {
+      "id": "secure",
+      "label": "My bar is secure enough for jumps and swings"
+    }
   ],
   "programmes": [
     {
@@ -38,7 +106,10 @@
       "perWeek": 3,
       "needs": "Bodyweight only",
       "summary": "Push-ups, lunges, planks and squats, built up week by week.",
-      "forLevels": ["sitting", "light"]
+      "forLevels": [
+        "sitting",
+        "light"
+      ]
     },
     {
       "id": "handstand",
@@ -47,7 +118,10 @@
       "perWeek": 3,
       "needs": "Bodyweight and a free wall",
       "summary": "Wall holds, pike push-ups and negatives toward a full handstand push-up.",
-      "forLevels": ["moderate", "very"]
+      "forLevels": [
+        "moderate",
+        "very"
+      ]
     }
   ]
 }
