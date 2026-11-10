@@ -6,6 +6,8 @@ interface AnswerSheetProps {
   onOpenChange: (open: boolean) => void
   title: string
   why: string
+  /** An optional plain line between the title and the reason. Use it only where it adds meaning. */
+  lead?: string
   children: ReactNode
   /** Label of the button that saves and closes. Omit when a single tap answers. */
   saveLabel?: string
@@ -25,6 +27,7 @@ export function AnswerSheet({
   onOpenChange,
   title,
   why,
+  lead,
   children,
   saveLabel,
   canSave = true,
@@ -54,6 +57,11 @@ export function AnswerSheet({
             </Drawer.Title>
               {headerAction}
             </div>
+            {lead && (
+              <p className="m-0 text-xl font-semibold text-pretty" data-testid="sheet-lead">
+                {lead}
+              </p>
+            )}
             <Drawer.Description id="sheet-why" className="m-0 text-[17px] text-pretty text-muted">
               {why}
             </Drawer.Description>

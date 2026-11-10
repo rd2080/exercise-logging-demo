@@ -65,6 +65,7 @@ export function ActivitySheet({ open, onOpenChange, answers, onChange }: SheetPr
       open={open}
       onOpenChange={onOpenChange}
       title="How active are you now?"
+      lead="Pick what is true this month, not what you want to be true."
       why="This sets how hard your first weeks start."
     >
       <div role="radiogroup" aria-label="Activity level">
@@ -106,6 +107,7 @@ export function EquipmentSheet({ open, onOpenChange, answers, onChange }: SheetP
       open={open}
       onOpenChange={onOpenChange}
       title="What equipment do you have?"
+      lead="Count only what you can reach today."
       why="We only plan exercises you can actually do."
       saveLabel="Save equipment"
       canSave={answers.equipment.length > 0}
@@ -152,6 +154,7 @@ export function LimitsSheet({ open, onOpenChange, answers, onChange }: SheetProp
       open={open}
       onOpenChange={onOpenChange}
       title="Any limits we should know about?"
+      lead="Skip this if nothing applies."
       why="Optional. Switch on anything that rules exercises out."
       saveLabel="Save limits"
     >

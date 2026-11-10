@@ -186,3 +186,17 @@ test('every control is at least 48px, nothing overflows, and screens are capture
   await page.getByTestId('start-programme').click()
   await check('reminders')
 })
+
+test('a plain lead-in line sits under the title where it adds meaning, and not on goals', async ({ page }) => {
+  await page.goto('/?stage=setup')
+  await openRow(page, /^Goals/)
+  await expect(page.getByTestId('sheet-lead')).toHaveCount(0)
+  await page.keyboard.press('Escape')
+  await page.waitForTimeout(400)
+  await openRow(page, /^Activity level/)
+  await expect(page.getByTestId('sheet-lead')).toContainText('true this month')
+  await page.keyboard.press('Escape')
+  await page.waitForTimeout(400)
+  await openRow(page, /^Limits/)
+  await expect(page.getByTestId('sheet-lead')).toHaveText('Skip this if nothing applies.')
+})
