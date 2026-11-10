@@ -194,6 +194,12 @@ One parallelogram segment per exercise. Unstarted: Worn Mat Brown. Current: Seam
 ### Cards / Containers
 24px radius, Chalkboard Brown, 16px padding, 16px internal gap, no border or shadow. Used for the input panel, rest panel, hold panel and done panel. The rest bar inside is an 8px pill track with a tape fill.
 
+### Empty state (template)
+For any page with nothing to show yet: an authored illustration (five empty parallelogram slots in Worn Mat Brown with a short grain tape tail entering the first), a 36px bold headline, one sentence in muted text saying where the data will appear, and one full-width 64px pill in the tape colour that names the result. It is the one place the main button sits inline instead of pinned, because the page scrolls and a pinned button would cover the content below.
+
+### Goal list
+Flat rows separated by Seam Brown hairlines, no cards, 72px minimum. Each row: a slanted slot (a lock in muted while locked, grain tape with a Tape Ink check once unlocked, laid with the standard wipe), a 20px semibold title, a muted requirement line, and a segmented grain strip only for goals with more than one step. A 4px tape bar under the first locked goal's slot marks the next goal to reach.
+
 ### Type tag
 Pill in Worn Mat Brown with a 12px tape-colour dot and the type name in 17px semibold, followed by the muted target text.
 
