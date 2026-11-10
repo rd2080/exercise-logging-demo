@@ -172,6 +172,8 @@ function Player({
         else if (phase.kind === 'lead') {
           const seconds = draft.seconds ?? ex.target.seconds ?? 30
           setPhase({ kind: 'hold', startedAt: phase.endsAt, endsAt: phase.endsAt + seconds * 1000 })
+          setAnnounce(`Hold started, ${seconds} seconds`)
+          navigator.vibrate?.(20)
         } else finishHold(Math.round((phase.endsAt - phase.startedAt) / 1000))
       },
       Math.max(0, phase.endsAt - Date.now()),
@@ -328,9 +330,10 @@ function Player({
                 <button
                   type="button"
                   className="press h-14 rounded-2xl bg-surface-2 text-lg font-semibold"
-                  onClick={() =>
+                  onClick={() => {
                     setPhase({ kind: 'lead', endsAt: Date.now() + LEAD_SECONDS * 1000 })
-                  }
+                    setAnnounce(`Get into position. The hold starts in ${LEAD_SECONDS} seconds.`)
+                  }}
                 >
                   Start {draft.seconds ?? 0} second hold
                 </button>

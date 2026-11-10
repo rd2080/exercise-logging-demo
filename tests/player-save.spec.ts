@@ -69,3 +69,20 @@ test('manual entries still say by hand', async ({ page }) => {
   await page.goto('/?stage=progress')
   await expect(page.getByTestId('entry-list')).toContainText('By hand')
 })
+
+test('the start of a hold is announced: get into position, then the hold begins', async ({ page }) => {
+  await page.clock.install()
+  await page.goto('/?stage=player')
+  for (const sets of [3, 3]) {
+    for (let i = 0; i < sets; i++) {
+      await page.evaluate(() => (document.querySelector('[data-testid=primary]') as HTMLElement).click())
+      if (i < sets - 1) await page.evaluate(() => (document.querySelector('[data-testid=primary]') as HTMLElement).click())
+    }
+    await page.evaluate(() => (document.querySelector('[data-testid=primary]') as HTMLElement).click())
+  }
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Plank')
+  await page.getByRole('button', { name: /second hold/ }).click()
+  await expect(page.getByText('Get into position. The hold starts in 3 seconds.')).toBeAttached()
+  await page.clock.fastForward(3500)
+  await expect(page.getByText('Hold started, 25 seconds')).toBeAttached()
+})

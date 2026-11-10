@@ -70,7 +70,7 @@ test('a timed hold leads in, counts down, and returns to logging', async ({ page
   await finishExercise(page, 3)
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Plank')
   await page.getByRole('button', { name: /second hold/ }).click()
-  await expect(page.getByText('Get into position')).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Get into position' })).toBeVisible()
   await page.clock.fastForward(3500)
   await expect(page.getByTestId('hold').getByRole('heading', { name: 'Hold' })).toBeVisible()
   await page.clock.fastForward(30000)
