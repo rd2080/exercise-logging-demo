@@ -12,12 +12,12 @@ Rules: one commit per feature, push after each, tests after each feature, one re
 - [x] Lead-in line per set-up question (row 5)
 - [x] Weight and height with unit toggle, unit remembered (row 9)
 - [x] Training-style preference ranking that changes the recommendation (row 20)
-- [ ] Batch B review and fixes
+- [x] Batch B review and fixes
 
 ## Batch C: Set-up rules
 - [x] Train quietly and Limited space filter exercises (row 19)
 - [x] Equipment follow-up questions for dumbbells and bands (row 17)
-- [ ] Batch C review and fixes
+- [x] Batch C review and fixes
 
 ## Batch D: Exercise list
 - [x] Category chips on exercise rows (row 32)
