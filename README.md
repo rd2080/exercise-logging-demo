@@ -37,6 +37,15 @@ Changes move dev -> staging -> prod, never skipping a step.
 
 The tech stack is deliberately **undecided**. It will come from the skill recommendation (see `docs/decisions.md`).
 
+## Design skills (Claude Code)
+
+Installed in `.claude/skills/` so every session on this repo has them:
+- `impeccable` plus its agents and a design-check hook (`.claude/settings.json`). The hook scans UI files after each edit and again when Claude finishes. It runs a checksum-verified engine binary downloaded from the project's GitHub releases.
+- `taste-skill` (design-taste-frontend). Aimed at marketing sites, so use it with care on app screens. Its large photo, object, scene and moment assets are not committed (see `.gitignore`).
+- Emil Kowalski's web skills: `emil-design-eng`, `animate`, `animation-performance`, `choreograph`, `gestures`, `mobile-native`, `review-animations`, `improve-animations`, `break-ui`, `ask-sonner`, `apple-design`. The React Native, Swift, prototype and library-picker skills were left out.
+
+Check a page by hand: `.claude/skills/impeccable/scripts/impeccable detect <file-or-url>` (exit code 2 means findings).
+
 ## Layout
 
 ```
