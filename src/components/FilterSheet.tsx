@@ -53,6 +53,7 @@ export function FilterSheet({ open, onOpenChange, filters, onChange, count }: Fi
       open={open}
       onOpenChange={onOpenChange}
       title="Filters"
+      compactWhenShort
       why="Within a group any choice counts. A choice in each group narrows the list."
       saveLabel={count === 0 ? 'No exercises match' : `Show ${count} ${count === 1 ? 'exercise' : 'exercises'}`}
       canSave={count > 0}
@@ -60,13 +61,20 @@ export function FilterSheet({ open, onOpenChange, filters, onChange, count }: Fi
         <button
           type="button"
           disabled={active === 0}
-          onClick={() => onChange({ ...NO_FILTERS, query: filters.query })}
+          onClick={() => {
+            onChange({ ...NO_FILTERS, query: filters.query })
+            // The button disables itself once nothing is set, so move focus somewhere that stays.
+            document.getElementById('sheet-title')?.focus()
+          }}
           className="press h-12 shrink-0 rounded-full bg-surface-2 px-4 text-lg font-semibold text-ink disabled:bg-transparent disabled:text-muted disabled:opacity-60"
         >
           Reset
         </button>
       }
     >
+      <p className="sr-only" role="status">
+        {count === 0 ? 'No exercises match' : `${count} ${count === 1 ? 'exercise matches' : 'exercises match'}`}
+      </p>
       <div className="flex flex-col">
         <Group title="How it is counted">
           {TYPES.map((t) => (

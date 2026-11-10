@@ -25,7 +25,7 @@ export function ExerciseRow({ exercise, keyed = false, clamp = false, onOpen, sh
   const inner = (
     <>
       <span
-        className={`tape-cut mt-1 h-11 w-3 shrink-0 ${keyed ? 'tape-fill' : 'bg-line'}`}
+        className={`tape-cut mt-0.5 h-14 w-3 shrink-0 ${keyed ? 'tape-fill' : 'bg-line'}`}
         aria-hidden="true"
       />
       <span className="flex min-w-0 flex-1 flex-col text-left">
@@ -45,18 +45,20 @@ export function ExerciseRow({ exercise, keyed = false, clamp = false, onOpen, sh
           {meta.label} · {rowSummary(exercise)}
         </span>
         {showAttributes && exercise.equipment && exercise.level && (
-          <span className="text-[15px] text-muted">
-            {exercise.category ? `${CATEGORY_LABELS[exercise.category]} · ` : ''}
-            {EQUIPMENT_LABELS[exercise.equipment]} · {LEVEL_LABELS[exercise.level]}
+          <span className="text-[15px] text-pretty text-muted">
+            {exercise.category && <span className="whitespace-nowrap">{CATEGORY_LABELS[exercise.category]} · </span>}
+            <span className="whitespace-nowrap">{EQUIPMENT_LABELS[exercise.equipment]}</span>
+            {' · '}
+            <span className="whitespace-nowrap">{LEVEL_LABELS[exercise.level]}</span>
           </span>
         )}
       </span>
       {showAttributes && (
-        <ExerciseThumb exerciseId={exercise.id} caption={exercise.category ? CATEGORY_LABELS[exercise.category] : 'Demo'} />
+        <ExerciseThumb exerciseId={exercise.id} caption={exercise.category ? CATEGORY_LABELS[exercise.category] : ''} />
       )}
     </>
   )
-  const layout = 'flex min-h-[72px] w-full items-start gap-3 py-3'
+  const layout = 'flex min-h-[72px] w-full items-start gap-3 py-3 max-[360px]:gap-2'
   return (
     <li
       className="border-t border-line first:border-t-0"
@@ -70,7 +72,7 @@ export function ExerciseRow({ exercise, keyed = false, clamp = false, onOpen, sh
           data-testid="exercise-open"
         >
           {inner}
-          <ChevronRight size={24} className="mt-2 shrink-0 text-muted" aria-hidden="true" />
+          <ChevronRight size={24} className="mt-[18px] shrink-0 text-muted" aria-hidden="true" />
         </button>
       ) : (
         <div className={layout}>{inner}</div>

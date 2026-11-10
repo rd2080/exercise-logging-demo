@@ -70,3 +70,22 @@ test('thumbnails do not make rows overflow at 320 with long names', async ({ pag
   const ok = await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)
   expect(ok).toBe(true)
 })
+
+test('Saved only with nothing saved says so, and the toast clears the Back and bookmark buttons', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 640 })
+  await page.goto('/?stage=exercises')
+  await page.getByTestId('open-filters').click()
+  await page.getByRole('dialog').getByRole('button', { name: 'Saved only' }).click()
+  await page.getByRole('dialog').getByRole('button', { name: /Show 0|No exercises match/ }).waitFor()
+  await page.keyboard.press('Escape')
+  await page.waitForTimeout(500)
+  await expect(page.getByRole('heading', { name: 'Nothing saved yet' })).toBeVisible()
+  await page.goto('/?stage=exercises')
+  await page.getByTestId('exercise-open').first().click()
+  await page.getByTestId('bookmark').click()
+  const toast = (await page.getByTestId('save-toast').locator('p').boundingBox())!
+  const back = (await page.getByTestId('detail-back').boundingBox())!
+  const mark = (await page.getByTestId('bookmark').boundingBox())!
+  expect(toast.y).toBeGreaterThanOrEqual(back.y + back.height - 1)
+  expect(toast.y).toBeGreaterThanOrEqual(mark.y + mark.height - 1)
+})

@@ -130,7 +130,15 @@ export function ExercisesScreen({ exercises: all, limits, savedIds, onStart, onO
               </button>
             </div>
 
-            {shown.length === 0 && !showAll && hiddenMatches > 0 ? (
+            {shown.length === 0 && filters.saved && savedIds.length === 0 ? (
+              <EmptyState
+                illustration={<EmptySlots />}
+                title="Nothing saved yet"
+                body="Tap the bookmark on an exercise to keep it here."
+                actionLabel={`Show all ${total} exercises`}
+                onAction={() => setFilters(NO_FILTERS)}
+              />
+            ) : shown.length === 0 && !showAll && hiddenMatches > 0 ? (
               <EmptyState
                 illustration={<EmptySlots />}
                 title="Hidden by your limits"

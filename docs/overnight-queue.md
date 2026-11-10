@@ -23,7 +23,7 @@ Rules: one commit per feature, push after each, tests after each feature, one re
 - [x] Category chips on exercise rows (row 32)
 - [x] Bookmarks with a save toast that fires only on the action (rows 30, 39)
 - [x] Thumbnails: drawn figure where one exists, marked placeholder tile otherwise (row 41)
-- [ ] Batch D review and fixes
+- [x] Batch D review and fixes (source-only review; applied 13 of 14, search by category left out on purpose)
 
 ## Batch E: Session and loading
 - [ ] Warm-up and cool-down collapsible sections, placeholder data (row 42)

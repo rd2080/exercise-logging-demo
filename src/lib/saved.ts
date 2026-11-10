@@ -14,10 +14,12 @@ export function loadSaved(): string[] {
   }
 }
 
-export function saveSaved(ids: string[]): void {
+/** Returns false when the browser refused to store the list. */
+export function saveSaved(ids: string[]): boolean {
   try {
     window.localStorage.setItem(SAVED_KEY, JSON.stringify({ v: 1, ids }))
+    return true
   } catch {
-    /* Not remembered. */
+    return false
   }
 }

@@ -59,12 +59,12 @@ function Screen() {
     setStage('player')
   }
   const [savedIds, setSavedIds] = useState<string[]>(loadSaved)
-  const toggleSaved = (id: string) =>
-    setSavedIds((list) => {
-      const next = list.includes(id) ? list.filter((x) => x !== id) : [...list, id]
-      saveSaved(next)
-      return next
-    })
+  /** Returns false when the browser refused to keep the change. */
+  const toggleSaved = (id: string): boolean => {
+    const next = savedIds.includes(id) ? savedIds.filter((x) => x !== id) : [...savedIds, id]
+    setSavedIds(next)
+    return saveSaved(next)
+  }
   const [saveFailed, setSaveFailed] = useState(false)
   const [chosen, setChosen] = useState<Chosen | null>(loadChosen)
   const chosenProgramme = programmeById(chosen?.id)

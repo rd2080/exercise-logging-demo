@@ -16,7 +16,7 @@ interface ExerciseDetailScreenProps {
   entries: Entry[]
   onAdd: (entry: Omit<Entry, 'id'>) => void
   saved: boolean
-  onToggleSaved: () => void
+  onToggleSaved: () => boolean
   onBack: () => void
 }
 
@@ -82,11 +82,11 @@ export function ExerciseDetailScreen({ exercise, plan, entries, onAdd, saved, on
           <button
             type="button"
             className="press grid size-12 place-items-center rounded-full bg-surface-2"
-            aria-label={saved ? 'Remove from saved' : 'Save exercise'}
+            aria-label="Save exercise"
             aria-pressed={saved}
             onClick={() => {
-              onToggleSaved()
-              setToast(saved ? 'Removed from saved' : 'Saved to your exercises')
+              const kept = onToggleSaved()
+              setToast(!kept ? 'Could not save on this device' : saved ? 'Removed from saved' : 'Saved to your exercises')
             }}
             data-testid="bookmark"
           >
@@ -94,7 +94,7 @@ export function ExerciseDetailScreen({ exercise, plan, entries, onAdd, saved, on
           </button>
         </div>
         <div
-          className="pointer-events-none fixed inset-x-0 top-[max(0.75rem,env(safe-area-inset-top))] z-30 mx-auto flex w-full max-w-[480px] justify-center px-4"
+          className="pointer-events-none fixed inset-x-0 top-[calc(max(0.75rem,env(safe-area-inset-top))+3.75rem)] z-30 mx-auto flex w-full max-w-[480px] justify-center px-4"
           role="status"
           data-testid="save-toast"
         >

@@ -289,13 +289,13 @@ export function ExerciseThumb({ exerciseId, caption }: { exerciseId: string; cap
   const pair = POSES[exerciseId]
   return (
     <span
-      className="mt-0.5 grid h-14 w-16 shrink-0 place-items-center overflow-hidden rounded-xl bg-surface-2"
+      className={`mt-0.5 grid h-14 w-16 shrink-0 place-items-center overflow-hidden rounded-xl max-[360px]:h-12 max-[360px]:w-12 ${pair ? 'bg-surface-2' : 'border-2 border-dashed border-line'}`}
       aria-hidden="true"
       data-testid={pair ? 'thumb-figure' : 'thumb-placeholder'}
     >
       {pair ? (
         <span className="block h-full w-full p-1">
-          <StaticFrame pose={pair.start} prop={pair.prop} view={pair.view} />
+          <StaticFrame pose={pair.start} prop={pair.prop} view={pair.view === LYING ? '20 64 200 90' : '50 30 120 125'} />
         </span>
       ) : (
         <span className="text-[15px] font-semibold text-muted">{caption}</span>
