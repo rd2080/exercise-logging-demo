@@ -107,7 +107,7 @@ test('every control is at least 48px and nothing overflows sideways', async ({ p
       () => document.documentElement.scrollWidth > window.innerWidth,
     )
     expect(overflow).toBe(false)
-    await page.screenshot({ path: `../screenshots/exercise-${i + 1}.png` })
+    await page.screenshot({ path: `screenshots/exercise-${i + 1}.png` })
     await finishExercise(page, [3, 3, 2, 3][i])
   }
 })
