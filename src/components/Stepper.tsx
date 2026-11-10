@@ -1,4 +1,5 @@
 import { Minus, Plus } from 'lucide-react'
+import { useId } from 'react'
 
 interface StepperProps {
   label: string
@@ -12,7 +13,9 @@ interface StepperProps {
   onChange: (next: number) => void
 }
 
-export function Stepper({ label, unit, value, min, max, step, compact, onChange }: StepperProps) {
+export function Stepper({ label, unit, value: rawValue, min, max, step, compact, onChange }: StepperProps) {
+  const value = Math.min(max, Math.max(min, Number.isFinite(rawValue) ? rawValue : min))
+  const labelId = useId()
   const set = (next: number) => onChange(Math.min(max, Math.max(min, Math.round(next * 100) / 100)))
 
   const minus = (
@@ -41,6 +44,7 @@ export function Stepper({ label, unit, value, min, max, step, compact, onChange 
     <output
       className={`num text-center text-[44px] leading-none font-bold max-[360px]:text-[32px] short:text-[36px] ${compact ? 'block' : 'min-w-[3.2ch]'}`}
       aria-live="polite"
+      aria-labelledby={labelId}
     >
       {value}
       {unit && <span className="ml-1 text-lg font-semibold whitespace-nowrap text-muted">{unit}</span>}
@@ -49,7 +53,7 @@ export function Stepper({ label, unit, value, min, max, step, compact, onChange 
 
   return (
     <div className="flex min-w-0 flex-1 flex-col gap-2 short:gap-1" role="group" aria-label={label}>
-      <span className="text-[15px] font-medium text-muted">{label}</span>
+      <span id={labelId} className="text-[15px] font-medium text-muted">{label}</span>
       {compact ? (
         <>
           {readout}

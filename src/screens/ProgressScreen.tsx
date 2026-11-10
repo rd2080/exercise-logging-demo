@@ -13,10 +13,12 @@ interface ProgressScreenProps {
   onStart: () => void
   plan: Exercise[]
   entries: Entry[]
+  /** True when the browser refused to save the entries. */
+  saveFailed?: boolean
   onAdd: (entry: Omit<Entry, 'id'>) => void
 }
 
-export function ProgressScreen({ onStart, plan, entries, onAdd }: ProgressScreenProps) {
+export function ProgressScreen({ onStart, plan, entries, saveFailed, onAdd }: ProgressScreenProps) {
   const [adding, setAdding] = useState(false)
   const progress = {
     ...(goalData.progress as Record<string, number>),
@@ -66,6 +68,12 @@ export function ProgressScreen({ onStart, plan, entries, onAdd }: ProgressScreen
               ))}
             </ul>
           </section>
+        )}
+
+        {saveFailed && entries.length > 0 && (
+          <p className="m-0 text-[15px] text-muted" role="status" data-testid="save-failed">
+            Not saved on this device. Your entries will be lost when you close this page.
+          </p>
         )}
 
         <section className="flex flex-col gap-1" aria-labelledby="goals-heading">

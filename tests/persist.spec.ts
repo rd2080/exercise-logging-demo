@@ -112,6 +112,22 @@ test('when the browser refuses to store anything, logging still works for this v
   await ctx.close()
 })
 
+test('unreadable or wrong-version saved data is backed up before it can be overwritten', async ({ browser }) => {
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 } })
+  const page = await ctx.newPage()
+  const raw = JSON.stringify({ v: 99, entries: [{ id: 'x' }] })
+  await page.addInitScript(([k, v]) => {
+    if (!sessionStorage.getItem('seeded')) {
+      localStorage.setItem(k, v)
+      sessionStorage.setItem('seeded', '1')
+    }
+  }, [KEY, raw])
+  await page.goto('/?stage=progress')
+  await logPushUp(page)
+  expect(await page.evaluate(() => localStorage.getItem('exercise-demo:entries:backup'))).toBe(raw)
+  await ctx.close()
+})
+
 test('a change in another tab shows up here', async ({ browser }) => {
   const ctx = await browser.newContext({ viewport: { width: 390, height: 844 } })
   const a = await ctx.newPage()
