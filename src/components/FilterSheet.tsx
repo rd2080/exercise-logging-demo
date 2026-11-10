@@ -55,18 +55,18 @@ export function FilterSheet({ open, onOpenChange, filters, onChange, count }: Fi
       why="Within a group any choice counts. A choice in each group narrows the list."
       saveLabel={count === 0 ? 'No exercises match' : `Show ${count} ${count === 1 ? 'exercise' : 'exercises'}`}
       canSave={count > 0}
+      headerAction={
+        <button
+          type="button"
+          disabled={active === 0}
+          onClick={() => onChange({ ...NO_FILTERS, query: filters.query })}
+          className="press h-12 shrink-0 rounded-full bg-surface-2 px-4 text-lg font-semibold text-ink disabled:bg-transparent disabled:text-muted disabled:opacity-60"
+        >
+          Reset
+        </button>
+      }
     >
       <div className="flex flex-col">
-        <div className="flex justify-end">
-          <button
-            type="button"
-            disabled={active === 0}
-            onClick={() => onChange({ ...NO_FILTERS, query: filters.query })}
-            className="press h-12 rounded-full px-4 text-lg font-semibold text-ink disabled:text-muted"
-          >
-            Reset
-          </button>
-        </div>
         <Group title="How it is counted">
           {TYPES.map((t) => (
             <Chip

@@ -10,6 +10,8 @@ interface AnswerSheetProps {
   /** Label of the button that saves and closes. Omit when a single tap answers. */
   saveLabel?: string
   canSave?: boolean
+  /** An action shown at the right of the title row, outside the scrolling area (for example Reset). */
+  headerAction?: ReactNode
   /** Tape colour for the pinned button, focus ring and anything else inside the sheet. */
   tape?: string
   /** Runs when the save button is tapped. */
@@ -26,6 +28,7 @@ export function AnswerSheet({
   children,
   saveLabel,
   canSave = true,
+  headerAction,
   tape,
   onSave,
   closeOnSave = true,
@@ -41,13 +44,16 @@ export function AnswerSheet({
         >
           <div className="mx-auto mt-3 h-1.5 w-12 shrink-0 rounded-full bg-line" aria-hidden="true" />
           <div className="flex flex-col gap-1 px-4 pt-4 pb-3">
-            <Drawer.Title
+            <div className="flex items-start justify-between gap-3">
+              <Drawer.Title
               id="sheet-title"
               tabIndex={-1}
               className="font-display m-0 text-[30px] leading-[1.1] font-bold outline-none [overflow-wrap:anywhere]"
             >
               {title}
             </Drawer.Title>
+              {headerAction}
+            </div>
             <Drawer.Description id="sheet-why" className="m-0 text-[17px] text-pretty text-muted">
               {why}
             </Drawer.Description>

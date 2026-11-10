@@ -7,6 +7,7 @@ const search = (page: Page) => page.getByTestId('search')
 async function openFilters(page: Page) {
   await page.getByTestId('open-filters').click()
   await expect(page.getByRole('dialog')).toBeVisible()
+  await page.waitForTimeout(700) // let the sheet finish sliding in before measuring
 }
 
 test.beforeEach(async ({ page }) => {
@@ -42,6 +43,38 @@ test('search also matches the type, equipment and level', async ({ page }) => {
   await expect(rows(page)).toHaveCount(1)
   await search(page).fill('advanced')
   await expect(count(page)).toHaveText('2 of 19 exercises')
+})
+
+test('a strip of tape shortens as the list narrows', async ({ page }) => {
+  const width = () => page.getByTestId('count-strip').locator('div').evaluate((e) => e.getBoundingClientRect().width)
+  const full = await width()
+  await search(page).fill('kettlebell')
+  await expect.poll(width).toBeLessThan(full / 10)
+  await search(page).fill('')
+  await expect.poll(width).toBeGreaterThan(full * 0.95)
+})
+
+test('Reset sits in the sheet header, not in the scrolling area, and looks different when disabled', async ({ page }) => {
+  await openFilters(page)
+  const sheet = page.getByRole('dialog')
+  const reset = sheet.getByRole('button', { name: 'Reset' })
+  const title = await sheet.getByRole('heading', { name: 'Filters' }).boundingBox()
+  const box = await reset.boundingBox()
+  expect(Math.abs(box!.y + box!.height / 2 - (title!.y + title!.height / 2))).toBeLessThan(30)
+  const bgOff = await reset.evaluate((e) => getComputedStyle(e).backgroundColor)
+  await sheet.getByRole('button', { name: 'Beginner' }).click()
+  await expect.poll(() => reset.evaluate((e) => getComputedStyle(e).backgroundColor)).not.toBe(bgOff)
+})
+
+test('the search field keeps a usable width beside the Filters button at 320 with a badge', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 667 })
+  await page.reload()
+  await openFilters(page)
+  await page.getByRole('dialog').getByRole('button', { name: 'Beginner' }).click()
+  await page.getByRole('dialog').getByRole('button', { name: /^Show/ }).click()
+  const w = (await search(page).boundingBox())!.width
+  expect(w).toBeGreaterThan(180)
+  expect(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth)).toBe(false)
 })
 
 test('the clear button empties the search and restores the list', async ({ page }) => {
@@ -86,7 +119,7 @@ test('no matches shows the empty state, which can be reset; the sheet button say
   await search(page).fill('zzzz')
   await expect(page.getByRole('heading', { name: 'No exercises match' })).toBeVisible()
   await expect(count(page)).toHaveText('0 of 19 exercises')
-  await page.getByRole('button', { name: 'Reset filters' }).click()
+  await page.getByRole('button', { name: 'Show all 19 exercises' }).click()
   await expect(page.getByRole('heading', { name: 'No exercises match' })).toHaveCount(0)
   await expect(search(page)).toHaveValue('')
   await expect(count(page)).toHaveText('19 exercises')

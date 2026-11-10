@@ -20,13 +20,13 @@ export function SearchField({ value, onChange, label }: SearchFieldProps) {
         value={value}
         onChange={(e) => onChange(e.target.value)}
         aria-label={label}
-        placeholder="Search exercises"
+        placeholder="Search"
         enterKeyHint="search"
         autoComplete="off"
         autoCorrect="off"
         spellCheck={false}
         maxLength={60}
-        className="h-14 w-full rounded-2xl bg-surface-2 pr-12 pl-12 text-lg text-ink placeholder:text-muted [&::-webkit-search-cancel-button]:hidden"
+        className="h-14 w-full rounded-2xl bg-surface-2 pr-12 pl-12 text-lg text-ink text-ellipsis placeholder:text-muted [&::-webkit-search-cancel-button]:hidden"
         data-testid="search"
       />
       {value && (

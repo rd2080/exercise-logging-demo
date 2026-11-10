@@ -34,6 +34,19 @@ export function ExercisesScreen({ exercises, onStart, onOpen }: ExercisesScreenP
           <p className="m-0 text-lg text-muted" role="status" data-testid="result-count">
             {filtered ? `${shown.length} of ${total}` : total} {total === 1 ? 'exercise' : 'exercises'}
           </p>
+          {total > 0 && (
+            <div
+              className="tape-cut mt-2 h-3 overflow-hidden bg-surface-2"
+              style={{ '--cut': '5px' } as CSSProperties}
+              aria-hidden="true"
+              data-testid="count-strip"
+            >
+              <div
+                className="tape-fill h-full origin-left transition-transform duration-150 ease-(--ease-out-expo) motion-reduce:transition-none"
+                style={{ transform: `scaleX(${shown.length / total})` }}
+              />
+            </div>
+          )}
         </header>
 
         {total === 0 ? (
@@ -46,7 +59,7 @@ export function ExercisesScreen({ exercises, onStart, onOpen }: ExercisesScreenP
           />
         ) : (
           <>
-            <div className="flex gap-2">
+            <div className="flex gap-2 max-[360px]:flex-col">
               <SearchField
                 value={filters.query}
                 onChange={(query) => setFilters((f) => ({ ...f, query }))}
@@ -54,7 +67,7 @@ export function ExercisesScreen({ exercises, onStart, onOpen }: ExercisesScreenP
               />
               <button
                 type="button"
-                className="press relative flex h-14 shrink-0 items-center gap-2 rounded-2xl bg-surface-2 px-4 text-lg font-semibold"
+                className="press relative flex h-14 shrink-0 items-center justify-center gap-2 rounded-2xl bg-surface-2 px-4 text-lg font-semibold"
                 onClick={() => setSheet(true)}
                 aria-label={active ? `Filters, ${active} selected` : 'Filters'}
                 data-testid="open-filters"
@@ -78,7 +91,7 @@ export function ExercisesScreen({ exercises, onStart, onOpen }: ExercisesScreenP
                 illustration={<EmptySlots />}
                 title="No exercises match"
                 body="Try a different search, or remove a filter."
-                actionLabel="Reset filters"
+                actionLabel={`Show all ${total} exercises`}
                 onAction={() => setFilters(NO_FILTERS)}
               />
             ) : (
