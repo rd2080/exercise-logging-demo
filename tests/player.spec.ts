@@ -3,7 +3,7 @@ import { expect, test, type Page } from '@playwright/test'
 const primary = (page: Page) => page.getByTestId('primary')
 
 async function open(page: Page) {
-  await page.goto('/')
+  await page.goto('/?stage=player')
   await expect(page.getByTestId('player')).toBeVisible()
 }
 
