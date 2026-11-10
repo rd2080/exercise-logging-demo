@@ -142,12 +142,14 @@ test('a very active user is recommended the handstand push-up programme', async 
   await expect(page.getByRole('radio', { name: /Handstand push-up/ })).toBeChecked()
 })
 
-test('the flow ends in the player after reminders', async ({ page }) => {
+test('the flow ends on the empty progress page, then the player', async ({ page }) => {
   await answerAll(page)
   await create(page).click()
   await page.getByTestId('start-programme').click()
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Get reminders on your training days?')
   await page.getByRole('button', { name: 'Not now' }).click()
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Progress')
+  await page.getByRole('button', { name: 'Start your first workout' }).click()
   await expect(page.getByTestId('player')).toBeVisible()
 })
 

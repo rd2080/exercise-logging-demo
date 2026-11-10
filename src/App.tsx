@@ -3,15 +3,16 @@ import session from '../fixtures/session.json'
 import { EMPTY_ANSWERS, type Answers } from './onboarding'
 import { PlayerScreen } from './screens/PlayerScreen'
 import { ProgrammeScreen } from './screens/ProgrammeScreen'
+import { ProgressScreen } from './screens/ProgressScreen'
 import { RemindersScreen } from './screens/RemindersScreen'
 import { SetupScreen } from './screens/SetupScreen'
 import type { Session } from './types'
 
-type Stage = 'setup' | 'programme' | 'reminders' | 'player'
+type Stage = 'setup' | 'programme' | 'reminders' | 'progress' | 'player'
 
 function initialStage(): Stage {
   const s = new URLSearchParams(window.location.search).get('stage')
-  return s === 'player' || s === 'programme' || s === 'reminders' ? s : 'setup'
+  return s === 'player' || s === 'programme' || s === 'reminders' || s === 'progress' ? s : 'setup'
 }
 
 export default function App() {
@@ -28,6 +29,7 @@ export default function App() {
         onStart={() => setStage('reminders')}
       />
     )
-  if (stage === 'reminders') return <RemindersScreen onDone={() => setStage('player')} />
+  if (stage === 'reminders') return <RemindersScreen onDone={() => setStage('progress')} />
+  if (stage === 'progress') return <ProgressScreen onStart={() => setStage('player')} />
   return <PlayerScreen session={session as Session} />
 }
