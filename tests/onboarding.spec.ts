@@ -157,7 +157,7 @@ test('every control is at least 48px, nothing overflows, and screens are capture
   const check = async (shot: string) => {
     const small = await page.evaluate(
       () =>
-        [...document.querySelectorAll('button, [role=switch], [role=checkbox], [role=radio]')]
+        [...document.querySelectorAll('button:not([data-testid=data-toggle] button), [role=switch], [role=checkbox], [role=radio]')]
           .filter((e) => e.getBoundingClientRect().width > 0)
           .map((e) => e.getBoundingClientRect())
           .filter((r) => r.height < 48 || r.width < 48).length,

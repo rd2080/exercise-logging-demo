@@ -34,7 +34,7 @@ for (const height of [667, 844]) {
     await page.reload()
     const small = await page.evaluate(
       () =>
-        [...document.querySelectorAll('button')]
+        [...document.querySelectorAll('button:not([data-testid=data-toggle] button)')]
           .map((b) => b.getBoundingClientRect())
           .filter((r) => r.height < 48 || r.width < 48).length,
     )

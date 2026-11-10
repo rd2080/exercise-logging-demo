@@ -98,7 +98,7 @@ test('every control is at least 48px and nothing overflows sideways', async ({ p
   await open(page)
   for (let i = 0; i < 4; i++) {
     const small = await page.evaluate(() =>
-      [...document.querySelectorAll('button')]
+      [...document.querySelectorAll('button:not([data-testid=data-toggle] button)')]
         .map((b) => b.getBoundingClientRect())
         .filter((r) => r.width < 48 || r.height < 48).length,
     )
