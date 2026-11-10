@@ -57,7 +57,15 @@ function RestBar({ endsAt, total }: { endsAt: number; total: number }) {
   )
 }
 
-export function PlayerScreen({ session, onExit }: { session: Session; onExit?: () => void }) {
+export function PlayerScreen({
+  session,
+  onExit,
+  onFinish,
+}: {
+  session: Session
+  onExit?: () => void
+  onFinish?: () => void
+}) {
   if (session.exercises.length === 0) {
     return (
       <div
@@ -75,10 +83,10 @@ export function PlayerScreen({ session, onExit }: { session: Session; onExit?: (
       </div>
     )
   }
-  return <Player session={session} />
+  return <Player session={session} onFinish={onFinish} />
 }
 
-function Player({ session }: { session: Session }) {
+function Player({ session, onFinish }: { session: Session; onFinish?: () => void }) {
   const { exercises } = session
   const [index, setIndex] = useState(0)
   const [logs, setLogs] = useState<SetValues[][]>(() => exercises.map(() => []))
@@ -153,7 +161,7 @@ function Player({ session }: { session: Session }) {
     startExercise(0)
   }
 
-  if (finished) return <Summary exercises={exercises} logs={logs} onRestart={restart} />
+  if (finished) return <Summary exercises={exercises} logs={logs} onDone={() => (onFinish ? onFinish() : restart())} />
 
   const patch = (p: SetValues) => {
     setDraft((d) => ({ ...d, ...p }))

@@ -15,7 +15,7 @@ export function ProgressScreen({ onStart }: ProgressScreenProps) {
       style={{ '--tape': 'var(--color-tape-reps)' } as CSSProperties}
       data-testid="progress"
     >
-      <main className="flex flex-1 flex-col gap-6 px-4 pt-[max(2rem,env(safe-area-inset-top))] pb-12">
+      <main className="flex flex-1 flex-col gap-6 px-4 pt-[max(2rem,env(safe-area-inset-top))] pb-28">
         <h1 className="font-display m-0 text-[40px] leading-[1.05] font-bold">Progress</h1>
         <EmptyState
           illustration={<EmptySlots />}

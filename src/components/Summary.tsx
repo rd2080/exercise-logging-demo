@@ -4,10 +4,10 @@ import { SUMMARY_MIN, TYPE_META, formatValues } from '../lib/tracking'
 interface SummaryProps {
   exercises: Exercise[]
   logs: SetValues[][]
-  onRestart: () => void
+  onDone: () => void
 }
 
-export function Summary({ exercises, logs, onRestart }: SummaryProps) {
+export function Summary({ exercises, logs, onDone }: SummaryProps) {
   const total = logs.reduce((n, l) => n + l.length, 0)
   return (
     <div className="mx-auto flex min-h-dvh w-full max-w-[480px] flex-col" data-testid="summary">
@@ -76,9 +76,9 @@ export function Summary({ exercises, logs, onRestart }: SummaryProps) {
         <button
           type="button"
           className="press h-16 w-full rounded-full bg-ink text-xl font-bold text-on-tape"
-          onClick={onRestart}
+          onClick={onDone}
         >
-          Restart demo
+          Back to today
         </button>
       </footer>
     </div>
