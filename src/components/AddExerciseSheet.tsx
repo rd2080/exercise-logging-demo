@@ -16,10 +16,12 @@ interface AddExerciseSheetProps {
   plan: Exercise[]
   entries: Entry[]
   onAdd: (entry: Omit<Entry, 'id'>) => void
+  /** Open straight on the log step for this exercise. */
+  initialExercise?: Exercise
 }
 
 /** Pick what you did, confirm the prefilled numbers, log it. Closes on Log set. */
-export function AddExerciseSheet({ open, onOpenChange, plan, entries, onAdd }: AddExerciseSheetProps) {
+export function AddExerciseSheet({ open, onOpenChange, plan, entries, onAdd, initialExercise }: AddExerciseSheetProps) {
   const [step, setStep] = useState<Step>('pick')
   const [exercise, setExercise] = useState<Exercise | null>(null)
   const [name, setName] = useState('')
@@ -31,11 +33,21 @@ export function AddExerciseSheet({ open, onOpenChange, plan, entries, onAdd }: A
   // Start from the first step each time the sheet opens.
   useLayoutEffect(() => {
     if (open) {
+      saved.current = false
+      if (initialExercise) {
+        const s = suggest(initialExercise.name, initialExercise.trackingType, initialExercise, entries)
+        setExercise(initialExercise)
+        setName(initialExercise.name)
+        setType(initialExercise.trackingType)
+        setValues(s.values)
+        setSource(s.source)
+        setStep('log')
+        return
+      }
       setStep('pick')
       setExercise(null)
       setName('')
       setType('reps')
-      saved.current = false
     }
   }, [open])
 
