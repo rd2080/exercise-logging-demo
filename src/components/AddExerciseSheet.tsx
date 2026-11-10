@@ -183,13 +183,15 @@ export function AddExerciseSheet({ open, onOpenChange, plan, entries, onAdd, ini
       }}
     >
       <div className="flex flex-col gap-4">
-        <span className="flex w-fit items-center gap-2 rounded-full bg-surface-2 py-1.5 pr-3.5 pl-2.5 text-[17px] font-semibold">
-          <span className="size-3 rounded-full bg-(--tape)" aria-hidden="true" />
-          {meta.label}
-        </span>
+        {!initialExercise && (
+          <span className="flex w-fit items-center gap-2 rounded-full bg-surface-2 py-1.5 pr-3.5 pl-2.5 text-[17px] font-semibold">
+            <span className="size-3 rounded-full bg-(--tape)" aria-hidden="true" />
+            {meta.label}
+          </span>
+        )}
         {exercise ? (
           <>
-            <DemoFigure exerciseId={exercise.id} name={exercise.name} compact />
+            {!initialExercise && <DemoFigure exerciseId={exercise.id} name={exercise.name} compact />}
             <p className="m-0 text-lg leading-snug text-ink" data-testid="manual-cue">
               {exercise.cue}
             </p>
@@ -206,13 +208,15 @@ export function AddExerciseSheet({ open, onOpenChange, plan, entries, onAdd, ini
             {SOURCE_NOTE[source]}
           </p>
         </div>
-        <button
-          type="button"
-          className="press h-14 w-full rounded-2xl bg-surface-2 text-lg font-semibold"
-          onClick={() => setStep('pick')}
-        >
-          Change exercise
-        </button>
+        {!initialExercise && (
+          <button
+            type="button"
+            className="press h-14 w-full rounded-2xl bg-surface-2 text-lg font-semibold"
+            onClick={() => setStep('pick')}
+          >
+            Change exercise
+          </button>
+        )}
       </div>
     </AnswerSheet>
   )

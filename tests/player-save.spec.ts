@@ -43,7 +43,8 @@ test('ending with no sets logged exits at once and says so', async ({ page }) =>
   await open(page)
   await page.getByRole('button', { name: 'End workout' }).click()
   await expect(page.getByRole('heading', { name: 'No sets logged' })).toBeFocused()
-  await expect(page.getByText('0 sets across 0 exercises.')).toBeVisible()
+  await expect(page.getByText('Nothing was saved.')).toBeVisible()
+  await expect(page.getByText('0 sets across 0 exercises.')).toHaveCount(0)
 })
 
 test('exercise changes are announced', async ({ page }) => {

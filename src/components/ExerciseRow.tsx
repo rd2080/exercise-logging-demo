@@ -1,3 +1,4 @@
+import { ChevronRight } from 'lucide-react'
 import type { CSSProperties } from 'react'
 import type { Exercise } from '../types'
 import { TYPE_META, rowSummary } from '../lib/tracking'
@@ -48,6 +49,7 @@ export function ExerciseRow({ exercise, keyed = false, clamp = false, onOpen }: 
           data-testid="exercise-open"
         >
           {inner}
+          <ChevronRight size={24} className="mt-2 shrink-0 text-muted" aria-hidden="true" />
         </button>
       ) : (
         <div className={layout}>{inner}</div>

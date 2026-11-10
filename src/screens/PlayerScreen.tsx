@@ -119,6 +119,20 @@ function Player({
   const [finished, setFinished] = useState(false)
   const [announce, setAnnounce] = useState('')
   const [confirmEnd, setConfirmEnd] = useState(false)
+  const closeRef = useRef<HTMLButtonElement>(null)
+  const keepGoing = () => {
+    setConfirmEnd(false)
+    // The button that had focus is about to unmount: put focus back on the X.
+    requestAnimationFrame(() => closeRef.current?.focus())
+  }
+  useEffect(() => {
+    if (!confirmEnd) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') keepGoing()
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [confirmEnd])
   const saved = useRef(false)
 
   const ex = exercises[index]
@@ -255,6 +269,7 @@ function Player({
             type="button"
             className="press grid size-12 place-items-center rounded-full bg-surface-2"
             aria-label="End workout"
+            ref={closeRef}
             onClick={closeWorkout}
           >
             <X size={24} strokeWidth={2.5} aria-hidden="true" />
@@ -270,7 +285,9 @@ function Player({
         />
       </header>
 
-      <main className="flex flex-1 flex-col gap-4 px-4 pb-40 short:gap-3 short:pb-32">
+      <main
+        className={`flex flex-1 flex-col gap-4 px-4 short:gap-3 ${confirmEnd ? 'pb-56 short:pb-52' : 'pb-40 short:pb-32'}`}
+      >
         <DemoFigure exerciseId={ex.id} name={ex.name} />
 
         <section className="flex flex-col gap-2.5 short:gap-1.5" aria-labelledby="exercise-name">
@@ -338,13 +355,13 @@ function Player({
               </p>
             </div>
             <RestBar endsAt={phase.endsAt} total={phase.total} />
-            <div className="flex items-center justify-between gap-3">
+            <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
               <p className="m-0 text-muted">
                 Next: set {logged.length + 1} of {ex.sets}
               </p>
               <button
                 type="button"
-                className="press h-12 rounded-2xl bg-surface-2 px-4 text-lg font-semibold"
+                className="press h-12 rounded-2xl bg-surface-2 px-4 text-lg font-semibold whitespace-nowrap"
                 onClick={() =>
                   setPhase({ ...phase, endsAt: phase.endsAt + 15000, total: phase.total + 15 })
                 }
@@ -389,14 +406,14 @@ function Player({
             <button
               type="button"
               className="press h-16 w-full rounded-full bg-(--tape) text-xl font-bold text-on-tape short:h-14"
-              onClick={() => setConfirmEnd(false)}
+              onClick={keepGoing}
               autoFocus
             >
               Keep going
             </button>
             <button
               type="button"
-              className="press h-12 w-full rounded-full bg-surface-2 text-lg font-semibold"
+              className="press h-12 w-full rounded-2xl bg-surface-2 text-lg font-semibold"
               onClick={finish}
             >
               End workout

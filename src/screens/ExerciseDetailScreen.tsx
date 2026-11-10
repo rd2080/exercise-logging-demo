@@ -81,7 +81,7 @@ export function ExerciseDetailScreen({ exercise, plan, entries, onAdd, onBack }:
             <span className="size-3 shrink-0 rounded-full bg-(--tape)" aria-hidden="true" />
             {meta.label}
           </span>
-          <p className="m-0 text-xl text-muted" data-testid="detail-target">
+          <p className="m-0 text-[17px] text-muted" data-testid="detail-target">
             Target: {targetText(exercise)}
           </p>
           <p className="m-0 text-lg leading-snug text-pretty text-ink [overflow-wrap:anywhere]" data-testid="detail-cue">
@@ -107,7 +107,7 @@ export function ExerciseDetailScreen({ exercise, plan, entries, onAdd, onBack }:
           ) : (
             <ul className="m-0 flex list-none flex-col p-0" data-testid="history-list">
               {history.map((e) => (
-                <EntryRow key={e.id} entry={e} />
+                <EntryRow key={e.id} entry={e} hideName />
               ))}
             </ul>
           )}

@@ -25,10 +25,12 @@ export function Summary({ exercises, logs, onDone }: SummaryProps) {
             {total > 0 ? 'Workout logged' : 'No sets logged'}
           </h1>
           <p className="m-0 text-lg text-muted">
-            {total} {total === 1 ? 'set' : 'sets'} across {done} {done === 1 ? 'exercise' : 'exercises'}.
+            {total > 0
+              ? `${total} ${total === 1 ? 'set' : 'sets'} across ${done} ${done === 1 ? 'exercise' : 'exercises'}.`
+              : 'Nothing was saved.'}
           </p>
         </div>
-        <ul className="m-0 flex list-none flex-col p-0">
+        {total > 0 && <ul className="m-0 flex list-none flex-col p-0">
           {exercises.map((ex, i) => {
             const meta = TYPE_META[ex.trackingType]
             return (
@@ -78,7 +80,7 @@ export function Summary({ exercises, logs, onDone }: SummaryProps) {
               </li>
             )
           })}
-        </ul>
+        </ul>}
       </main>
       <footer className="fixed inset-x-0 bottom-0 mx-auto w-full max-w-[480px] border-t border-line bg-ground px-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
         <button

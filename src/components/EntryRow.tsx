@@ -1,3 +1,4 @@
+import { ChevronRight } from 'lucide-react'
 import { Slot } from './Slot'
 import type { Entry } from '../entries'
 import { TYPE_META, formatValues } from '../lib/tracking'
@@ -11,19 +12,34 @@ function show(entry: Entry): string {
 }
 
 /** One logged-by-hand set: a tape slot, the exercise, the values and where it came from. */
-export function EntryRow({ entry, onSelect }: { entry: Entry; onSelect?: (entry: Entry) => void }) {
+export function EntryRow({
+  entry,
+  onSelect,
+  hideName = false,
+}: {
+  entry: Entry
+  onSelect?: (entry: Entry) => void
+  /** On a page already about one exercise: lead with the values, not the repeated name. */
+  hideName?: boolean
+}) {
   const meta = TYPE_META[entry.trackingType]
-  const body = (
+  const kind = `${meta.label}${entry.source !== 'workout' ? ' · By hand' : ''}`
+  const body = hideName ? (
+    <>
+      <Slot n={0} filled />
+      <span className="flex min-w-0 flex-1 flex-col">
+        <span className="num text-xl leading-tight font-bold [overflow-wrap:anywhere]">{show(entry)}</span>
+        <span className="text-[17px] text-pretty text-muted">{kind}</span>
+      </span>
+    </>
+  ) : (
     <>
       <Slot n={0} filled />
       <span className="flex min-w-0 flex-1 flex-col">
         <span className="font-display text-xl leading-tight font-semibold [overflow-wrap:anywhere]">
           {entry.name}
         </span>
-        <span className="text-[17px] text-pretty text-muted">
-          {meta.label}
-          {entry.source !== 'workout' && ' · By hand'}
-        </span>
+        <span className="text-[17px] text-pretty text-muted">{kind}</span>
       </span>
       <span className="num shrink-0 pt-0.5 text-xl font-bold whitespace-nowrap">{show(entry)}</span>
     </>
@@ -47,6 +63,7 @@ export function EntryRow({ entry, onSelect }: { entry: Entry; onSelect?: (entry:
       aria-label={`${entry.name}: ${formatValues(entry.trackingType, entry.values)}. Edit entry`}
     >
       {body}
+      <ChevronRight size={24} className="mt-2 shrink-0 text-muted" aria-hidden="true" />
     </button>
     </li>
   )

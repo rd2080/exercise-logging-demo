@@ -33,9 +33,9 @@ function Body({ open, onOpenChange, entry, onSave, onDelete }: EditEntrySheetPro
         onOpenChange(o)
       }}
       title={entry.name}
-      why={meta.label}
+      why="Change the numbers, or delete the entry."
       tape={meta.tape}
-      saveLabel="Save changes"
+      saveLabel={confirming ? undefined : 'Save changes'}
       onSave={() => onSave(entry.id, values)}
     >
       <div className="flex flex-col gap-4">
@@ -47,16 +47,16 @@ function Body({ open, onOpenChange, entry, onSave, onDelete }: EditEntrySheetPro
             <p className="font-display m-0 text-2xl leading-tight font-bold">Delete this entry?</p>
             <button
               type="button"
-              className="press h-14 w-full rounded-2xl bg-surface-2 text-lg font-semibold text-ink"
+              className="press h-14 w-full rounded-2xl border-2 border-line bg-transparent text-lg font-semibold text-ink"
               onClick={() => onDelete(entry.id)}
-              autoFocus
             >
               Delete entry
             </button>
             <button
               type="button"
-              className="press h-14 w-full rounded-2xl bg-surface-2 text-lg font-semibold"
+              className="press h-14 w-full rounded-2xl bg-ink text-lg font-bold text-on-tape"
               onClick={() => setConfirming(false)}
+              autoFocus
             >
               Keep entry
             </button>

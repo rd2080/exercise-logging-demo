@@ -55,7 +55,10 @@ test('Log a set opens the sheet on that exercise, and the saved set appears in t
   await expect(sheet).toHaveCount(0)
   const rows = page.getByTestId('history-list').getByRole('listitem')
   await expect(rows).toHaveCount(1)
-  await expect(rows.first()).toContainText('Push-up')
+  // On the detail page rows lead with the values, since the page already names the exercise.
+  await expect(rows.first()).toContainText('12')
+  await expect(rows.first()).toContainText('Reps · By hand')
+  await expect(rows.first()).not.toContainText('Push-up')
   await expect(page.getByTestId('history-empty')).toHaveCount(0)
 })
 

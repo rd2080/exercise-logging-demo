@@ -93,7 +93,7 @@ test('a timed entry edits in seconds with its own tape and no timer', async ({ p
   await page.goto('/?stage=progress')
   await log(page, /Plank/)
   await rows(page).first().getByRole('button').click()
-  await expect(sheet(page).getByText('Timed hold')).toBeVisible()
+  await expect(sheet(page).getByRole('group', { name: 'Hold time' })).toBeVisible()
   await sheet(page).getByRole('button', { name: 'Increase hold time' }).click()
   await sheet(page).getByRole('button', { name: 'Save changes' }).click()
   await expect(rows(page).first()).toContainText('30 s')
