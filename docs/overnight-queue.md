@@ -10,7 +10,7 @@ Rules: one commit per feature, push after each, tests after each feature, one re
 
 ## Batch B: Set-up questions
 - [x] Lead-in line per set-up question (row 5)
-- [ ] Weight and height with unit toggle, unit remembered (row 9)
+- [x] Weight and height with unit toggle, unit remembered (row 9)
 - [ ] Training-style preference ranking that changes the recommendation (row 20)
 - [ ] Batch B review and fixes
 

@@ -1,7 +1,8 @@
 import { ChevronRight } from 'lucide-react'
 import { useState, type CSSProperties } from 'react'
 import { Slot } from '../components/Slot'
-import { ActivitySheet, EquipmentSheet, GoalsSheet, LimitsSheet } from '../components/Sheets'
+import { ActivitySheet, BodySheet, EquipmentSheet, GoalsSheet, LimitsSheet } from '../components/Sheets'
+import { loadUnits, saveUnits, type Units } from '../lib/body'
 import { missing, summaryText, type Answers, type RowId } from '../onboarding'
 
 interface SetupScreenProps {
@@ -15,10 +16,16 @@ const ROWS: { id: RowId; label: string; why: string; sheet: string }[] = [
   { id: 'activity', label: 'Activity level', why: 'Sets how hard your first weeks start', sheet: 'Choose activity level' },
   { id: 'equipment', label: 'Equipment', why: 'So we only plan what you can do', sheet: 'Choose equipment' },
   { id: 'limits', label: 'Limits', why: 'Optional. Rules exercises out', sheet: 'Choose limits' },
+  { id: 'body', label: 'Weight and height', why: 'Optional. Stays on this device', sheet: 'Add measurements' },
 ]
 
 export function SetupScreen({ answers, onChange, onCreate }: SetupScreenProps) {
   const [open, setOpen] = useState<RowId | null>(null)
+  const [units, setUnits] = useState<Units>(loadUnits)
+  const changeUnits = (u: Units) => {
+    setUnits(u)
+    saveUnits(u)
+  }
   const need = missing(answers)
   const ready = need.length === 0
   const sheetProps = (id: RowId) => ({
@@ -44,7 +51,7 @@ export function SetupScreen({ answers, onChange, onCreate }: SetupScreenProps) {
 
         <ul className="m-0 flex list-none flex-col p-0">
           {ROWS.map((row, i) => {
-            const value = summaryText(answers, row.id)
+            const value = summaryText(answers, row.id, units)
             const filled = row.id === 'limits' ? answers.limits.length > 0 : value !== null
             return (
               <li key={row.id} className="border-t border-line first:border-t-0">
@@ -61,7 +68,7 @@ export function SetupScreen({ answers, onChange, onCreate }: SetupScreenProps) {
                       className={`truncate text-lg ${value ? 'text-ink' : 'font-semibold text-(--tape)'}`}
                       data-testid={`answer-${row.id}`}
                     >
-                      {value ?? 'Choose'}
+                      {value ?? (row.id === 'body' ? 'Add' : 'Choose')}
                     </span>
                   </span>
                   <ChevronRight size={24} className="shrink-0 text-muted" aria-hidden="true" />
@@ -91,6 +98,7 @@ export function SetupScreen({ answers, onChange, onCreate }: SetupScreenProps) {
       <ActivitySheet {...sheetProps('activity')} />
       <EquipmentSheet {...sheetProps('equipment')} />
       <LimitsSheet {...sheetProps('limits')} />
+      <BodySheet {...sheetProps('body')} units={units} onUnits={changeUnits} />
     </div>
   )
 }

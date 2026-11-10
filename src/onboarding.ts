@@ -1,4 +1,5 @@
 import { onboarding as data } from './data/fixtures'
+import { bodySummary, DEFAULT_UNITS, type Units } from './lib/body'
 
 export interface Option {
   id: string
@@ -35,6 +36,9 @@ export interface Answers {
   equipment: string[]
   pullup: { hang: boolean; secure: boolean }
   limits: string[]
+  /** Optional body measurements, always stored in kg and cm. */
+  weightKg: number | null
+  heightCm: number | null
 }
 
 export const EMPTY_ANSWERS: Answers = {
@@ -43,9 +47,11 @@ export const EMPTY_ANSWERS: Answers = {
   equipment: [],
   pullup: { hang: false, secure: false },
   limits: [],
+  weightKg: null,
+  heightCm: null,
 }
 
-export type RowId = 'goals' | 'activity' | 'equipment' | 'limits'
+export type RowId = 'goals' | 'activity' | 'equipment' | 'limits' | 'body'
 
 export function labelOf(options: Option[], id: string): string {
   const o = options.find((x) => x.id === id)
@@ -60,7 +66,7 @@ export function missing(a: Answers): string[] {
   return out
 }
 
-export function summaryText(a: Answers, row: RowId): string | null {
+export function summaryText(a: Answers, row: RowId, units: Units = DEFAULT_UNITS): string | null {
   switch (row) {
     case 'goals':
       return a.goals.length ? a.goals.map((g) => labelOf(GOALS, g)).join(', ') : null
@@ -68,6 +74,8 @@ export function summaryText(a: Answers, row: RowId): string | null {
       return a.activity ? labelOf(ACTIVITY, a.activity) : null
     case 'equipment':
       return a.equipment.length ? a.equipment.map((e) => labelOf(EQUIPMENT, e)).join(', ') : null
+    case 'body':
+      return bodySummary(a.weightKg, a.heightCm, units)
     case 'limits':
       return a.limits.length ? a.limits.map((l) => labelOf(LIMITS, l)).join(', ') : 'No limits'
   }
