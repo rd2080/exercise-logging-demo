@@ -25,7 +25,7 @@ test('tappable rows end in a chevron; read-only history rows do not', async ({ p
   await page.goto('/?stage=progress')
   await expect(page.getByRole('button', { name: /Edit entry/ }).locator('svg')).toHaveCount(2) // slot check + chevron
   await page.goto('/?stage=exercises')
-  await expect(page.getByTestId('exercise-open').first().locator('svg')).toHaveCount(1)
+  await expect(page.getByTestId('exercise-open').first().locator('svg')).toHaveCount(2) // thumbnail figure + chevron
   await page.goto('/?stage=exercise&id=push-up')
   await expect(page.getByTestId('history-list').getByRole('listitem').first().locator('svg')).toHaveCount(1) // slot check only
 })

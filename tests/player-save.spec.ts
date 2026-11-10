@@ -73,6 +73,7 @@ test('manual entries still say by hand', async ({ page }) => {
 test('the start of a hold is announced: get into position, then the hold begins', async ({ page }) => {
   await page.clock.install()
   await page.goto('/?stage=player')
+  await expect(page.getByTestId('player')).toBeVisible() // the screen loads on demand
   for (const sets of [3, 3]) {
     for (let i = 0; i < sets; i++) {
       await page.evaluate(() => (document.querySelector('[data-testid=primary]') as HTMLElement).click())

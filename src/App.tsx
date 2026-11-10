@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { DataToggle } from './components/DataToggle'
 import { library, session } from './data/fixtures'
 import type { Entry } from './entries'
@@ -7,16 +7,19 @@ import { loadSaved, saveSaved } from './lib/saved'
 import { loadLimits, saveLimits } from './lib/limits'
 import { loadEntries, saveEntries, ENTRIES_KEY } from './lib/storage'
 import { EMPTY_ANSWERS, type Answers } from './onboarding'
-import { ExerciseDetailScreen } from './screens/ExerciseDetailScreen'
-import { ExercisesScreen } from './screens/ExercisesScreen'
-import { MyProgrammeScreen } from './screens/MyProgrammeScreen'
-import { PlayerScreen } from './screens/PlayerScreen'
 import { ProgrammeScreen } from './screens/ProgrammeScreen'
-import { ProgressScreen } from './screens/ProgressScreen'
 import { RemindersScreen } from './screens/RemindersScreen'
 import { SetupScreen } from './screens/SetupScreen'
 import { TodayScreen } from './screens/TodayScreen'
+import { ScreenSkeleton } from './components/ScreenSkeleton'
 import { TabBar, type TabId } from './components/TabBar'
+
+// The longer screens load on demand, with a skeleton in the meantime.
+const ExerciseDetailScreen = lazy(() => import('./screens/ExerciseDetailScreen').then((m) => ({ default: m.ExerciseDetailScreen })))
+const ExercisesScreen = lazy(() => import('./screens/ExercisesScreen').then((m) => ({ default: m.ExercisesScreen })))
+const MyProgrammeScreen = lazy(() => import('./screens/MyProgrammeScreen').then((m) => ({ default: m.MyProgrammeScreen })))
+const PlayerScreen = lazy(() => import('./screens/PlayerScreen').then((m) => ({ default: m.PlayerScreen })))
+const ProgressScreen = lazy(() => import('./screens/ProgressScreen').then((m) => ({ default: m.ProgressScreen })))
 
 type Stage = 'setup' | 'programme' | 'reminders' | TabId | 'player' | 'exercise' | 'myprogramme'
 const STAGES: Stage[] = ['programme', 'reminders', 'today', 'exercises', 'progress', 'player', 'exercise', 'myprogramme']
@@ -206,7 +209,9 @@ function Screen() {
 export default function App() {
   return (
     <>
-      <Screen />
+      <Suspense fallback={<ScreenSkeleton />}>
+        <Screen />
+      </Suspense>
       <DataToggle />
     </>
   )
