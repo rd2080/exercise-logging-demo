@@ -126,3 +126,18 @@ test('the workout ends on a summary of what was logged', async ({ page }) => {
   await expect(page.getByTestId('summary')).toBeVisible()
   await expect(page.getByText('11 sets across 4 exercises.')).toBeVisible()
 })
+
+for (const height of [667, 844]) {
+  test(`the logged value and its source note stay above the button at 390x${height}`, async ({ page }) => {
+    await page.setViewportSize({ width: 390, height })
+    await open(page)
+    for (const sets of [3, 3, 2, 3]) {
+      const button = await primary(page).boundingBox()
+      const note = await page.getByTestId('prefill-note').boundingBox()
+      const slots = await page.getByTestId('set-slots').boundingBox()
+      expect(note!.y + note!.height).toBeLessThanOrEqual(button!.y - 4)
+      expect(slots!.y + slots!.height).toBeLessThanOrEqual(button!.y)
+      await finishExercise(page, sets)
+    }
+  })
+}

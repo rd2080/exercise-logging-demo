@@ -18,7 +18,7 @@ export function Stepper({ label, unit, value, min, max, step, compact, onChange 
   const minus = (
     <button
       type="button"
-      className={`press grid h-14 place-items-center rounded-2xl bg-surface-2 ${compact ? 'flex-1' : 'w-14 shrink-0'}`}
+      className={`press grid h-14 short:h-12 place-items-center rounded-2xl bg-surface-2 ${compact ? 'flex-1' : 'w-14 shrink-0'}`}
       aria-label={`Decrease ${label.toLowerCase()}`}
       disabled={value <= min}
       onClick={() => set(value - step)}
@@ -29,7 +29,7 @@ export function Stepper({ label, unit, value, min, max, step, compact, onChange 
   const plus = (
     <button
       type="button"
-      className={`press grid h-14 place-items-center rounded-2xl bg-surface-2 ${compact ? 'flex-1' : 'w-14 shrink-0'}`}
+      className={`press grid h-14 short:h-12 place-items-center rounded-2xl bg-surface-2 ${compact ? 'flex-1' : 'w-14 shrink-0'}`}
       aria-label={`Increase ${label.toLowerCase()}`}
       disabled={value >= max}
       onClick={() => set(value + step)}
@@ -39,7 +39,7 @@ export function Stepper({ label, unit, value, min, max, step, compact, onChange 
   )
   const readout = (
     <output
-      className={`num text-center text-[44px] leading-none font-bold ${compact ? 'block' : 'min-w-[3.2ch]'}`}
+      className={`num text-center text-[44px] leading-none font-bold short:text-[36px] ${compact ? 'block' : 'min-w-[3.2ch]'}`}
       aria-live="polite"
     >
       {value}
@@ -48,7 +48,7 @@ export function Stepper({ label, unit, value, min, max, step, compact, onChange 
   )
 
   return (
-    <div className="flex min-w-0 flex-1 flex-col gap-2" role="group" aria-label={label}>
+    <div className="flex min-w-0 flex-1 flex-col gap-2 short:gap-1" role="group" aria-label={label}>
       <span className="text-[15px] font-medium text-muted">{label}</span>
       {compact ? (
         <>

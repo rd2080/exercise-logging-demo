@@ -23,7 +23,7 @@ interface PosePair {
 }
 
 const LYING = '0 50 240 104'
-const STANDING = '0 16 240 136'
+const STANDING = '0 8 240 144'
 
 const standing = (): Pose => ({
   neck: [120, 52],
@@ -241,7 +241,7 @@ export function DemoFigure({ exerciseId, name }: { exerciseId: string; name: str
 
   return (
     <figure
-      className="relative m-0 aspect-[240/104] w-full overflow-hidden rounded-3xl bg-surface"
+      className="relative m-0 aspect-[240/104] short:aspect-[240/68] w-full overflow-hidden rounded-3xl bg-surface"
       aria-label={`${name} demo`}
       data-testid="media-slot"
     >

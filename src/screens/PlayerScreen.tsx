@@ -135,7 +135,7 @@ export function PlayerScreen({ session }: { session: Session }) {
       style={{ '--tape': meta.tape } as CSSProperties}
       data-testid="player"
     >
-      <header className="flex flex-col gap-3 px-4 pt-[max(0.75rem,env(safe-area-inset-top))] pb-3">
+      <header className="flex flex-col gap-3 px-4 pt-[max(0.5rem,env(safe-area-inset-top))] pb-3.5 short:gap-2 short:pb-3">
         <div className="flex items-center justify-between">
           <button
             type="button"
@@ -156,13 +156,13 @@ export function PlayerScreen({ session }: { session: Session }) {
         />
       </header>
 
-      <main className="flex flex-1 flex-col gap-4 px-4 pb-40">
+      <main className="flex flex-1 flex-col gap-4 px-4 pb-40 short:gap-3 short:pb-32">
         <DemoFigure exerciseId={ex.id} name={ex.name} />
 
-        <section className="flex flex-col gap-2.5" aria-labelledby="exercise-name">
+        <section className="flex flex-col gap-2.5 short:gap-1.5" aria-labelledby="exercise-name">
           <h1
             id="exercise-name"
-            className="font-display m-0 text-[36px] leading-[1.05] font-bold text-balance"
+            className="font-display m-0 text-[36px] leading-[1.05] font-bold text-balance short:text-[30px]"
           >
             {ex.name}
           </h1>
@@ -173,7 +173,7 @@ export function PlayerScreen({ session }: { session: Session }) {
             </span>
             <span className="text-muted">{targetText(ex)}</span>
           </div>
-          <p className="m-0 max-w-[34ch] text-lg leading-snug text-ink" data-testid="form-cue">
+          <p className="m-0 max-w-[34ch] text-lg leading-snug text-ink short:text-base" data-testid="form-cue">
             {ex.cue}
           </p>
         </section>
@@ -187,7 +187,7 @@ export function PlayerScreen({ session }: { session: Session }) {
 
         {phase.kind === 'log' && (
           <section
-            className="flex flex-col gap-4 rounded-3xl bg-surface p-4"
+            className="flex flex-col gap-4 rounded-3xl bg-surface p-4 short:gap-2 short:p-3"
             aria-label="Log this set"
             data-testid="inputs"
           >
@@ -339,10 +339,10 @@ export function PlayerScreen({ session }: { session: Session }) {
         )}
       </main>
 
-      <footer className="fixed inset-x-0 bottom-0 mx-auto w-full max-w-[480px] border-t border-line bg-ground px-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
+      <footer className="fixed inset-x-0 bottom-0 mx-auto w-full max-w-[480px] border-t border-line bg-ground px-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] short:pt-3 short:pb-3">
         <button
           type="button"
-          className="press h-16 w-full rounded-full bg-(--tape) text-xl font-bold text-on-tape"
+          className="press h-16 w-full rounded-full bg-(--tape) text-xl font-bold text-on-tape short:h-14"
           onClick={primary.onClick}
           data-testid="primary"
         >

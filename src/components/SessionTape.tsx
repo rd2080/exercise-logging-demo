@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react'
 import type { Exercise } from '../types'
 import { TYPE_META } from '../lib/tracking'
 
@@ -17,19 +18,25 @@ export function SessionTape({ exercises, current, loggedCounts }: SessionTapePro
         return (
           <li
             key={ex.id}
-            className={`tape-cut flex-1 self-center overflow-hidden bg-surface-2 ${isCurrent ? 'h-4' : 'h-3'}`}
+            className="relative flex-1"
             aria-current={isCurrent ? 'step' : undefined}
             aria-label={`${ex.name}, ${loggedCounts[i]} of ${ex.sets} sets logged`}
-            style={
-              isCurrent
-                ? { backgroundColor: `color-mix(in oklab, ${tape} 42%, var(--color-surface-2))` }
-                : undefined
-            }
           >
             <div
-              className="tape-fill h-full origin-left transition-transform duration-300 ease-(--ease-out-expo) motion-reduce:transition-none"
-              style={{ '--tape': tape, transform: `scaleX(${fill})` } as React.CSSProperties}
-            />
+              className={`tape-cut h-3 overflow-hidden ${isCurrent ? 'bg-line' : 'bg-surface-2'}`}
+            >
+              <div
+                className="tape-fill h-full origin-left transition-transform duration-300 ease-(--ease-out-expo) motion-reduce:transition-none"
+                style={{ '--tape': tape, transform: `scaleX(${fill})` } as CSSProperties}
+              />
+            </div>
+            {isCurrent && (
+              <span
+                className="absolute -bottom-2 left-1/2 h-1 w-8 -translate-x-1/2 rounded-full"
+                style={{ background: tape }}
+                aria-hidden="true"
+              />
+            )}
           </li>
         )
       })}

@@ -35,20 +35,24 @@ export function Summary({ exercises, logs, onRestart }: SummaryProps) {
                     {logs[i].length} of {ex.sets}
                   </span>
                 </div>
-                <ol className="m-0 flex list-none gap-2 p-0" aria-label={`${ex.name} sets`}>
+                <ol
+                  className="m-0 flex list-none gap-1 p-0"
+                  style={{ '--cut': '10px' } as React.CSSProperties}
+                  aria-label={`${ex.name} sets`}
+                >
                   {Array.from({ length: ex.sets }, (_, j) => {
                     const v = logs[i][j]
                     return v ? (
                       <li
                         key={j}
-                        className="tape-fill num flex h-12 flex-1 items-center justify-center rounded-2xl px-2 text-lg font-bold whitespace-nowrap text-on-tape"
+                        className="tape-fill tape-cut num flex h-12 min-w-0 flex-1 items-center justify-center px-3 text-lg font-bold whitespace-nowrap text-on-tape"
                       >
                         {formatValues(ex.trackingType, v)}
                       </li>
                     ) : (
                       <li
                         key={j}
-                        className="num flex h-12 flex-1 items-center justify-center rounded-2xl bg-surface-2 text-lg font-semibold text-muted"
+                        className="tape-cut num flex h-12 min-w-0 flex-1 items-center justify-center bg-surface-2 text-lg font-semibold text-muted"
                         aria-label={`Set ${j + 1}: not logged`}
                       >
                         {j + 1}

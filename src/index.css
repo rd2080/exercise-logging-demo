@@ -1,5 +1,7 @@
 @import 'tailwindcss';
 
+@custom-variant short (@media (max-height: 700px));
+
 @theme {
   --font-sans: 'Barlow', system-ui, sans-serif;
   --font-display: 'Barlow Semi Condensed', 'Barlow', system-ui, sans-serif;
@@ -95,12 +97,12 @@
   /* Route tape: an authored fibre-grain tile (horizontal cloth streaks) over the tape colour. */
   .tape-fill {
     background-color: var(--tape);
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='96'%3E%3Cfilter id='f' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.02 0.9' numOctaves='2' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.9 0 0 0 -0.32'/%3E%3C/filter%3E%3Crect width='160' height='96' filter='url(%23f)' opacity='0.55'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='96'%3E%3Cfilter id='f' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.02 0.9' numOctaves='2' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.9 0 0 0 -0.32'/%3E%3C/filter%3E%3Crect width='160' height='96' filter='url(%23f)' opacity='0.55'/%3E%3C/svg%3E");
     background-size: 160px 96px;
   }
 
   .tape-cut {
-    clip-path: polygon(7px 0, 100% 0, calc(100% - 7px) 100%, 0 100%);
+    clip-path: polygon(var(--cut, 7px) 0, 100% 0, calc(100% - var(--cut, 7px)) 100%, 0 100%);
   }
 
   .num {
