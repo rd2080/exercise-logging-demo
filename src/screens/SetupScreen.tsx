@@ -51,7 +51,6 @@ export function SetupScreen({ answers, onChange, onCreate }: SetupScreenProps) {
                 <button
                   type="button"
                   className="press flex min-h-[88px] w-full items-center gap-3 py-3 text-left short:min-h-[76px]"
-                  aria-label={`${row.sheet}. ${value ?? 'Not answered'}`}
                   onClick={() => setOpen(row.id)}
                 >
                   <Slot n={i + 1} filled={filled} />

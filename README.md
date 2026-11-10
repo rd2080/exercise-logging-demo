@@ -70,6 +70,8 @@ Entries you log by hand are stored in the browser's localStorage under `exercise
 
 Playwright at phone width (390x844). Specs are in `tests/`.
 
+`tests/a11y.spec.ts` runs axe (WCAG 2.2 AA, including colour contrast) on every screen and the main sheets at 390 and 320 px wide, checks that reduced motion stops animation, and asserts the muted-text contrast ratio. The dev data toggle is excluded.
+
 ## Design skills (Claude Code)
 
 Installed in `.claude/skills/` so every session on this repo has them:

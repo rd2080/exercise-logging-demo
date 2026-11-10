@@ -8,13 +8,13 @@ async function openRow(page: Page, name: RegExp) {
 }
 
 async function answerAll(page: Page, activity = 'Lightly active') {
-  await openRow(page, /Choose goals/)
+  await openRow(page, /^Goals/)
   await page.getByRole('checkbox', { name: 'Improve fitness' }).click()
   await page.getByRole('checkbox', { name: 'Build muscle' }).click()
   await page.getByRole('button', { name: 'Save goals' }).click()
-  await openRow(page, /Choose activity level/)
+  await openRow(page, /^Activity level/)
   await page.getByRole('radio', { name: new RegExp(activity) }).click()
-  await openRow(page, /Choose equipment/)
+  await openRow(page, /^Equipment/)
   await page.getByRole('checkbox', { name: /None, bodyweight only/ }).click()
   await page.getByRole('button', { name: 'Save equipment' }).click()
   await expect(page.getByRole('dialog')).toHaveCount(0)
@@ -43,7 +43,7 @@ test('all four questions are on one screen with a why line and a time estimate',
 test('the main button is disabled until the required answers exist and says what is missing', async ({ page }) => {
   await expect(create(page)).toBeDisabled()
   await expect(page.getByTestId('still-needed')).toHaveText('Still needed: goal, activity level, equipment.')
-  await openRow(page, /Choose goals/)
+  await openRow(page, /^Goals/)
   await page.getByRole('checkbox', { name: 'Improve fitness' }).click()
   await page.getByRole('button', { name: 'Save goals' }).click()
   await expect(page.getByTestId('still-needed')).toHaveText('Still needed: activity level, equipment.')
@@ -51,7 +51,7 @@ test('the main button is disabled until the required answers exist and says what
 })
 
 test('goals are ranked by pick order, capped at three', async ({ page }) => {
-  await openRow(page, /Choose goals/)
+  await openRow(page, /^Goals/)
   for (const g of ['Build muscle', 'Burn fat', 'Relieve stress'])
     await page.getByRole('checkbox', { name: g }).click()
   await expect(page.getByRole('checkbox', { name: 'Improve fitness' })).toBeDisabled()
@@ -61,14 +61,14 @@ test('goals are ranked by pick order, capped at three', async ({ page }) => {
 })
 
 test('picking an activity level answers in one tap and closes the sheet', async ({ page }) => {
-  await openRow(page, /Choose activity level/)
+  await openRow(page, /^Activity level/)
   await page.getByRole('radio', { name: /Mostly sitting/ }).click()
   await expect(page.getByRole('dialog')).toHaveCount(0)
   await expect(page.getByTestId('answer-activity')).toHaveText('Mostly sitting')
 })
 
 test('None is exclusive and a pull-up bar asks follow-ups with the consequence in place', async ({ page }) => {
-  await openRow(page, /Choose equipment/)
+  await openRow(page, /^Equipment/)
   await page.getByRole('checkbox', { name: 'Dumbbells' }).click()
   await page.getByRole('checkbox', { name: /None, bodyweight only/ }).click()
   await expect(page.getByRole('checkbox', { name: 'Dumbbells' })).not.toBeChecked()
@@ -84,14 +84,14 @@ test('None is exclusive and a pull-up bar asks follow-ups with the consequence i
 
 test('limits are optional and default to none', async ({ page }) => {
   await expect(page.getByTestId('answer-limits')).toHaveText('No limits')
-  await openRow(page, /Choose limits/)
+  await openRow(page, /^Limits/)
   await page.getByRole('switch', { name: /Train quietly/ }).click()
   await page.getByRole('button', { name: 'Save limits' }).click()
   await expect(page.getByTestId('answer-limits')).toHaveText('Train quietly')
 })
 
 test('button labels name the result in sentence case', async ({ page }) => {
-  await openRow(page, /Choose goals/)
+  await openRow(page, /^Goals/)
   await expect(page.getByRole('button', { name: 'Save goals' })).toBeVisible()
   await page.keyboard.press('Escape')
   await expect(create(page)).toHaveText('Create my plan')
@@ -112,12 +112,12 @@ test('a lightly active user is recommended foundation strength and can start it'
 })
 
 test('a first goal of learning a skill recommends the handstand programme, with the reason', async ({ page }) => {
-  await openRow(page, /Choose goals/)
+  await openRow(page, /^Goals/)
   await page.getByRole('checkbox', { name: /Learn a skill/ }).click()
   await page.getByRole('button', { name: 'Save goals' }).click()
-  await openRow(page, /Choose activity level/)
+  await openRow(page, /^Activity level/)
   await page.getByRole('radio', { name: /Lightly active/ }).click()
-  await openRow(page, /Choose equipment/)
+  await openRow(page, /^Equipment/)
   await page.getByRole('checkbox', { name: /None, bodyweight only/ }).click()
   await page.getByRole('button', { name: 'Save equipment' }).click()
   await create(page).click()
@@ -166,18 +166,18 @@ test('every control is at least 48px, nothing overflows, and screens are capture
     await page.screenshot({ path: `screenshots/${shot}.png` })
   }
   await check('setup-empty')
-  await openRow(page, /Choose equipment/)
+  await openRow(page, /^Equipment/)
   await page.getByRole('checkbox', { name: 'Pull-up bar' }).click()
   await page.waitForTimeout(500)
   await check('setup-equipment-sheet')
   await page.getByRole('checkbox', { name: 'Pull-up bar' }).click()
   await page.getByRole('checkbox', { name: /None, bodyweight only/ }).click()
   await page.getByRole('button', { name: 'Save equipment' }).click()
-  await openRow(page, /Choose goals/)
+  await openRow(page, /^Goals/)
   await page.getByRole('checkbox', { name: 'Improve fitness' }).click()
   await page.getByRole('checkbox', { name: 'Build muscle' }).click()
   await page.getByRole('button', { name: 'Save goals' }).click()
-  await openRow(page, /Choose activity level/)
+  await openRow(page, /^Activity level/)
   await page.getByRole('radio', { name: /Lightly active/ }).click()
   await page.waitForTimeout(500)
   await check('setup-ready')

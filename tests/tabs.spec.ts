@@ -119,12 +119,12 @@ test('tapping the current tab scrolls to the top', async ({ page }) => {
 
 test('with no programmes, the programme step shows an empty state with a way back', async ({ page }) => {
   await page.goto('/?data=empty')
-  await page.getByRole('button', { name: /Choose goals/ }).click()
+  await page.getByRole('button', { name: /^Goals/ }).click()
   await page.getByRole('checkbox', { name: 'Improve fitness' }).click()
   await page.getByRole('button', { name: 'Save goals' }).click()
-  await page.getByRole('button', { name: /Choose activity level/ }).click()
+  await page.getByRole('button', { name: /^Activity level/ }).click()
   await page.getByRole('radio', { name: /Lightly active/ }).click()
-  await page.getByRole('button', { name: /Choose equipment/ }).click()
+  await page.getByRole('button', { name: /^Equipment/ }).click()
   await page.getByRole('checkbox', { name: /None, bodyweight only/ }).click()
   await page.getByRole('button', { name: 'Save equipment' }).click()
   await page.getByTestId('create-plan').click()
@@ -135,12 +135,12 @@ test('with no programmes, the programme step shows an empty state with a way bac
 
 test('finishing set up with programmes brings the tab bar back on Progress', async ({ page }) => {
   await page.goto('/')
-  await page.getByRole('button', { name: /Choose goals/ }).click()
+  await page.getByRole('button', { name: /^Goals/ }).click()
   await page.getByRole('checkbox', { name: 'Improve fitness' }).click()
   await page.getByRole('button', { name: 'Save goals' }).click()
-  await page.getByRole('button', { name: /Choose activity level/ }).click()
+  await page.getByRole('button', { name: /^Activity level/ }).click()
   await page.getByRole('radio', { name: /Lightly active/ }).click()
-  await page.getByRole('button', { name: /Choose equipment/ }).click()
+  await page.getByRole('button', { name: /^Equipment/ }).click()
   await page.getByRole('checkbox', { name: /None, bodyweight only/ }).click()
   await page.getByRole('button', { name: 'Save equipment' }).click()
   await page.getByTestId('create-plan').click()
