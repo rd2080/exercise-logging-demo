@@ -117,6 +117,7 @@ export function ProgressScreen({
               why={`All ${entries.length} logged ${entries.length === 1 ? 'set' : 'sets'} on this device are deleted, and this cannot be undone.`}
               confirmLabel="Clear all entries"
               onConfirm={onClear}
+              destructive
               testId="clear-confirm"
             />
           </>

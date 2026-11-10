@@ -6,7 +6,7 @@ Rules: one commit per feature, push after each, tests after each feature, one re
 - [x] Stage-move popup with "Cancel" and "Switch to stage 2" (sheet row 61)
 - [x] Muscles on exercises, shown on the Today session card (row 43)
 - [x] Clear-all and restart for entries and programme, with a confirm
-- [ ] Batch A review and fixes
+- [x] Batch A review and fixes (review: fix; applied double-tap guard, focus, destructive layout, numeral face, DESIGN.md)
 
 ## Batch B: Set-up questions
 - [x] Lead-in line per set-up question (row 5)

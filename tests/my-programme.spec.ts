@@ -333,3 +333,30 @@ test('clearing all entries asks first and empties the list for good', async ({ p
   await page.reload()
   await expect(page.getByTestId('clear-entries')).toHaveCount(0)
 })
+
+test('a double tap on a destructive trigger cannot confirm it, and focus moves into and back out of the sheet', async ({ page }) => {
+  await setup(page, { entries: [entry('a', at(10)), entry('b', at(9))] })
+  await page.goto('/?stage=progress')
+  const trigger = page.getByTestId('clear-entries')
+  await trigger.click()
+  const dialog = page.getByRole('dialog')
+  await expect(dialog).toBeVisible()
+  // Cancel is the filled, focused choice. The action is outlined and ignores taps at first.
+  await expect(dialog.getByRole('button', { name: 'Cancel' })).toBeFocused()
+  await expect(dialog.getByRole('button', { name: 'Clear all entries' })).toBeDisabled()
+  await page.waitForTimeout(800)
+  await expect(dialog.getByRole('button', { name: 'Clear all entries' })).toBeEnabled()
+  await dialog.getByRole('button', { name: 'Cancel' }).click()
+  await expect(dialog).toHaveCount(0)
+  await expect(trigger).toBeFocused()
+  const kept = await page.evaluate(() => JSON.parse(localStorage.getItem('exercise-demo:entries')!).entries.length)
+  expect(kept).toBe(2)
+})
+
+test('Today facts keep the sentence in the body face and only the number in the numeral face', async ({ page }) => {
+  await page.goto('/?stage=today')
+  const p = page.getByTestId('session-facts')
+  const fam = await p.evaluate((e) => getComputedStyle(e).fontFamily)
+  const num = await p.locator('.num').evaluate((e) => getComputedStyle(e).fontFamily)
+  expect(fam).not.toBe(num)
+})

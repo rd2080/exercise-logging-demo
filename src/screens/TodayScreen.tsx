@@ -71,8 +71,8 @@ export function TodayScreen({ session, onStart, onChoose, onOpen, programme, onP
                 {session.exercises.length} {session.exercises.length === 1 ? 'exercise' : 'exercises'},{' '}
                 {sets} {sets === 1 ? 'set' : 'sets'}
               </h2>
-              <p className="num m-0 pb-1 text-[17px] text-pretty text-muted" data-testid="session-facts">
-                About {facts.minutes} min
+              <p className="m-0 pb-1 text-[17px] text-pretty text-muted" data-testid="session-facts">
+                About <span className="num">{facts.minutes}</span> min
                 {facts.muscles.length > 0 && ` · Works ${joinList(facts.muscles.slice(0, 4))}`}
                 {` · ${facts.equipment}`}
               </p>

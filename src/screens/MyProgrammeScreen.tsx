@@ -252,6 +252,7 @@ export function MyProgrammeScreen({ programme, chosen, entries, now, onBack, onS
           why="Week 1 starts again today, with no sessions counted and the streak back at zero. Your logged sets stay."
           confirmLabel="Restart programme"
           onConfirm={onRestart}
+          destructive
           tape="var(--color-tape-reps)"
           testId="restart-confirm"
         />
