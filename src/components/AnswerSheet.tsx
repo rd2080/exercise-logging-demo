@@ -10,6 +10,10 @@ interface AnswerSheetProps {
   /** Label of the button that saves and closes. Omit when a single tap answers. */
   saveLabel?: string
   canSave?: boolean
+  /** Runs when the save button is tapped. */
+  onSave?: () => void
+  /** Close the sheet after saving. Set false when the button moves to a next step. */
+  closeOnSave?: boolean
 }
 
 export function AnswerSheet({
@@ -20,6 +24,8 @@ export function AnswerSheet({
   children,
   saveLabel,
   canSave = true,
+  onSave,
+  closeOnSave = true,
 }: AnswerSheetProps) {
   return (
     <Drawer.Root open={open} onOpenChange={onOpenChange}>
@@ -47,7 +53,10 @@ export function AnswerSheet({
                 type="button"
                 className="press h-16 w-full rounded-full bg-(--tape) text-xl font-bold text-on-tape disabled:bg-surface-2 disabled:text-muted"
                 disabled={!canSave}
-                onClick={() => onOpenChange(false)}
+                onClick={() => {
+                  onSave?.()
+                  if (closeOnSave) onOpenChange(false)
+                }}
               >
                 {saveLabel}
               </button>

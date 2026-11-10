@@ -203,6 +203,9 @@ Flat row with hairline separators: a small slanted slot (neutral on Today, in th
 ### Known gaps
 Set up has no back button: a user who reaches it from an empty tab can only finish it, which returns them to Progress with the tab bar. Exercise rows are not tappable and there is no exercise detail page.
 
+### Plus button and manual entry
+An icon-only 48px circle (Worn Mat Brown, ivory plus) at the right of the Progress title, labelled "Log an exercise" for screen readers. It is the one approved exception to the result-named-button rule. The empty state also carries a quiet text button, "Log an exercise", under its main button. Both open a bottom sheet in three steps: pick an exercise (the plan's exercises plus "Something else"), optionally name a new exercise and choose how it is counted, then log it with the player's own steppers, prefilled and with a source note. Plan exercises show the compact demo figure and the form cue above the inputs; a new exercise has neither, and the sheet says so. The pinned button is "Set amounts" while naming, then "Log set". A logged entry becomes an entry row on Progress (tape check slot, name, type and "Added by hand", the values on the right), newest first.
+
 ### Empty state (template)
 For any page with nothing to show yet: an authored illustration (five empty parallelogram slots in Worn Mat Brown with a short grain tape tail entering the first), a 36px bold headline, one sentence in muted text saying where the data will appear, and one full-width 64px pill in the tape colour that names the result. It is the one place the main button sits inline instead of pinned, because the page scrolls and a pinned button would cover the content below.
 

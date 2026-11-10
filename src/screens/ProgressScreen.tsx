@@ -1,14 +1,30 @@
-import type { CSSProperties } from 'react'
-import { goalsData as goalData } from '../data/fixtures'
+import { Plus } from 'lucide-react'
+import { useState, type CSSProperties } from 'react'
+import { AddExerciseSheet } from '../components/AddExerciseSheet'
 import { EmptySlots } from '../components/EmptySlots'
 import { EmptyState } from '../components/EmptyState'
+import { EntryRow } from '../components/EntryRow'
 import { GoalList, type Goal } from '../components/GoalList'
+import { goalsData as goalData } from '../data/fixtures'
+import type { Entry } from '../entries'
+import type { Exercise } from '../types'
 
 interface ProgressScreenProps {
   onStart: () => void
+  plan: Exercise[]
+  entries: Entry[]
+  onAdd: (entry: Omit<Entry, 'id'>) => void
 }
 
-export function ProgressScreen({ onStart }: ProgressScreenProps) {
+export function ProgressScreen({ onStart, plan, entries, onAdd }: ProgressScreenProps) {
+  const [adding, setAdding] = useState(false)
+  const progress = {
+    ...(goalData.progress as Record<string, number>),
+    'first-set': Math.max(
+      (goalData.progress as Record<string, number>)['first-set'] ?? 0,
+      entries.length > 0 ? 1 : 0,
+    ),
+  }
   return (
     <div
       className="mx-auto flex min-h-dvh w-full max-w-[480px] flex-col"
@@ -16,24 +32,57 @@ export function ProgressScreen({ onStart }: ProgressScreenProps) {
       data-testid="progress"
     >
       <main className="flex flex-1 flex-col gap-6 px-4 pt-[max(2rem,env(safe-area-inset-top))] pb-28">
-        <h1 className="font-display m-0 text-[40px] leading-[1.05] font-bold">Progress</h1>
-        <EmptyState
-          illustration={<EmptySlots />}
-          title="Your sets will be logged here"
-          body="Log a set in any workout. It shows up here with what you did, next to what you did last time."
-          actionLabel="Start your first workout"
-          onAction={onStart}
-        />
+        <div className="flex items-center justify-between gap-3">
+          <h1 className="font-display m-0 text-[40px] leading-[1.05] font-bold">Progress</h1>
+          <button
+            type="button"
+            className="press grid size-12 shrink-0 place-items-center rounded-full bg-surface-2"
+            aria-label="Log an exercise"
+            onClick={() => setAdding(true)}
+            data-testid="add-exercise"
+          >
+            <Plus size={24} strokeWidth={2.5} aria-hidden="true" />
+          </button>
+        </div>
+
+        {entries.length === 0 ? (
+          <EmptyState
+            illustration={<EmptySlots />}
+            title="Your sets will be logged here"
+            body="Log a set in any workout. It shows up here with what you did, next to what you did last time."
+            actionLabel="Start your first workout"
+            onAction={onStart}
+            secondaryLabel="Log an exercise"
+            onSecondary={() => setAdding(true)}
+          />
+        ) : (
+          <section className="flex flex-col gap-1" aria-labelledby="logged-heading">
+            <h2 id="logged-heading" className="font-display m-0 text-2xl leading-tight font-bold">
+              Logged by hand
+            </h2>
+            <ul className="m-0 flex list-none flex-col p-0" data-testid="entry-list">
+              {entries.map((e) => (
+                <EntryRow key={e.id} entry={e} />
+              ))}
+            </ul>
+          </section>
+        )}
+
         <section className="flex flex-col gap-1" aria-labelledby="goals-heading">
           <h2 id="goals-heading" className="font-display m-0 text-2xl leading-tight font-bold">
             Goals to unlock
           </h2>
-          <GoalList
-            goals={goalData.goals as Goal[]}
-            progress={goalData.progress as Record<string, number>}
-          />
+          <GoalList goals={goalData.goals as Goal[]} progress={progress} />
         </section>
       </main>
+
+      <AddExerciseSheet
+        open={adding}
+        onOpenChange={setAdding}
+        plan={plan}
+        entries={entries}
+        onAdd={onAdd}
+      />
     </div>
   )
 }

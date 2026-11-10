@@ -45,6 +45,7 @@ export const SOURCE_NOTE: Record<PrefillSource, string> = {
   plan: "Prefilled from today's plan",
   'previous-set': 'Same as your last set',
   hold: 'Taken from your timed hold',
+  default: 'A starting point. Adjust it to what you did.',
 }
 
 export function formatClock(totalSeconds: number): string {

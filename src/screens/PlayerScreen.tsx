@@ -5,7 +5,7 @@ import { EmptySlots } from '../components/EmptySlots'
 import { EmptyState } from '../components/EmptyState'
 import { SessionTape } from '../components/SessionTape'
 import { SetSlots } from '../components/SetSlots'
-import { Stepper } from '../components/Stepper'
+import { SetFields } from '../components/SetFields'
 import { Summary } from '../components/Summary'
 import {
   SOURCE_NOTE,
@@ -246,49 +246,8 @@ function Player({ session, onFinish }: { session: Session; onFinish?: () => void
             aria-label="Log this set"
             data-testid="inputs"
           >
-            {ex.trackingType === 'reps' && (
-              <Stepper
-                label="Reps"
-                value={draft.reps ?? 0}
-                min={0}
-                max={99}
-                step={1}
-                onChange={(reps) => patch({ reps })}
-              />
-            )}
-            {ex.trackingType === 'reps_per_side' && (
-              <div className="flex gap-4">
-                <Stepper
-                  compact
-                  label="Left"
-                  value={draft.left ?? 0}
-                  min={0}
-                  max={99}
-                  step={1}
-                  onChange={(left) => patch({ left })}
-                />
-                <Stepper
-                  compact
-                  label="Right"
-                  value={draft.right ?? 0}
-                  min={0}
-                  max={99}
-                  step={1}
-                  onChange={(right) => patch({ right })}
-                />
-              </div>
-            )}
+            <SetFields type={ex.trackingType} values={draft} onChange={patch} />
             {ex.trackingType === 'time' && (
-              <>
-                <Stepper
-                  label="Hold time"
-                  unit="s"
-                  value={draft.seconds ?? 0}
-                  min={5}
-                  max={300}
-                  step={5}
-                  onChange={(seconds) => patch({ seconds })}
-                />
                 <button
                   type="button"
                   className="press h-14 rounded-2xl bg-surface-2 text-lg font-semibold"
@@ -298,30 +257,6 @@ function Player({ session, onFinish }: { session: Session; onFinish?: () => void
                 >
                   Start {draft.seconds ?? 0} second hold
                 </button>
-              </>
-            )}
-            {ex.trackingType === 'weight_reps' && (
-              <div className="flex gap-4">
-                <Stepper
-                  compact
-                  label="Weight"
-                  unit="kg"
-                  value={draft.kg ?? 0}
-                  min={0}
-                  max={300}
-                  step={2.5}
-                  onChange={(kg) => patch({ kg })}
-                />
-                <Stepper
-                  compact
-                  label="Reps"
-                  value={draft.reps ?? 0}
-                  min={0}
-                  max={99}
-                  step={1}
-                  onChange={(reps) => patch({ reps })}
-                />
-              </div>
             )}
             <p className="m-0 flex items-center gap-2 text-[15px] text-muted" data-testid="prefill-note">
               <History size={18} aria-hidden="true" />

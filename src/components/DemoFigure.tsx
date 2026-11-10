@@ -235,13 +235,21 @@ function LoopingFigure({ pair }: { pair: PosePair }) {
   )
 }
 
-export function DemoFigure({ exerciseId, name }: { exerciseId: string; name: string }) {
+export function DemoFigure({
+  exerciseId,
+  name,
+  compact = false,
+}: {
+  exerciseId: string
+  name: string
+  compact?: boolean
+}) {
   const reduce = useReducedMotion()
   const pair = POSES[exerciseId] ?? POSES['push-up']
 
   return (
     <figure
-      className="relative m-0 aspect-[240/104] short:aspect-[240/68] w-full overflow-hidden rounded-3xl bg-surface"
+      className={`relative m-0 w-full overflow-hidden rounded-3xl bg-surface ${compact ? 'aspect-[240/68]' : 'aspect-[240/104] short:aspect-[240/68]'}`}
       aria-label={`${name} demo`}
       data-testid="media-slot"
     >

@@ -9,10 +9,13 @@ interface EmptyStateProps {
   /** Names the result of the one main action. */
   actionLabel: string
   onAction: () => void
+  /** An optional text button under the main one. */
+  secondaryLabel?: string
+  onSecondary?: () => void
 }
 
 /** Template for any page with nothing to show yet: picture, headline, where it will appear, one action. */
-export function EmptyState({ illustration, title, body, actionLabel, onAction }: EmptyStateProps) {
+export function EmptyState({ illustration, title, body, actionLabel, onAction, secondaryLabel, onSecondary }: EmptyStateProps) {
   return (
     <section className="flex flex-col gap-6" aria-labelledby="empty-title" data-testid="empty-state">
       <div aria-hidden="true">{illustration}</div>
@@ -30,6 +33,16 @@ export function EmptyState({ illustration, title, body, actionLabel, onAction }:
       >
         {actionLabel}
       </button>
+      {secondaryLabel && (
+        <button
+          type="button"
+          className="press -mt-2 h-14 w-full rounded-full text-xl font-semibold"
+          onClick={onSecondary}
+          data-testid="empty-secondary"
+        >
+          {secondaryLabel}
+        </button>
+      )}
     </section>
   )
 }

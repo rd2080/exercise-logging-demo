@@ -9,8 +9,9 @@ test('the empty state shows a picture, a headline, where sets will appear, and o
   const empty = page.getByTestId('empty-state')
   await expect(empty.getByRole('heading', { name: 'Your sets will be logged here' })).toBeVisible()
   await expect(empty.getByText(/shows up here with what you did/)).toBeVisible()
-  await expect(empty.getByRole('button')).toHaveCount(1)
-  await expect(empty.getByRole('button')).toHaveText('Start your first workout')
+  // One main button, plus a quiet text button for logging by hand.
+  await expect(empty.getByTestId('empty-action')).toHaveText('Start your first workout')
+  await expect(empty.getByRole('button')).toHaveText(['Start your first workout', 'Log an exercise'])
 })
 
 test('the main button starts the first workout', async ({ page }) => {

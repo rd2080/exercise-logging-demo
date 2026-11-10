@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { DataToggle } from './components/DataToggle'
 import { session } from './data/fixtures'
+import type { Entry } from './entries'
 import { EMPTY_ANSWERS, type Answers } from './onboarding'
 import { ExercisesScreen } from './screens/ExercisesScreen'
 import { PlayerScreen } from './screens/PlayerScreen'
@@ -22,6 +23,9 @@ function initialStage(): Stage {
 function Screen() {
   const [stage, setStage] = useState<Stage>(initialStage)
   const [answers, setAnswers] = useState<Answers>(EMPTY_ANSWERS)
+  const [entries, setEntries] = useState<Entry[]>([])
+  const addEntry = (e: Omit<Entry, 'id'>) =>
+    setEntries((list) => [{ ...e, id: `${Date.now()}-${list.length}` }, ...list])
 
   if (stage === 'setup')
     return <SetupScreen answers={answers} onChange={setAnswers} onCreate={() => setStage('programme')} />
@@ -50,7 +54,14 @@ function Screen() {
           onChoose={() => setStage('setup')}
         />}
       {stage === 'exercises' && <ExercisesScreen session={session} onStart={() => setStage('setup')} />}
-      {stage === 'progress' && <ProgressScreen onStart={() => setStage('player')} />}
+      {stage === 'progress' && (
+        <ProgressScreen
+          onStart={() => setStage('player')}
+          plan={session.exercises}
+          entries={entries}
+          onAdd={addEntry}
+        />
+      )}
       <TabBar current={stage} onChange={setStage} />
     </>
   )

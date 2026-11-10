@@ -24,4 +24,4 @@ export interface Session {
   exercises: Exercise[]
 }
 
-export type PrefillSource = 'last-session' | 'plan' | 'previous-set' | 'hold'
+export type PrefillSource = 'last-session' | 'plan' | 'previous-set' | 'hold' | 'default'
