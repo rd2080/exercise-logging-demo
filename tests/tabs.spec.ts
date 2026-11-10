@@ -157,3 +157,11 @@ test('Today keeps one tape colour beside the button, Exercises keys rows by type
   await page.goto('/?stage=exercises')
   await expect(page.locator('[data-testid=exercise-list] li .tape-fill')).toHaveCount(19)
 })
+
+test('Today states the length, muscles and equipment of the session', async ({ page }) => {
+  await page.goto('/?stage=today')
+  const facts = page.getByTestId('session-facts')
+  await expect(facts).toContainText('About ')
+  await expect(facts).toContainText('Works chest')
+  await expect(facts).toContainText('Needs dumbbells')
+})

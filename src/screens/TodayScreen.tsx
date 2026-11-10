@@ -3,6 +3,7 @@ import type { CSSProperties } from 'react'
 import { EmptySlots } from '../components/EmptySlots'
 import { EmptyState } from '../components/EmptyState'
 import { ExerciseRow } from '../components/ExerciseRow'
+import { joinList, sessionFacts } from '../lib/sessionFacts'
 import type { Session } from '../types'
 
 interface TodayScreenProps {
@@ -16,6 +17,7 @@ interface TodayScreenProps {
 }
 
 export function TodayScreen({ session, onStart, onChoose, onOpen, programme, onProgramme }: TodayScreenProps) {
+  const facts = sessionFacts(session)
   const sets = session.exercises.reduce((n, e) => n + e.sets, 0)
   return (
     <div
@@ -69,6 +71,11 @@ export function TodayScreen({ session, onStart, onChoose, onOpen, programme, onP
                 {session.exercises.length} {session.exercises.length === 1 ? 'exercise' : 'exercises'},{' '}
                 {sets} {sets === 1 ? 'set' : 'sets'}
               </h2>
+              <p className="num m-0 pb-1 text-[17px] text-pretty text-muted" data-testid="session-facts">
+                About {facts.minutes} min
+                {facts.muscles.length > 0 && ` · Works ${joinList(facts.muscles.slice(0, 4))}`}
+                {` · ${facts.equipment}`}
+              </p>
               <ul className="m-0 flex list-none flex-col p-0">
                 {session.exercises.map((e) => (
                   <ExerciseRow key={e.id} exercise={e} clamp onOpen={onOpen} />

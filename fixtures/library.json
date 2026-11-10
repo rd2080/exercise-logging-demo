@@ -14,7 +14,12 @@
       },
       "cue": "Keep your body in one straight line from head to heels.",
       "equipment": "none",
-      "level": "beginner"
+      "level": "beginner",
+      "muscles": [
+        "chest",
+        "shoulders",
+        "triceps"
+      ]
     },
     {
       "id": "incline-push-up",
@@ -27,7 +32,11 @@
       "last": null,
       "cue": "Hands on a sturdy bench and your body in one line.",
       "equipment": "none",
-      "level": "beginner"
+      "level": "beginner",
+      "muscles": [
+        "chest",
+        "triceps"
+      ]
     },
     {
       "id": "pike-push-up",
@@ -40,7 +49,11 @@
       "last": null,
       "cue": "Hips high, and lower the top of your head between your hands.",
       "equipment": "none",
-      "level": "intermediate"
+      "level": "intermediate",
+      "muscles": [
+        "shoulders",
+        "triceps"
+      ]
     },
     {
       "id": "diamond-push-up",
@@ -53,7 +66,11 @@
       "last": null,
       "cue": "Thumbs and fingers touching, elbows close to your ribs.",
       "equipment": "none",
-      "level": "intermediate"
+      "level": "intermediate",
+      "muscles": [
+        "triceps",
+        "chest"
+      ]
     },
     {
       "id": "bodyweight-squat",
@@ -66,7 +83,11 @@
       "last": null,
       "cue": "Sit back and down, heels flat, chest tall.",
       "equipment": "none",
-      "level": "beginner"
+      "level": "beginner",
+      "muscles": [
+        "quads",
+        "glutes"
+      ]
     },
     {
       "id": "glute-bridge",
@@ -79,7 +100,11 @@
       "last": null,
       "cue": "Press through your heels and squeeze at the top.",
       "equipment": "none",
-      "level": "beginner"
+      "level": "beginner",
+      "muscles": [
+        "glutes",
+        "hamstrings"
+      ]
     },
     {
       "id": "reverse-lunge",
@@ -93,7 +118,11 @@
       "last": null,
       "cue": "Step back and keep your front knee over your ankle.",
       "equipment": "none",
-      "level": "beginner"
+      "level": "beginner",
+      "muscles": [
+        "quads",
+        "glutes"
+      ]
     },
     {
       "id": "split-squat",
@@ -107,7 +136,11 @@
       "last": null,
       "cue": "Stay tall and lower straight down.",
       "equipment": "none",
-      "level": "beginner"
+      "level": "beginner",
+      "muscles": [
+        "quads",
+        "glutes"
+      ]
     },
     {
       "id": "plank",
@@ -122,7 +155,10 @@
       },
       "cue": "Squeeze your glutes and keep your hips level.",
       "equipment": "none",
-      "level": "beginner"
+      "level": "beginner",
+      "muscles": [
+        "core"
+      ]
     },
     {
       "id": "side-plank",
@@ -135,7 +171,11 @@
       "last": null,
       "cue": "Stack your feet and push the floor away.",
       "equipment": "none",
-      "level": "intermediate"
+      "level": "intermediate",
+      "muscles": [
+        "core",
+        "obliques"
+      ]
     },
     {
       "id": "hollow-hold",
@@ -148,7 +188,10 @@
       "last": null,
       "cue": "Press your lower back down and reach long.",
       "equipment": "none",
-      "level": "advanced"
+      "level": "advanced",
+      "muscles": [
+        "core"
+      ]
     },
     {
       "id": "handstand-wall-hold",
@@ -161,7 +204,11 @@
       "last": null,
       "cue": "Push tall through your shoulders and keep your ribs in.",
       "equipment": "none",
-      "level": "advanced"
+      "level": "advanced",
+      "muscles": [
+        "shoulders",
+        "core"
+      ]
     },
     {
       "id": "goblet-squat",
@@ -178,7 +225,11 @@
       },
       "cue": "Keep your elbows inside your knees and your chest tall.",
       "equipment": "dumbbells",
-      "level": "beginner"
+      "level": "beginner",
+      "muscles": [
+        "quads",
+        "glutes"
+      ]
     },
     {
       "id": "dumbbell-row",
@@ -192,7 +243,11 @@
       "last": null,
       "cue": "Pull your elbow to your hip and keep your back flat.",
       "equipment": "dumbbells",
-      "level": "beginner"
+      "level": "beginner",
+      "muscles": [
+        "back",
+        "biceps"
+      ]
     },
     {
       "id": "kettlebell-swing",
@@ -206,7 +261,12 @@
       "last": null,
       "cue": "Snap your hips and let the bell float to chest height.",
       "equipment": "kettlebell",
-      "level": "intermediate"
+      "level": "intermediate",
+      "muscles": [
+        "glutes",
+        "hamstrings",
+        "back"
+      ]
     },
     {
       "id": "band-pull-apart",
@@ -219,7 +279,11 @@
       "last": null,
       "cue": "Reach long and squeeze your shoulder blades together.",
       "equipment": "band",
-      "level": "beginner"
+      "level": "beginner",
+      "muscles": [
+        "upper back",
+        "shoulders"
+      ]
     },
     {
       "id": "pull-up",
@@ -232,7 +296,11 @@
       "last": null,
       "cue": "Start from a full hang and lead with your chest.",
       "equipment": "pullup",
-      "level": "intermediate"
+      "level": "intermediate",
+      "muscles": [
+        "back",
+        "biceps"
+      ]
     },
     {
       "id": "chin-up",
@@ -245,7 +313,11 @@
       "last": null,
       "cue": "Palms toward you and elbows pulled down.",
       "equipment": "pullup",
-      "level": "intermediate"
+      "level": "intermediate",
+      "muscles": [
+        "biceps",
+        "back"
+      ]
     },
     {
       "id": "hanging-knee-raise",
@@ -258,7 +330,11 @@
       "last": null,
       "cue": "Control the swing and curl your pelvis up.",
       "equipment": "pullup",
-      "level": "intermediate"
+      "level": "intermediate",
+      "muscles": [
+        "core",
+        "grip"
+      ]
     }
   ]
 }

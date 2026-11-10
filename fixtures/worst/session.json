@@ -8,36 +8,69 @@
       "name": "Single-arm kettlebell Turkish get-up, alternating sides",
       "trackingType": "reps",
       "sets": 8,
-      "target": { "reps": 100 },
-      "last": { "reps": 100 },
-      "cue": "Keep your eyes on the weight, your wrist stacked over your elbow and your free arm away from your body at about forty-five degrees throughout the whole movement."
+      "target": {
+        "reps": 100
+      },
+      "last": {
+        "reps": 100
+      },
+      "cue": "Keep your eyes on the weight, your wrist stacked over your elbow and your free arm away from your body at about forty-five degrees throughout the whole movement.",
+      "muscles": [
+        "chest",
+        "shoulders",
+        "triceps"
+      ]
     },
     {
       "id": "reverse-lunge",
       "name": "Fentes arrière avec haltères (jambe gauche puis droite)",
       "trackingType": "reps_per_side",
       "sets": 5,
-      "target": { "left": 12, "right": 15 },
+      "target": {
+        "left": 12,
+        "right": 15
+      },
       "last": null,
-      "cue": "Squeeze."
+      "cue": "Squeeze.",
+      "muscles": [
+        "quads",
+        "glutes"
+      ]
     },
     {
       "id": "plank",
       "name": "Plank",
       "trackingType": "time",
       "sets": 6,
-      "target": { "seconds": 300 },
-      "last": { "seconds": 285 },
-      "cue": "Squeeze your glutes and keep your hips level."
+      "target": {
+        "seconds": 300
+      },
+      "last": {
+        "seconds": 285
+      },
+      "cue": "Squeeze your glutes and keep your hips level.",
+      "muscles": [
+        "core"
+      ]
     },
     {
       "id": "goblet-squat",
       "name": "Zercher squat",
       "trackingType": "weight_reps",
       "sets": 10,
-      "target": { "kg": 142.5, "reps": 12 },
-      "last": { "kg": 142.5, "reps": 12 },
-      "cue": "Keep your elbows inside your knees and your chest tall."
+      "target": {
+        "kg": 142.5,
+        "reps": 12
+      },
+      "last": {
+        "kg": 142.5,
+        "reps": 12
+      },
+      "cue": "Keep your elbows inside your knees and your chest tall.",
+      "muscles": [
+        "quads",
+        "glutes"
+      ]
     }
   ]
 }

@@ -21,6 +21,8 @@ export interface Exercise {
   cue: string
   equipment?: EquipmentId
   level?: LevelId
+  /** Placeholder muscles worked, in sentence case. */
+  muscles?: string[]
 }
 
 export interface Session {

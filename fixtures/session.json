@@ -16,7 +16,12 @@
       },
       "cue": "Keep your body in one straight line from head to heels.",
       "equipment": "none",
-      "level": "beginner"
+      "level": "beginner",
+      "muscles": [
+        "chest",
+        "shoulders",
+        "triceps"
+      ]
     },
     {
       "id": "reverse-lunge",
@@ -30,7 +35,11 @@
       "last": null,
       "cue": "Step back and keep your front knee over your ankle.",
       "equipment": "none",
-      "level": "beginner"
+      "level": "beginner",
+      "muscles": [
+        "quads",
+        "glutes"
+      ]
     },
     {
       "id": "plank",
@@ -45,7 +54,10 @@
       },
       "cue": "Squeeze your glutes and keep your hips level.",
       "equipment": "none",
-      "level": "beginner"
+      "level": "beginner",
+      "muscles": [
+        "core"
+      ]
     },
     {
       "id": "goblet-squat",
@@ -62,7 +74,11 @@
       },
       "cue": "Keep your elbows inside your knees and your chest tall.",
       "equipment": "dumbbells",
-      "level": "beginner"
+      "level": "beginner",
+      "muscles": [
+        "quads",
+        "glutes"
+      ]
     }
   ]
 }
