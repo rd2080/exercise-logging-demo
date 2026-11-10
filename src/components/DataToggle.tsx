@@ -11,7 +11,7 @@ export function DataToggle() {
   }
   return (
     <div
-      className="fixed top-1 left-1/2 z-[100] flex -translate-x-1/2 gap-px rounded-md bg-neutral-700 p-px font-sans text-[10px]"
+      className="fixed top-1 left-1/2 z-[100] flex -translate-x-1/2 gap-px overflow-hidden rounded bg-line p-px font-sans text-[10px]"
       role="group"
       aria-label="Data mode (dev only)"
       data-testid="data-toggle"
@@ -22,7 +22,7 @@ export function DataToggle() {
           type="button"
           onClick={() => go(m)}
           aria-pressed={m === dataMode}
-          className={`px-1.5 py-0.5 ${m === dataMode ? 'bg-white text-black' : 'bg-neutral-700 text-neutral-200'}`}
+          className={`px-1.5 py-0.5 ${m === dataMode ? 'bg-ink text-on-tape' : 'bg-surface-2 text-muted'}`}
         >
           {m}
         </button>
