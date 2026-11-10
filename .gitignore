@@ -11,3 +11,6 @@ playwright-report/
 .claude/skills/taste-skill/assets/objects/
 .claude/skills/taste-skill/assets/scenes/
 .claude/skills/taste-skill/assets/moments/
+dist/
+.impeccable/review/
+test-results/
