@@ -17,6 +17,7 @@ import {
   LIMITS,
   MAX_GOALS,
   PULLUP_CHECKS,
+  STYLES,
   pullupConsequence,
   type Answers,
 } from '../onboarding'
@@ -386,6 +387,40 @@ export function BodySheet({ open, onOpenChange, answers, onChange, units, onUnit
               : `Between ${units.height === 'cm' ? '100 and 250 cm' : '3 ft 4 in and 8 ft 2 in'}.`}
           </p>
         </div>
+      </div>
+    </AnswerSheet>
+  )
+}
+
+export function StyleSheet({ open, onOpenChange, answers, onChange }: SheetProps) {
+  const toggle = (id: string) => {
+    const has = answers.styles.includes(id)
+    onChange({ ...answers, styles: has ? answers.styles.filter((x) => x !== id) : [...answers.styles, id] })
+  }
+  return (
+    <AnswerSheet
+      open={open}
+      onOpenChange={onOpenChange}
+      title="What do you like training?"
+      lead="Tap in order, favourite first."
+      why="Optional. Your order can change which programme we suggest."
+      saveLabel="Save training style"
+    >
+      <div role="group" aria-label="Training styles">
+        {STYLES.map((st) => {
+          const rank = answers.styles.indexOf(st.id) + 1
+          return (
+            <OptionRow
+              key={st.id}
+              role="checkbox"
+              checked={rank > 0}
+              rank={rank > 0 ? rank : undefined}
+              label={st.label}
+              detail={st.detail}
+              onClick={() => toggle(st.id)}
+            />
+          )
+        })}
       </div>
     </AnswerSheet>
   )

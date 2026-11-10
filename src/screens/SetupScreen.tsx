@@ -1,7 +1,7 @@
 import { ChevronRight } from 'lucide-react'
 import { useState, type CSSProperties } from 'react'
 import { Slot } from '../components/Slot'
-import { ActivitySheet, BodySheet, EquipmentSheet, GoalsSheet, LimitsSheet } from '../components/Sheets'
+import { ActivitySheet, BodySheet, EquipmentSheet, GoalsSheet, LimitsSheet, StyleSheet } from '../components/Sheets'
 import { loadUnits, saveUnits, type Units } from '../lib/body'
 import { missing, summaryText, type Answers, type RowId } from '../onboarding'
 
@@ -16,6 +16,7 @@ const ROWS: { id: RowId; label: string; why: string; sheet: string }[] = [
   { id: 'activity', label: 'Activity level', why: 'Sets how hard your first weeks start', sheet: 'Choose activity level' },
   { id: 'equipment', label: 'Equipment', why: 'So we only plan what you can do', sheet: 'Choose equipment' },
   { id: 'limits', label: 'Limits', why: 'Optional. Rules exercises out', sheet: 'Choose limits' },
+  { id: 'style', label: 'Training style', why: 'Optional. Can change the programme we suggest', sheet: 'Rank training styles' },
   { id: 'body', label: 'Weight and height', why: 'Optional. Stays on this device', sheet: 'Add measurements' },
 ]
 
@@ -68,7 +69,7 @@ export function SetupScreen({ answers, onChange, onCreate }: SetupScreenProps) {
                       className={`truncate text-lg ${value ? 'text-ink' : 'font-semibold text-(--tape)'}`}
                       data-testid={`answer-${row.id}`}
                     >
-                      {value ?? (row.id === 'body' ? 'Add' : 'Choose')}
+                      {value ?? (row.id === 'body' || row.id === 'style' ? 'Add' : 'Choose')}
                     </span>
                   </span>
                   <ChevronRight size={24} className="shrink-0 text-muted" aria-hidden="true" />
@@ -98,6 +99,7 @@ export function SetupScreen({ answers, onChange, onCreate }: SetupScreenProps) {
       <ActivitySheet {...sheetProps('activity')} />
       <EquipmentSheet {...sheetProps('equipment')} />
       <LimitsSheet {...sheetProps('limits')} />
+      <StyleSheet {...sheetProps('style')} />
       <BodySheet {...sheetProps('body')} units={units} onUnits={changeUnits} />
     </div>
   )

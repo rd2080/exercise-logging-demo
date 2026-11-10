@@ -30,6 +30,13 @@ export const PROGRAMMES = data.programmes as Programme[]
 
 export const MAX_GOALS = 3
 
+/** Training styles the person can rank. Ids match the programme tags. Placeholder list. */
+export const STYLES: Option[] = [
+  { id: 'Strength', label: 'Strength', detail: 'Getting stronger at the basics' },
+  { id: 'Skill', label: 'Skills', detail: 'Working toward a move like a handstand' },
+  { id: 'Bodyweight', label: 'Bodyweight', detail: 'Training with no kit' },
+]
+
 export interface Answers {
   goals: string[]
   activity: string | null
@@ -39,6 +46,8 @@ export interface Answers {
   /** Optional body measurements, always stored in kg and cm. */
   weightKg: number | null
   heightCm: number | null
+  /** Training styles in order of preference. Optional. */
+  styles: string[]
 }
 
 export const EMPTY_ANSWERS: Answers = {
@@ -49,9 +58,10 @@ export const EMPTY_ANSWERS: Answers = {
   limits: [],
   weightKg: null,
   heightCm: null,
+  styles: [],
 }
 
-export type RowId = 'goals' | 'activity' | 'equipment' | 'limits' | 'body'
+export type RowId = 'goals' | 'activity' | 'equipment' | 'limits' | 'style' | 'body'
 
 export function labelOf(options: Option[], id: string): string {
   const o = options.find((x) => x.id === id)
@@ -74,6 +84,8 @@ export function summaryText(a: Answers, row: RowId, units: Units = DEFAULT_UNITS
       return a.activity ? labelOf(ACTIVITY, a.activity) : null
     case 'equipment':
       return a.equipment.length ? a.equipment.map((e) => labelOf(EQUIPMENT, e)).join(', ') : null
+    case 'style':
+      return a.styles.length ? a.styles.map((x) => labelOf(STYLES, x)).join(', ') : null
     case 'body':
       return bodySummary(a.weightKg, a.heightCm, units)
     case 'limits':
@@ -94,6 +106,21 @@ export function recommended(a: Answers): { id: string; reason: string } | null {
     return { id: 'handstand', reason: 'Matches your first goal: learn a skill' }
   }
   const level = a.activity ?? 'sitting'
+  if (a.styles.length > 0) {
+    // Each ranked style a programme carries earns more points the higher it is ranked.
+    // A matching activity level breaks ties and the first programme wins after that.
+    const score = (x: Programme) =>
+      x.tags.reduce((n, t) => {
+        const i = a.styles.indexOf(t)
+        return i >= 0 ? n + (a.styles.length - i) : n
+      }, 0) + (x.forLevels.includes(level) ? 0.5 : 0)
+    const ranked = [...PROGRAMMES].sort((x, y) => score(y) - score(x))
+    const top = ranked[0]
+    if (score(top) >= 1) {
+      const tag = a.styles.find((t) => top.tags.includes(t)) ?? a.styles[0]
+      return { id: top.id, reason: `Matches your favourite training style: ${labelOf(STYLES, tag).toLowerCase()}` }
+    }
+  }
   const p = PROGRAMMES.find((x) => x.forLevels.includes(level)) ?? PROGRAMMES[0]
   return { id: p.id, reason: `Matches your activity level: ${labelOf(ACTIVITY, level).toLowerCase()}` }
 }

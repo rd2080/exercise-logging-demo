@@ -230,3 +230,22 @@ test('saving the measurements blank is fine and plan creation does not need them
   await page.getByRole('dialog').getByRole('button', { name: 'Save measurements' }).click()
   await expect(page.getByTestId('answer-body')).toHaveText('Add')
 })
+
+test('ranking training styles changes the recommendation and says why', async ({ page }) => {
+  await answerAll(page, 'Lightly active')
+  await openRow(page, /^Training style/)
+  await page.getByRole('checkbox', { name: /Skills/ }).click()
+  await page.getByRole('checkbox', { name: /Bodyweight/ }).click()
+  await page.getByRole('dialog').getByRole('button', { name: 'Save training style' }).click()
+  await expect(page.getByTestId('answer-style')).toHaveText('Skills, Bodyweight')
+  await create(page).click()
+  await expect(page.getByRole('radio', { name: /Handstand push-up/ })).toBeChecked()
+  await expect(page.getByText('Matches your favourite training style: skills')).toBeVisible()
+})
+
+test('without a training style the recommendation is unchanged', async ({ page }) => {
+  await answerAll(page, 'Lightly active')
+  await expect(page.getByTestId('answer-style')).toHaveText('Add')
+  await create(page).click()
+  await expect(page.getByRole('radio', { name: /Foundation strength/ })).toBeChecked()
+})
