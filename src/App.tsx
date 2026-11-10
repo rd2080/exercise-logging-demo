@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { DataToggle } from './components/DataToggle'
 import { session } from './data/fixtures'
 import type { Entry } from './entries'
+import { loadEntries, saveEntries, ENTRIES_KEY } from './lib/storage'
 import { EMPTY_ANSWERS, type Answers } from './onboarding'
 import { ExercisesScreen } from './screens/ExercisesScreen'
 import { PlayerScreen } from './screens/PlayerScreen'
@@ -23,9 +24,27 @@ function initialStage(): Stage {
 function Screen() {
   const [stage, setStage] = useState<Stage>(initialStage)
   const [answers, setAnswers] = useState<Answers>(EMPTY_ANSWERS)
-  const [entries, setEntries] = useState<Entry[]>([])
+  const [entries, setEntries] = useState<Entry[]>(loadEntries)
   const addEntry = (e: Omit<Entry, 'id'>) =>
-    setEntries((list) => [{ ...e, id: `${Date.now()}-${list.length}` }, ...list])
+    setEntries((list) => [{ ...e, id: crypto.randomUUID?.() ?? `${Date.now()}-${list.length}` }, ...list])
+
+  // Save every change, but not the list we just read from storage on load.
+  const initial = useRef(entries)
+  useEffect(() => {
+    if (entries === initial.current) return
+    saveEntries(entries)
+  }, [entries])
+
+  // Another tab changed the saved entries: show them here too.
+  useEffect(() => {
+    const onStorage = (ev: StorageEvent) => {
+      if (ev.key === ENTRIES_KEY || ev.key === null) {
+        setEntries(loadEntries())
+      }
+    }
+    window.addEventListener('storage', onStorage)
+    return () => window.removeEventListener('storage', onStorage)
+  }, [])
 
   if (stage === 'setup')
     return <SetupScreen answers={answers} onChange={setAnswers} onCreate={() => setStage('programme')} />

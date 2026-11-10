@@ -39,7 +39,7 @@ Tracking-type rules for every exercise and logging screen:
 
 Tracking types in scope: reps, reps per side, time (holds), weight and reps.
 Dark theme only. One polished design, no plain comparison version.
-Agents never write test data to a live database. Everything runs on fixtures.
+Agents never write test data to a live database. Everything runs on fixtures. Sets a user logs by hand are saved in that browser's local storage only (key `exercise-demo:entries`, versioned, validated on read); nothing is sent anywhere.
 Undecided: the first exercises and the goal programme (the handstand push-up is only an example).
 
 ## Brand Commitments
