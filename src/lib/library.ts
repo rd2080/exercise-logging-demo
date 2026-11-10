@@ -55,3 +55,11 @@ export function matches(e: Exercise, f: Filters): boolean {
 export function filterExercises(list: Exercise[], f: Filters): Exercise[] {
   return list.filter((e) => matches(e, f))
 }
+
+/** Each limit on the set-up screen rules out exercises with the matching demand. */
+export const LIMIT_DEMAND: Record<string, string> = { quiet: 'loud', space: 'space', norun: 'running' }
+
+export function fitsLimits(e: Exercise, limits: string[]): boolean {
+  const demands = e.demands ?? []
+  return !limits.some((l) => LIMIT_DEMAND[l] && (demands as string[]).includes(LIMIT_DEMAND[l]))
+}

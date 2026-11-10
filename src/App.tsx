@@ -3,6 +3,7 @@ import { DataToggle } from './components/DataToggle'
 import { library, session } from './data/fixtures'
 import type { Entry } from './entries'
 import { loadChosen, programmeById, progressFor, saveChosen, type Chosen } from './lib/programme'
+import { loadLimits, saveLimits } from './lib/limits'
 import { loadEntries, saveEntries, ENTRIES_KEY } from './lib/storage'
 import { EMPTY_ANSWERS, type Answers } from './onboarding'
 import { ExerciseDetailScreen } from './screens/ExerciseDetailScreen'
@@ -48,7 +49,7 @@ function Screen() {
     setStage('exercise')
     window.scrollTo(0, 0)
   }
-  const [answers, setAnswers] = useState<Answers>(EMPTY_ANSWERS)
+  const [answers, setAnswers] = useState<Answers>(() => ({ ...EMPTY_ANSWERS, limits: loadLimits() }))
   const [entries, setEntries] = useState<Entry[]>(loadEntries)
   const [saveFailed, setSaveFailed] = useState(false)
   const [chosen, setChosen] = useState<Chosen | null>(loadChosen)
@@ -74,6 +75,11 @@ function Screen() {
     if (entries === initial.current) return
     setSaveFailed(!saveEntries(entries))
   }, [entries])
+
+  // Remember the limits so the Exercises list can keep honouring them after a reload.
+  useEffect(() => {
+    saveLimits(answers.limits)
+  }, [answers.limits])
 
   // Another tab changed the saved entries: show them here too.
   useEffect(() => {
@@ -152,7 +158,7 @@ function Screen() {
         />
       )}
       {stage === 'exercises' && (
-        <ExercisesScreen exercises={library} onStart={() => setStage('setup')} onOpen={openExercise('exercises')} />
+        <ExercisesScreen exercises={library} limits={answers.limits} onStart={() => setStage('setup')} onOpen={openExercise('exercises')} />
       )}
       {stage === 'exercise' && (
         <ExerciseDetailScreen

@@ -122,6 +122,9 @@
       "muscles": [
         "quads",
         "glutes"
+      ],
+      "demands": [
+        "space"
       ]
     },
     {
@@ -140,6 +143,9 @@
       "muscles": [
         "quads",
         "glutes"
+      ],
+      "demands": [
+        "space"
       ]
     },
     {
@@ -208,6 +214,9 @@
       "muscles": [
         "shoulders",
         "core"
+      ],
+      "demands": [
+        "loud"
       ]
     },
     {
@@ -266,6 +275,10 @@
         "glutes",
         "hamstrings",
         "back"
+      ],
+      "demands": [
+        "loud",
+        "space"
       ]
     },
     {
@@ -300,6 +313,9 @@
       "muscles": [
         "back",
         "biceps"
+      ],
+      "demands": [
+        "space"
       ]
     },
     {

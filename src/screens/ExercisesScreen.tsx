@@ -5,16 +5,21 @@ import { EmptyState } from '../components/EmptyState'
 import { ExerciseRow } from '../components/ExerciseRow'
 import { FilterSheet } from '../components/FilterSheet'
 import { SearchField } from '../components/SearchField'
-import { NO_FILTERS, activeFilterCount, filterExercises, hasAnyFilter, type Filters } from '../lib/library'
+import { fitsLimits, NO_FILTERS, activeFilterCount, filterExercises, hasAnyFilter, type Filters } from '../lib/library'
 import type { Exercise } from '../types'
 
 interface ExercisesScreenProps {
   exercises: Exercise[]
+  /** Limit ids from set up. Exercises that clash with them are hidden unless the person asks. */
+  limits: string[]
   onStart: () => void
   onOpen: (id: string) => void
 }
 
-export function ExercisesScreen({ exercises, onStart, onOpen }: ExercisesScreenProps) {
+export function ExercisesScreen({ exercises: all, limits, onStart, onOpen }: ExercisesScreenProps) {
+  const [showAll, setShowAll] = useState(false)
+  const exercises = useMemo(() => (showAll ? all : all.filter((e) => fitsLimits(e, limits))), [all, limits, showAll])
+  const hidden = all.length - all.filter((e) => fitsLimits(e, limits)).length
   const [filters, setFilters] = useState<Filters>(NO_FILTERS)
   const [sheet, setSheet] = useState(false)
   const shown = useMemo(() => filterExercises(exercises, filters), [exercises, filters])
@@ -49,7 +54,26 @@ export function ExercisesScreen({ exercises, onStart, onOpen }: ExercisesScreenP
           )}
         </header>
 
-        {total === 0 ? (
+        {hidden > 0 && (
+          <p className="m-0 text-[17px] text-muted" data-testid="limits-note">
+            {showAll
+              ? `Showing ${hidden} that clash with your limits. `
+              : `Hiding ${hidden} that clash with your limits. `}
+            <button type="button" className="press inline-flex min-h-12 items-center font-semibold text-ink underline underline-offset-4" onClick={() => setShowAll((v) => !v)} data-testid="limits-toggle">
+              {showAll ? 'Hide them' : 'Show them'}
+            </button>
+          </p>
+        )}
+
+        {total === 0 && hidden > 0 ? (
+          <EmptyState
+            illustration={<EmptySlots />}
+            title="Nothing fits your limits"
+            body="Every exercise clashes with a limit you set. Show them, or change your limits in set up."
+            actionLabel="Show them"
+            onAction={() => setShowAll(true)}
+          />
+        ) : total === 0 ? (
           <EmptyState
             illustration={<EmptySlots />}
             title="No exercises yet"

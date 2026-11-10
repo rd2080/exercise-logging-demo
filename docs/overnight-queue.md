@@ -15,7 +15,7 @@ Rules: one commit per feature, push after each, tests after each feature, one re
 - [ ] Batch B review and fixes
 
 ## Batch C: Set-up rules
-- [ ] Train quietly and Limited space filter exercises (row 19)
+- [x] Train quietly and Limited space filter exercises (row 19)
 - [ ] Equipment follow-up questions for dumbbells and bands (row 17)
 - [ ] Batch C review and fixes
 
