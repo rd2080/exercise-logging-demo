@@ -143,7 +143,7 @@ function Player({
   const saved = useRef(false)
   const readyRef = useRef<HTMLHeadingElement>(null)
   // A tap that lands just as the countdown ends must not also log the first set.
-  const leftReadyAt = useRef(0)
+  const leftReadyAt = useRef(-1000)
   useEffect(() => {
     if (phase.kind !== 'ready') return
     readyRef.current?.focus()
@@ -186,7 +186,7 @@ function Player({
           navigator.vibrate?.(20)
         }
         else if (phase.kind === 'ready') {
-          leftReadyAt.current = Date.now()
+          leftReadyAt.current = performance.now()
           setPhase({ kind: 'log' })
           setAnnounce('Go. Log your first set when you finish it.')
           navigator.vibrate?.(20)
@@ -203,7 +203,7 @@ function Player({
   }, [phase, ex, draft.seconds, finishHold])
 
   const logSet = () => {
-    if (Date.now() - leftReadyAt.current < 400) return
+    if (performance.now() - leftReadyAt.current < 400) return
     const values = { ...draft }
     const nextLogs = logs.map((l, i) => (i === index ? [...l, values] : l))
     setLogs(nextLogs)
@@ -273,7 +273,7 @@ function Player({
         return {
           label: 'Skip countdown',
           onClick: () => {
-            leftReadyAt.current = Date.now()
+            leftReadyAt.current = performance.now()
             setPhase({ kind: 'log' })
             setAnnounce('Go. Log your first set when you finish it.')
           },
