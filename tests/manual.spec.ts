@@ -44,7 +44,7 @@ test('a plan exercise logs in two taps with prefilled values, the cue and the me
   const row = page.getByTestId('entry-list').getByRole('listitem').first()
   await expect(row).toContainText('Push-up')
     await expect(row).toContainText('12')
-  await expect(page.getByRole('heading', { name: 'Logged by hand' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Logged sets' })).toBeVisible()
   await expect(page.getByTestId('empty-state')).toHaveCount(0)
 })
 

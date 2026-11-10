@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import type { Exercise, SetValues } from '../types'
 import { SUMMARY_MIN, TYPE_META, formatValues } from '../lib/tracking'
 
@@ -9,15 +10,22 @@ interface SummaryProps {
 
 export function Summary({ exercises, logs, onDone }: SummaryProps) {
   const total = logs.reduce((n, l) => n + l.length, 0)
+  const done = logs.filter((l) => l.length > 0).length
+  const heading = useRef<HTMLHeadingElement>(null)
+  useEffect(() => heading.current?.focus(), [])
   return (
     <div className="mx-auto flex min-h-dvh w-full max-w-[480px] flex-col" data-testid="summary">
       <main className="flex flex-1 flex-col gap-6 px-4 pt-[max(2rem,env(safe-area-inset-top))] pb-40">
         <div className="flex flex-col gap-2">
-          <h1 className="font-display m-0 text-[40px] leading-[1.05] font-bold text-balance">
-            Workout logged
+          <h1
+            ref={heading}
+            tabIndex={-1}
+            className="font-display m-0 text-[40px] leading-[1.05] font-bold text-balance outline-none"
+          >
+            {total > 0 ? 'Workout logged' : 'No sets logged'}
           </h1>
           <p className="m-0 text-lg text-muted">
-            {total} {total === 1 ? 'set' : 'sets'} across {exercises.length} exercises.
+            {total} {total === 1 ? 'set' : 'sets'} across {done} {done === 1 ? 'exercise' : 'exercises'}.
           </p>
         </div>
         <ul className="m-0 flex list-none flex-col p-0">

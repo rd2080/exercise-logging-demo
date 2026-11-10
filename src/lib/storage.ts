@@ -48,6 +48,7 @@ function cleanEntry(x: unknown): Entry | null {
   const values = validValues(trackingType, e.values)
   if (!values) return null
   if (e.exerciseId !== undefined && (typeof e.exerciseId !== 'string' || e.exerciseId.length > 80)) return null
+  if (e.source !== undefined && e.source !== 'workout' && e.source !== 'hand') return null
   return { ...(e as unknown as Entry), id: e.id, name, trackingType, values }
 }
 

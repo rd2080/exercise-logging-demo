@@ -73,7 +73,7 @@ export function ProgressScreen({
         ) : (
           <section className="flex flex-col gap-1" aria-labelledby="logged-heading">
             <h2 id="logged-heading" className="font-display m-0 text-2xl leading-tight font-bold">
-              Logged by hand
+              Logged sets
             </h2>
             <ul className="m-0 flex list-none flex-col p-0" data-testid="entry-list">
               {entries.map((e) => (

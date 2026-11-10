@@ -8,6 +8,8 @@ export interface Entry {
   values: SetValues
   /** Plan exercise this came from, if any. */
   exerciseId?: string
+  /** Where it was logged. Missing on older saved entries, which were all by hand. */
+  source?: 'workout' | 'hand'
 }
 
 export const MAX_NAME = 60

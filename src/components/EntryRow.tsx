@@ -28,6 +28,7 @@ export function EntryRow({ entry, onSelect }: { entry: Entry; onSelect: (entry: 
         </span>
         <span className="text-[17px] text-pretty text-muted">
           {meta.label}
+          {entry.source !== 'workout' && ' · By hand'}
         </span>
       </span>
       <span className="num shrink-0 pt-0.5 text-xl font-bold whitespace-nowrap">
