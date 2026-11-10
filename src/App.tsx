@@ -134,6 +134,12 @@ function Screen() {
           onBack={() => setStage('today')}
           onStart={() => setStage('player')}
           onChange={() => setStage('setup')}
+          onRestart={() => {
+            if (!chosen) return
+            const c = { id: chosen.id, startedAt: Date.now() }
+            setChosen(c)
+            saveChosen(c)
+          }}
           onAdvance={() => {
             if (!chosen || !chosenProgramme) return
             const pr = progressFor(chosenProgramme, chosen, entries, now)
@@ -166,6 +172,7 @@ function Screen() {
           onAdd={addEntry}
           onUpdate={updateEntry}
           onDelete={deleteEntry}
+          onClear={() => setEntries([])}
         />
       )}
       <TabBar current={stage === 'exercise' ? detailFrom : stage === 'myprogramme' ? 'today' : stage} onChange={setStage} />

@@ -17,6 +17,7 @@ interface MyProgrammeScreenProps {
   onStart: () => void
   onChange: () => void
   onAdvance: () => void
+  onRestart: () => void
 }
 
 function Back({ onBack }: { onBack: () => void }) {
@@ -36,8 +37,9 @@ function Back({ onBack }: { onBack: () => void }) {
 const shell = 'mx-auto flex min-h-dvh w-full max-w-[480px] flex-col'
 const main = 'flex flex-1 flex-col gap-6 px-4 pt-[max(0.75rem,env(safe-area-inset-top))] pb-28'
 
-export function MyProgrammeScreen({ programme, chosen, entries, now, onBack, onStart, onChange, onAdvance }: MyProgrammeScreenProps) {
+export function MyProgrammeScreen({ programme, chosen, entries, now, onBack, onStart, onChange, onAdvance, onRestart }: MyProgrammeScreenProps) {
   const [confirming, setConfirming] = useState(false)
+  const [restarting, setRestarting] = useState(false)
   const tape = { '--tape': 'var(--color-tape-reps)' } as CSSProperties
   if (!programme || !chosen) {
     return (
@@ -235,6 +237,24 @@ export function MyProgrammeScreen({ programme, chosen, entries, now, onBack, onS
         >
           Choose a different programme
         </button>
+        <button
+          type="button"
+          className="press h-14 w-full rounded-full text-xl font-semibold"
+          onClick={() => setRestarting(true)}
+          data-testid="programme-restart"
+        >
+          Restart programme
+        </button>
+        <ConfirmSheet
+          open={restarting}
+          onOpenChange={setRestarting}
+          title="Restart this programme?"
+          why="Week 1 starts again today, with no sessions counted and the streak back at zero. Your logged sets stay."
+          confirmLabel="Restart programme"
+          onConfirm={onRestart}
+          tape="var(--color-tape-reps)"
+          testId="restart-confirm"
+        />
       </main>
     </div>
   )

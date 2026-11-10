@@ -1,4 +1,5 @@
 import { Plus } from 'lucide-react'
+import { ConfirmSheet } from '../components/ConfirmSheet'
 import { useState, type CSSProperties } from 'react'
 import { AddExerciseSheet } from '../components/AddExerciseSheet'
 import { EditEntrySheet } from '../components/EditEntrySheet'
@@ -19,6 +20,7 @@ interface ProgressScreenProps {
   onAdd: (entry: Omit<Entry, 'id'>) => void
   onUpdate: (id: string, values: SetValues) => void
   onDelete: (id: string) => void
+  onClear: () => void
 }
 
 export function ProgressScreen({
@@ -29,9 +31,11 @@ export function ProgressScreen({
   onAdd,
   onUpdate,
   onDelete,
+  onClear,
 }: ProgressScreenProps) {
   const [adding, setAdding] = useState(false)
   const [editing, setEditing] = useState<Entry | null>(null)
+  const [clearing, setClearing] = useState(false)
   const [editOpen, setEditOpen] = useState(false)
   const progress = {
     ...(goalData.progress as Record<string, number>),
@@ -95,6 +99,28 @@ export function ProgressScreen({
           </h2>
           <GoalList goals={goalData.goals as Goal[]} progress={progress} />
         </section>
+
+        {entries.length > 0 && (
+          <>
+            <button
+              type="button"
+              className="press h-14 w-full rounded-full text-xl font-semibold"
+              onClick={() => setClearing(true)}
+              data-testid="clear-entries"
+            >
+              Clear all entries
+            </button>
+            <ConfirmSheet
+              open={clearing}
+              onOpenChange={setClearing}
+              title="Clear all entries?"
+              why={`All ${entries.length} logged ${entries.length === 1 ? 'set' : 'sets'} on this device are deleted, and this cannot be undone.`}
+              confirmLabel="Clear all entries"
+              onConfirm={onClear}
+              testId="clear-confirm"
+            />
+          </>
+        )}
       </main>
 
       <AddExerciseSheet
