@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { DataToggle } from './components/DataToggle'
-import { session } from './data/fixtures'
+import { library, session } from './data/fixtures'
 import type { Entry } from './entries'
 import { loadEntries, saveEntries, ENTRIES_KEY } from './lib/storage'
 import { EMPTY_ANSWERS, type Answers } from './onboarding'
@@ -49,6 +49,8 @@ function Screen() {
   const [answers, setAnswers] = useState<Answers>(EMPTY_ANSWERS)
   const [entries, setEntries] = useState<Entry[]>(loadEntries)
   const [saveFailed, setSaveFailed] = useState(false)
+  // The detail screen can show anything in the plan or the library.
+  const allExercises = [...session.exercises, ...library.filter((l) => !session.exercises.some((p) => p.id === l.id))]
   const addEntry = (e: Omit<Entry, 'id'>) =>
     setEntries((list) => [{ ...e, id: newId() }, ...list])
 
@@ -104,11 +106,11 @@ function Screen() {
           onOpen={openExercise('today')}
         />}
       {stage === 'exercises' && (
-        <ExercisesScreen session={session} onStart={() => setStage('setup')} onOpen={openExercise('exercises')} />
+        <ExercisesScreen exercises={library} onStart={() => setStage('setup')} onOpen={openExercise('exercises')} />
       )}
       {stage === 'exercise' && (
         <ExerciseDetailScreen
-          exercise={session.exercises.find((e) => e.id === detailId)}
+          exercise={allExercises.find((e) => e.id === detailId)}
           plan={session.exercises}
           entries={entries}
           onAdd={addEntry}

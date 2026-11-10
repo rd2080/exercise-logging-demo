@@ -43,12 +43,12 @@ test('Today lists the workout with one inline Start workout button', async ({ pa
 
 test('Exercises lists every exercise with its type and target', async ({ page }) => {
   await page.goto('/?stage=exercises')
-  await expect(page.getByText('4 exercises in your plan')).toBeVisible()
+  await expect(page.getByTestId('result-count')).toHaveText('19 exercises')
   const rows = page.getByTestId('exercise-list').getByRole('listitem')
-  await expect(rows).toHaveCount(4)
+  await expect(rows).toHaveCount(19)
   await expect(rows.nth(0)).toContainText('Push-up')
   await expect(rows.nth(0)).toContainText('Reps · 3 × 10')
-  await expect(rows.nth(2)).toContainText('Timed hold · 2 × 30 s')
+  await expect(rows.nth(8)).toContainText('Timed hold · 2 × 30 s')
 })
 
 test('the bar is hidden in the player, set up, programmes and reminders', async ({ page }) => {
@@ -155,5 +155,5 @@ test('Today keeps one tape colour beside the button, Exercises keys rows by type
   const today = await page.locator('[data-testid=today] li .tape-fill').count()
   expect(today).toBe(0)
   await page.goto('/?stage=exercises')
-  await expect(page.locator('[data-testid=exercise-list] li .tape-fill')).toHaveCount(4)
+  await expect(page.locator('[data-testid=exercise-list] li .tape-fill')).toHaveCount(19)
 })

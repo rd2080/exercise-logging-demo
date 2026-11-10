@@ -8,6 +8,9 @@ export interface SetValues {
   kg?: number
 }
 
+export type EquipmentId = 'none' | 'dumbbells' | 'band' | 'kettlebell' | 'pullup'
+export type LevelId = 'beginner' | 'intermediate' | 'advanced'
+
 export interface Exercise {
   id: string
   name: string
@@ -16,6 +19,8 @@ export interface Exercise {
   target: SetValues
   last: SetValues | null
   cue: string
+  equipment?: EquipmentId
+  level?: LevelId
 }
 
 export interface Session {

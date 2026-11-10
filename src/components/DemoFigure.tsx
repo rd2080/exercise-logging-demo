@@ -245,7 +245,7 @@ export function DemoFigure({
   compact?: boolean
 }) {
   const reduce = useReducedMotion()
-  const pair = POSES[exerciseId] ?? POSES['push-up']
+  const pair = POSES[exerciseId]
 
   return (
     <figure
@@ -253,7 +253,11 @@ export function DemoFigure({
       aria-label={`${name} demo`}
       data-testid="media-slot"
     >
-      {reduce ? (
+      {!pair ? (
+        <div className="grid h-full place-items-center" data-testid="no-demo">
+          <p className="m-0 text-lg text-muted">No demo for this exercise yet</p>
+        </div>
+      ) : reduce ? (
         <div className="grid h-full grid-cols-2 gap-px bg-line">
           <div className="relative bg-surface">
             <StaticFrame pose={pair.start} prop={pair.prop} view={pair.view} />
@@ -271,9 +275,11 @@ export function DemoFigure({
       ) : (
         <LoopingFigure key={exerciseId} pair={pair} />
       )}
-      <figcaption className="absolute top-3 left-4 text-sm font-medium text-muted">
-        Demo figure
-      </figcaption>
+      {pair && (
+        <figcaption className="absolute top-3 left-4 text-sm font-medium text-muted">
+          Demo figure
+        </figcaption>
+      )}
     </figure>
   )
 }

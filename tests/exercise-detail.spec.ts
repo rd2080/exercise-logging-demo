@@ -10,7 +10,7 @@ const seed = (page: Page, entries: unknown[]) =>
 
 test('a row on Exercises opens the detail with figure, name, type, target and cue; the Exercises tab stays current', async ({ page }) => {
   await page.goto('/?stage=exercises')
-  await page.getByTestId('exercise-list').getByRole('button', { name: /Push-up/ }).click()
+  await page.getByTestId('exercise-list').getByRole('button', { name: /^Push-up/ }).click()
   await expect(detail(page)).toBeVisible()
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Push-up')
   await expect(page.getByTestId('media-slot')).toBeVisible()

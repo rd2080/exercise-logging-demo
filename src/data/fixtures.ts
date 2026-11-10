@@ -4,7 +4,8 @@ import goalsDemo from '../../fixtures/goals.json'
 import onboardingWorst from '../../fixtures/worst/onboarding.json'
 import sessionWorst from '../../fixtures/worst/session.json'
 import goalsWorst from '../../fixtures/worst/goals.json'
-import type { Session } from '../types'
+import libraryDemo from '../../fixtures/library.json'
+import type { Exercise, Session } from '../types'
 
 /** Dev-only data modes for stress testing the UI. Production always uses the demo data. */
 export type DataMode = 'demo' | 'worst' | 'empty' | 'one' | 'huge'
@@ -77,3 +78,27 @@ function pickGoals() {
 export const session = pickSession()
 export const onboarding = pickOnboarding()
 export const goalsData = pickGoals()
+
+const demoLibrary = libraryDemo.exercises as unknown as Exercise[]
+
+function pickLibrary(): Exercise[] {
+  switch (dataMode) {
+    case 'worst':
+      // Long names and a mix of every filter value.
+      return demoLibrary.map((e, i) =>
+        i % 4 === 0
+          ? { ...e, name: `${e.name} with a slow tempo, pausing for two seconds at the bottom of every repetition` }
+          : e,
+      )
+    case 'empty':
+      return []
+    case 'one':
+      return [demoLibrary[0]]
+    case 'huge':
+      return repeat(demoLibrary, 200).map((e, i) => ({ ...e, name: `${e.name} ${i + 1}` }))
+    default:
+      return demoLibrary
+  }
+}
+
+export const library = pickLibrary()

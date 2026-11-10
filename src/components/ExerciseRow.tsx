@@ -1,6 +1,7 @@
 import { ChevronRight } from 'lucide-react'
 import type { CSSProperties } from 'react'
 import type { Exercise } from '../types'
+import { EQUIPMENT_LABELS, LEVEL_LABELS } from '../lib/library'
 import { TYPE_META, rowSummary } from '../lib/tracking'
 
 interface ExerciseRowProps {
@@ -11,10 +12,12 @@ interface ExerciseRowProps {
   clamp?: boolean
   /** Makes the whole row a button that opens the exercise. */
   onOpen?: (id: string) => void
+  /** Also show the equipment and level (the library list). */
+  showAttributes?: boolean
 }
 
 /** One exercise as a flat row: a slanted slot, its name, its type and its target. */
-export function ExerciseRow({ exercise, keyed = false, clamp = false, onOpen }: ExerciseRowProps) {
+export function ExerciseRow({ exercise, keyed = false, clamp = false, onOpen, showAttributes = false }: ExerciseRowProps) {
   const meta = TYPE_META[exercise.trackingType]
   const inner = (
     <>
@@ -32,6 +35,11 @@ export function ExerciseRow({ exercise, keyed = false, clamp = false, onOpen }: 
         <span className="text-[17px] text-pretty text-muted">
           {meta.label} · {rowSummary(exercise)}
         </span>
+        {showAttributes && exercise.equipment && exercise.level && (
+          <span className="text-[15px] text-muted">
+            {EQUIPMENT_LABELS[exercise.equipment]} · {LEVEL_LABELS[exercise.level]}
+          </span>
+        )}
       </span>
     </>
   )
