@@ -304,8 +304,33 @@ test('with the keyboard open on a small screen the weight field stays in view', 
   await page.setViewportSize({ width: 320, height: 340 })
   await page.goto('/?stage=setup')
   await page.getByRole('button', { name: /^Weight and height/ }).click()
+  await page.waitForTimeout(800)
   await page.getByTestId('body-weight').focus()
   const box = (await page.getByTestId('body-weight').boundingBox())!
   const save = (await page.getByRole('button', { name: 'Save measurements' }).boundingBox())!
   expect(box.y + box.height).toBeLessThanOrEqual(save.y + 1)
+})
+
+test('a follow-up answer starts off again when its equipment is removed and added back', async ({ page }) => {
+  await page.goto('/?stage=setup')
+  await openRow(page, /^Equipment/)
+  const sheet = page.getByRole('dialog')
+  await sheet.getByRole('checkbox', { name: /Dumbbells/ }).click()
+  await sheet.getByRole('switch', { name: /heavier than 10 kg/ }).click()
+  await sheet.getByRole('checkbox', { name: /Dumbbells/ }).click()
+  await sheet.getByRole('checkbox', { name: /Dumbbells/ }).click()
+  await expect(sheet.getByRole('switch', { name: /heavier than 10 kg/ })).toHaveAttribute('aria-checked', 'false')
+})
+
+test('a follow-up block that appears is scrolled into view at 320x640', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 640 })
+  await page.goto('/?stage=setup')
+  await openRow(page, /^Equipment/)
+  const sheet = page.getByRole('dialog')
+  await sheet.getByRole('checkbox', { name: /Resistance band/ }).click()
+  await page.waitForTimeout(700)
+  const box = (await page.getByTestId('band-checks').boundingBox())!
+  const save = (await sheet.getByRole('button', { name: 'Save equipment' }).boundingBox())!
+  expect(box.y).toBeGreaterThan(0)
+  expect(box.y + 100).toBeLessThanOrEqual(save.y)
 })

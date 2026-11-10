@@ -38,3 +38,17 @@ test('switching a limit on in set up is remembered after a reload', async ({ pag
   await page.goto('/?stage=exercises')
   await expect(page.getByTestId('limits-note')).toContainText('Hiding 2')
 })
+
+test('a search that only finds hidden exercises says so and offers them', async ({ page }) => {
+  await page.addInitScript(() => {
+    if (sessionStorage.getItem('seeded')) return
+    sessionStorage.setItem('seeded', '1')
+    localStorage.setItem('exercise-demo:limits', JSON.stringify({ v: 1, limits: ['quiet', 'space'] }))
+  })
+  await page.goto('/?stage=exercises')
+  await expect(page.getByTestId('limits-note')).toContainText('train quietly and limited space')
+  await page.getByTestId('search').fill('swing')
+  await expect(page.getByRole('heading', { name: 'Hidden by your limits' })).toBeVisible()
+  await page.getByRole('button', { name: 'Show them' }).first().click()
+  await expect(page.getByTestId('exercise-list')).toContainText('Kettlebell swing')
+})

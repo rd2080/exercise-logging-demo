@@ -106,9 +106,20 @@ export function ActivitySheet({ open, onOpenChange, answers, onChange }: SheetPr
 export function EquipmentSheet({ open, onOpenChange, answers, onChange }: SheetProps) {
   const hasPullup = answers.equipment.includes('pullup')
   const checksRef = useRef<HTMLDivElement>(null)
+  const dumbbellsRef = useRef<HTMLDivElement>(null)
+  const bandRef = useRef<HTMLDivElement>(null)
+  const hasDumbbells = answers.equipment.includes('dumbbells')
+  const hasBand = answers.equipment.includes('band')
+  // Bring the follow-up that has just appeared into view, so the person sees the question.
   useEffect(() => {
     if (hasPullup) checksRef.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
   }, [hasPullup])
+  useEffect(() => {
+    if (hasDumbbells) dumbbellsRef.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+  }, [hasDumbbells])
+  useEffect(() => {
+    if (hasBand) bandRef.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+  }, [hasBand])
   const pick = (id: string) => {
     let equipment: string[]
     if (id === 'none') equipment = answers.equipment.includes('none') ? [] : ['none']
@@ -116,7 +127,16 @@ export function EquipmentSheet({ open, onOpenChange, answers, onChange }: SheetP
       const without = answers.equipment.filter((e) => e !== 'none')
       equipment = without.includes(id) ? without.filter((e) => e !== id) : [...without, id]
     }
-    onChange({ ...answers, equipment })
+    // A follow-up answer goes away with its equipment, so it starts off again if the item is picked again.
+    onChange({
+      ...answers,
+      equipment,
+      extras: {
+        heavy: equipment.includes('dumbbells') ? answers.extras.heavy : false,
+        anchor: equipment.includes('band') ? answers.extras.anchor : false,
+      },
+      pullup: equipment.includes('pullup') ? answers.pullup : { hang: false, secure: false },
+    })
   }
   return (
     <AnswerSheet
@@ -140,7 +160,7 @@ export function EquipmentSheet({ open, onOpenChange, answers, onChange }: SheetP
         ))}
       </div>
       {answers.equipment.includes('dumbbells') && (
-        <div className="mt-4 border-t border-line pt-4" data-testid="dumbbells-checks">
+        <div ref={dumbbellsRef} className="mt-4 border-t border-line pt-4" data-testid="dumbbells-checks">
           <h3 className="font-display m-0 text-2xl font-semibold">About your dumbbells</h3>
           <p className="m-0 pt-1 pb-2 text-[15px] text-muted" data-testid="dumbbells-consequence" role="status">
             {dumbbellConsequence(answers.extras.heavy)}
@@ -153,7 +173,7 @@ export function EquipmentSheet({ open, onOpenChange, answers, onChange }: SheetP
         </div>
       )}
       {answers.equipment.includes('band') && (
-        <div className="mt-4 border-t border-line pt-4" data-testid="band-checks">
+        <div ref={bandRef} className="mt-4 border-t border-line pt-4" data-testid="band-checks">
           <h3 className="font-display m-0 text-2xl font-semibold">About your band</h3>
           <p className="m-0 pt-1 pb-2 text-[15px] text-muted" data-testid="band-consequence" role="status">
             {bandConsequence(answers.extras.anchor)}

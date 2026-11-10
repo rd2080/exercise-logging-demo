@@ -5,6 +5,7 @@ import { EmptyState } from '../components/EmptyState'
 import { ExerciseRow } from '../components/ExerciseRow'
 import { FilterSheet } from '../components/FilterSheet'
 import { SearchField } from '../components/SearchField'
+import { LIMITS } from '../onboarding'
 import { fitsLimits, NO_FILTERS, activeFilterCount, filterExercises, hasAnyFilter, type Filters } from '../lib/library'
 import type { Exercise } from '../types'
 
@@ -21,12 +22,23 @@ interface ExercisesScreenProps {
 export function ExercisesScreen({ exercises: all, limits, savedIds, onStart, onOpen }: ExercisesScreenProps) {
   const [showAll, setShowAll] = useState(false)
   const exercises = useMemo(() => (showAll ? all : all.filter((e) => fitsLimits(e, limits))), [all, limits, showAll])
+  const limitNames = limits
+    .map((id) => LIMITS.find((l) => l.id === id)?.label.toLowerCase())
+    .filter((x): x is string => !!x)
+    .join(' and ')
   const hidden = all.length - all.filter((e) => fitsLimits(e, limits)).length
   const [filters, setFilters] = useState<Filters>(NO_FILTERS)
   const [sheet, setSheet] = useState(false)
   const shown = useMemo(
     () => filterExercises(exercises, filters).filter((e) => !filters.saved || savedIds.includes(e.id)),
     [exercises, filters, savedIds],
+  )
+  const hiddenMatches = useMemo(
+    () =>
+      showAll
+        ? 0
+        : filterExercises(all, filters).filter((e) => !fitsLimits(e, limits) && (!filters.saved || savedIds.includes(e.id))).length,
+    [all, filters, limits, savedIds, showAll],
   )
   const total = exercises.length
   const active = activeFilterCount(filters)
@@ -59,11 +71,12 @@ export function ExercisesScreen({ exercises: all, limits, savedIds, onStart, onO
           )}
         </header>
 
-        {hidden > 0 && (
+        {hidden > 0 && (total > 0 || showAll) && (
           <p className="m-0 text-[17px] text-muted" data-testid="limits-note">
-            {showAll
-              ? `Showing ${hidden} that clash with your limits. `
-              : `Hiding ${hidden} that clash with your limits. `}
+            <span role="status">
+              {showAll ? `Showing ${hidden} that clash with ` : `Hiding ${hidden} that clash with `}
+              {limitNames}.{' '}
+            </span>
             <button type="button" className="press inline-flex min-h-12 items-center font-semibold text-ink underline underline-offset-4" onClick={() => setShowAll((v) => !v)} data-testid="limits-toggle">
               {showAll ? 'Hide them' : 'Show them'}
             </button>
@@ -77,6 +90,8 @@ export function ExercisesScreen({ exercises: all, limits, savedIds, onStart, onO
             body="Every exercise clashes with a limit you set. Show them, or change your limits in set up."
             actionLabel="Show them"
             onAction={() => setShowAll(true)}
+            secondaryLabel="Change my limits"
+            onSecondary={onStart}
           />
         ) : total === 0 ? (
           <EmptyState
@@ -115,7 +130,15 @@ export function ExercisesScreen({ exercises: all, limits, savedIds, onStart, onO
               </button>
             </div>
 
-            {shown.length === 0 ? (
+            {shown.length === 0 && !showAll && hiddenMatches > 0 ? (
+              <EmptyState
+                illustration={<EmptySlots />}
+                title="Hidden by your limits"
+                body={`${hiddenMatches} ${hiddenMatches === 1 ? 'exercise matches' : 'exercises match'}, but ${hiddenMatches === 1 ? 'it clashes' : 'they clash'} with ${limitNames}.`}
+                actionLabel="Show them"
+                onAction={() => setShowAll(true)}
+              />
+            ) : shown.length === 0 ? (
               <EmptyState
                 illustration={<EmptySlots />}
                 title="No exercises match"
