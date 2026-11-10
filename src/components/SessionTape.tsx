@@ -32,8 +32,8 @@ export function SessionTape({ exercises, current, loggedCounts }: SessionTapePro
             </div>
             {isCurrent && (
               <span
-                className="absolute -bottom-2 left-1/2 h-1 w-8 -translate-x-1/2 rounded-full"
-                style={{ background: tape }}
+                className="tape-cut tape-fill absolute -bottom-2 left-1/2 h-1 w-8 -translate-x-1/2"
+                style={{ '--tape': tape, '--cut': '3px' } as CSSProperties}
                 aria-hidden="true"
               />
             )}

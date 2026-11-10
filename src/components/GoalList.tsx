@@ -36,7 +36,7 @@ function GoalSlot({ unlocked, next }: { unlocked: boolean; next: boolean }) {
       ) : (
         <Lock size={20} strokeWidth={2.5} className="text-muted" />
       )}
-      {next && <span className="absolute inset-x-0 bottom-0 h-1 bg-(--tape)" />}
+      {next && <span className="absolute inset-x-0 bottom-0 tape-fill h-1" />}
     </span>
   )
 }

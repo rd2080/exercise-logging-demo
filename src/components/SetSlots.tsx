@@ -62,7 +62,7 @@ export function SetSlots({ exercise, logged, active }: SetSlotsProps) {
               </span>
             )}
             {isCurrent && (
-              <span className="absolute inset-x-0 bottom-0 h-1 bg-(--tape)" aria-hidden="true" />
+              <span className="absolute inset-x-0 bottom-0 tape-fill h-1" aria-hidden="true" />
             )}
           </li>
         )
