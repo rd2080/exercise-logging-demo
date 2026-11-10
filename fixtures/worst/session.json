@@ -79,5 +79,44 @@
       ],
       "category": "legs"
     }
+  ],
+  "warmup": [
+    {
+      "id": "arm-circles",
+      "name": "Arm circles",
+      "detail": "30 s"
+    },
+    {
+      "id": "hip-hinge",
+      "name": "Hip hinges",
+      "detail": "10 reps"
+    },
+    {
+      "id": "cat-cow",
+      "name": "Cat-cow",
+      "detail": "10 reps"
+    },
+    {
+      "id": "long",
+      "name": "A warm-up move with a very long name that keeps going and going without any spaces: Supercalifragilisticexpialidocious-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "detail": "1 min"
+    }
+  ],
+  "cooldown": [
+    {
+      "id": "childs-pose",
+      "name": "Child's pose",
+      "detail": "30 s"
+    },
+    {
+      "id": "chest-stretch",
+      "name": "Chest stretch",
+      "detail": "20 s each side"
+    },
+    {
+      "id": "breathing",
+      "name": "Slow breathing",
+      "detail": "1 min"
+    }
   ]
 }

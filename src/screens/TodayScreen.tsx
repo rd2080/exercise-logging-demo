@@ -4,7 +4,21 @@ import { EmptySlots } from '../components/EmptySlots'
 import { EmptyState } from '../components/EmptyState'
 import { ExerciseRow } from '../components/ExerciseRow'
 import { joinList, sessionFacts } from '../lib/sessionFacts'
-import type { Session } from '../types'
+import { Disclosure } from '../components/Disclosure'
+import type { Routine, Session } from '../types'
+
+function RoutineList({ items }: { items: Routine[] }) {
+  return (
+    <ul className="m-0 flex list-none flex-col p-0">
+      {items.map((r) => (
+        <li key={r.id} className="flex min-h-14 items-baseline justify-between gap-3 border-t border-line py-3 first:border-t-0">
+          <span className="min-w-0 text-xl font-semibold [overflow-wrap:anywhere]">{r.name}</span>
+          <span className="num shrink-0 text-[17px] whitespace-nowrap text-muted">{r.detail}</span>
+        </li>
+      ))}
+    </ul>
+  )
+}
 
 interface TodayScreenProps {
   session: Session
@@ -66,22 +80,45 @@ export function TodayScreen({ session, onStart, onChoose, onOpen, programme, onP
             >
               Start workout
             </button>
-            <section className="flex flex-col gap-1" aria-labelledby="today-list">
-              <h2 id="today-list" className="font-display m-0 text-2xl leading-tight font-bold">
-                {session.exercises.length} {session.exercises.length === 1 ? 'exercise' : 'exercises'},{' '}
-                {sets} {sets === 1 ? 'set' : 'sets'}
-              </h2>
-              <p className="m-0 pb-1 text-[17px] text-pretty text-muted" data-testid="session-facts">
-                About <span className="num">{facts.minutes}</span> min
-                {facts.muscles.length > 0 && ` · Works ${joinList(facts.muscles.slice(0, 4))}`}
-                {` · ${facts.equipment}`}
-              </p>
-              <ul className="m-0 flex list-none flex-col p-0">
-                {session.exercises.map((e) => (
-                  <ExerciseRow key={e.id} exercise={e} clamp onOpen={onOpen} />
-                ))}
-              </ul>
-            </section>
+            <div className="flex flex-col gap-2">
+              {session.warmup && session.warmup.length > 0 && (
+                <Disclosure
+                  title="Warm-up"
+                  meta={`${session.warmup.length} moves, not logged`}
+                  testId="warmup"
+                >
+                  <RoutineList items={session.warmup} />
+                </Disclosure>
+              )}
+              <Disclosure
+                title={`${session.exercises.length} ${session.exercises.length === 1 ? 'exercise' : 'exercises'}, ${sets} ${sets === 1 ? 'set' : 'sets'}`}
+                meta={
+                  <>
+                    About <span className="num">{facts.minutes}</span> min
+                    {facts.muscles.length > 0 && ` · Works ${joinList(facts.muscles.slice(0, 4))}`}
+                    {` · ${facts.equipment}`}
+                  </>
+                }
+                metaTestId="session-facts"
+                defaultOpen
+                testId="workout"
+              >
+                <ul className="m-0 flex list-none flex-col p-0">
+                  {session.exercises.map((e) => (
+                    <ExerciseRow key={e.id} exercise={e} clamp onOpen={onOpen} />
+                  ))}
+                </ul>
+              </Disclosure>
+              {session.cooldown && session.cooldown.length > 0 && (
+                <Disclosure
+                  title="Cool-down"
+                  meta={`${session.cooldown.length} moves, not logged`}
+                  testId="cooldown"
+                >
+                  <RoutineList items={session.cooldown} />
+                </Disclosure>
+              )}
+            </div>
           </>
         )}
       </main>

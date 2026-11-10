@@ -165,3 +165,32 @@ test('Today states the length, muscles and equipment of the session', async ({ p
   await expect(facts).toContainText('Works chest')
   await expect(facts).toContainText('Needs dumbbells')
 })
+
+test('Today has Warm-up, Workout and Cool-down sections that open and close, the workout open first', async ({ page }) => {
+  await page.goto('/?stage=today')
+  const head = (name: RegExp) => page.getByRole('button', { name })
+  await expect(head(/^4 exercises, 11 sets/)).toHaveAttribute('aria-expanded', 'true')
+  await expect(head(/^Warm-up/)).toHaveAttribute('aria-expanded', 'false')
+  await expect(head(/^Cool-down/)).toHaveAttribute('aria-expanded', 'false')
+  await expect(page.getByTestId('warmup').getByRole('listitem')).toHaveCount(0)
+  await head(/^Warm-up/).click()
+  await expect(head(/^Warm-up/)).toHaveAttribute('aria-expanded', 'true')
+  await expect(page.getByTestId('warmup').getByRole('listitem')).toHaveCount(3)
+  await expect(page.getByTestId('warmup')).toContainText('Arm circles')
+  await head(/^4 exercises, 11 sets/).click()
+  await expect(page.getByTestId('workout').getByRole('listitem')).toHaveCount(0)
+  for (const b of await page.getByTestId('today').locator('h2 button').all()) {
+    expect((await b.boundingBox())!.height).toBeGreaterThanOrEqual(48)
+  }
+  // The workout rows are not warm-up moves: starting still goes to the four exercises.
+  await page.getByTestId('start-workout').click()
+  await expect(page.getByTestId('ready')).toBeVisible()
+})
+
+test('worst-case warm-up names wrap at 320 without overflow', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 640 })
+  await page.goto('/?stage=today&data=worst')
+  await page.getByRole('button', { name: /^Warm-up/ }).click()
+  const ok = await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)
+  expect(ok).toBe(true)
+})

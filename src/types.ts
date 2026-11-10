@@ -31,10 +31,19 @@ export interface Exercise {
   demands?: Demand[]
 }
 
+/** A warm-up or cool-down move. Shown for reference, not logged. Placeholder fixtures. */
+export interface Routine {
+  id: string
+  name: string
+  detail: string
+}
+
 export interface Session {
   name: string
   restSeconds: number
   exercises: Exercise[]
+  warmup?: Routine[]
+  cooldown?: Routine[]
 }
 
 export type PrefillSource = 'last-session' | 'plan' | 'previous-set' | 'hold' | 'default'
