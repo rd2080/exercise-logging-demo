@@ -35,7 +35,40 @@ Changes move dev -> staging -> prod, never skipping a step.
 4. Build the screens using the stack from the reel (`docs/observations/reel-design-stack.md`): three design skills (Emil Kowalski's design skills, Impeccable, Taste) and two tools (Figma MCP, Playwright). Review the result in phone-width Playwright screenshots in `screenshots/`.
 5. When output is wrong, fix the prompt rather than patching code -> log in `docs/prompt-log.md`.
 
-The tech stack is deliberately **undecided**. It will come from the skill recommendation (see `docs/decisions.md`).
+Stack: React, Vite, TypeScript, Tailwind and Motion. Open questions and decisions are in `docs/decisions.md`.
+
+## Run it
+
+Needs Node >=22.
+
+```
+npm install
+npm run dev     # start the dev server
+npm test        # Playwright tests
+```
+
+## Screens and URL stages
+
+Open a screen directly with `?stage=`:
+- `setup`
+- `programme`
+- `reminders`
+- `today`
+- `exercises`
+- `progress`
+- `player`
+
+## Dev data modes
+
+`?data=worst|empty|one|huge` swaps in test data to stress the screens. Dev only. Fixtures are in `fixtures/` and `fixtures/worst/`.
+
+## Saved data
+
+Entries you log by hand are stored in the browser's localStorage under `exercise-demo:entries`. Nothing is sent anywhere.
+
+## Tests
+
+Playwright at phone width (390x844). Specs are in `tests/`.
 
 ## Design skills (Claude Code)
 
@@ -49,13 +82,16 @@ Check a page by hand: `.claude/skills/impeccable/scripts/impeccable detect <file
 ## Layout
 
 ```
+src/                  app code (App.tsx, screens/, components/, lib/, data/)
+public/               static assets
 docs/
   decisions.md        open questions and decisions
   trend-map.md        Step 2 keep/change/drop/add table
   prompt-log.md       prompt fixes (Step 6)
   observations/       Step 1 output
-  frames/             frames extracted from the video
-fixtures/             fixture data (no live data)
+  frames*/            frames extracted from the videos
+DESIGN.md, PRODUCT.md design and product notes
+fixtures/             fixture data (no live data), worst/ for edge cases
 tests/                Playwright checks (phone width)
 screenshots/          Playwright phone-width screenshots for review
 ```
