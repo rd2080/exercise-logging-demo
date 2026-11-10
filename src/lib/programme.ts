@@ -110,11 +110,17 @@ export function progressFor(p: Programme, c: Chosen, entries: Entry[], now: numb
       lastWeek: firstWeek + s.weeks - 1,
       size,
       done,
-      current: !finished && week >= firstWeek && week <= firstWeek + s.weeks - 1,
+      current: false,
     }
     firstWeek += s.weeks
     return stage
   })
+
+  // The current stage is the first one with sessions still to do, so the strips and the label agree.
+  if (!finished) {
+    const first = stages.find((st) => st.done < st.size)
+    if (first) first.current = true
+  }
 
   const monday = mondayOf(now)
   const done = Array.from({ length: 7 }, (_, i) => days.has(addDays(monday, i)))

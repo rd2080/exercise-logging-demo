@@ -1,6 +1,6 @@
 import { Check } from 'lucide-react'
 import type { CSSProperties } from 'react'
-import { DAY_LETTERS, DAY_NAMES } from '../lib/weeks'
+import { DAY_NAMES, DAY_SHORT } from '../lib/weeks'
 
 interface WeekDotsProps {
   /** Which weekdays the programme plans a session on (0 = Monday). */
@@ -11,7 +11,19 @@ interface WeekDotsProps {
   today: number
 }
 
-/** Monday to Sunday as seven slots of tape: laid where you trained, outlined where one is planned. */
+type State = 'done' | 'planned' | 'missed' | 'rest'
+
+const LABEL: Record<State, string> = {
+  done: 'workout done',
+  planned: 'workout planned',
+  missed: 'planned, no workout logged',
+  rest: 'rest day',
+}
+
+/**
+ * Monday to Sunday as seven slots of tape: laid where you trained, an ivory label where one is planned,
+ * a muted underlined label where a planned day passed without one. Today is marked under its slot.
+ */
 export function WeekDots({ planned, done, today }: WeekDotsProps) {
   return (
     <ol
@@ -20,38 +32,42 @@ export function WeekDots({ planned, done, today }: WeekDotsProps) {
       aria-label="This week"
       data-testid="week-dots"
     >
-      {DAY_LETTERS.map((letter, i) => {
-        const state = done[i] ? 'done' : planned[i] ? 'planned' : 'rest'
+      {DAY_SHORT.map((short, i) => {
+        const state: State = done[i] ? 'done' : planned[i] ? (i < today ? 'missed' : 'planned') : 'rest'
         return (
           <li
             key={i}
-            className={`tape-cut relative flex h-14 min-w-0 flex-1 flex-col items-center justify-center overflow-hidden ${
-              state === 'done'
-                ? 'tape-fill text-on-tape'
-                : state === 'planned'
-                  ? 'bg-surface-2 text-ink'
-                  : 'bg-surface-2 text-muted'
-            }`}
-            aria-label={`${DAY_NAMES[i]}${i === today ? ', today' : ''}: ${
-              state === 'done' ? 'workout done' : state === 'planned' ? 'workout planned' : 'rest day'
-            }`}
+            className="flex min-w-0 flex-1 flex-col gap-1"
+            aria-label={`${DAY_NAMES[i]}${i === today ? ', today' : ''}: ${LABEL[state]}`}
             aria-current={i === today ? 'date' : undefined}
             data-state={state}
             data-today={i === today ? 'true' : undefined}
           >
-            {state === 'done' ? (
-              <Check size={20} strokeWidth={3} aria-hidden="true" />
-            ) : (
-              <span className="num text-lg font-semibold" aria-hidden="true">
-                {letter}
-              </span>
-            )}
-            {i === today && (
-              <span
-                className={`absolute inset-x-0 bottom-0 h-1 ${state === 'done' ? 'bg-on-tape' : 'tape-fill'}`}
-                aria-hidden="true"
-              />
-            )}
+            <span
+              className={`tape-cut flex h-14 items-center justify-center ${
+                state === 'done'
+                  ? 'tape-fill text-on-tape'
+                  : state === 'planned'
+                    ? 'bg-surface-2 text-ink'
+                    : 'bg-surface-2 text-muted'
+              }`}
+            >
+              {state === 'done' ? (
+                <Check size={20} strokeWidth={3} aria-hidden="true" />
+              ) : (
+                <span
+                  className={`num text-base font-semibold ${state === 'missed' ? 'underline decoration-2 underline-offset-4' : ''}`}
+                  aria-hidden="true"
+                >
+                  {short}
+                </span>
+              )}
+            </span>
+            <span
+              className={`tape-cut h-1 ${i === today ? 'tape-fill' : ''}`}
+              style={{ '--cut': '3px' } as CSSProperties}
+              aria-hidden="true"
+            />
           </li>
         )
       })}

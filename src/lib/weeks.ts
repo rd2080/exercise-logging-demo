@@ -29,3 +29,4 @@ export function weeksBetween(from: number, to: number): number {
 
 export const DAY_NAMES = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 export const DAY_LETTERS = ['M', 'T', 'W', 'T', 'F', 'S', 'S']
+export const DAY_SHORT = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su']

@@ -34,6 +34,7 @@ test('Today shows your programme and week, and opens the programme page with Tod
   const row = page.getByTestId('programme-row')
   await expect(row).toContainText('Foundation strength')
   await expect(row).toContainText('Week 1 of 4')
+  await expect(row).not.toContainText('Your programme')
   await row.click()
   await expect(page.getByTestId('my-programme')).toBeVisible()
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Foundation strength')
@@ -47,6 +48,7 @@ test('without a chosen programme, the Today row says so and leads to set up', as
   await setup(page, { programme: null })
   await page.goto('/?stage=today')
   await expect(page.getByTestId('programme-row')).toContainText('Choose a programme')
+  await expect(page.getByTestId('programme-row')).toContainText('Weeks, stages and training days')
   await page.getByTestId('programme-row').click()
   await expect(page.getByTestId('setup')).toBeVisible()
   await page.goto('/?stage=myprogramme')
@@ -90,6 +92,29 @@ test('weekly dots: planned days outlined, done days laid in tape, today marked',
   await page.screenshot({ path: 'screenshots/programme-dots.png' })
 })
 
+test('a planned day that passed without a workout looks different from one still to come', async ({ page }) => {
+  await setup(page, { now: new Date(2026, 10, 13, 10, 0, 0), entries: [entry('a', at(9))] }) // Friday, only Monday done
+  await page.goto('/?stage=myprogramme')
+  await expect(dots(page).nth(0)).toHaveAttribute('data-state', 'done')
+  await expect(dots(page).nth(2)).toHaveAttribute('data-state', 'missed') // Wednesday passed
+  await expect(dots(page).nth(2)).toHaveAccessibleName('Wednesday: planned, no workout logged')
+  await expect(dots(page).nth(4)).toHaveAttribute('data-state', 'planned') // Friday is today
+  await expect(dots(page).nth(4)).toHaveAttribute('data-today', 'true')
+})
+
+test('the today marker is visible even when today is done', async ({ page }) => {
+  await setup(page, { entries: [entry('a', at(11, 9))] }) // today, Wednesday
+  await page.goto('/?stage=myprogramme')
+  const li = dots(page).nth(2)
+  await expect(li).toHaveAttribute('data-state', 'done')
+  const marker = li.locator('span').last()
+  const slot = li.locator('span').first()
+  const m = (await marker.boundingBox())!
+  const sl = (await slot.boundingBox())!
+  expect(m.y).toBeGreaterThanOrEqual(sl.y + sl.height) // below the slot, not on top of it
+  expect(m.height).toBeGreaterThanOrEqual(3)
+})
+
 test('only finished-workout days count: hand-logged sets, undated sets and sets before the start are ignored', async ({ page }) => {
   await setup(page, {
     entries: [
@@ -115,12 +140,24 @@ test('stage progress fills in order and the current stage moves with the week', 
     entries: [entry('a', at(9)), entry('b', at(11)), entry('c', at(13))],
   })
   await page.goto('/?stage=myprogramme')
-  await expect(page.getByTestId('programme-status')).toHaveText('Week 3 of 4 · Stage 2: Build')
+  // The current stage is the one with sessions still to do, so the label and the strips agree.
+  await expect(page.getByTestId('programme-status')).toHaveText('Week 3 of 4 · Stage 1: Lace up')
   const stages = page.getByTestId('stage-list').getByRole('listitem')
   await expect(stages.nth(0)).toContainText('3 of 6')
+  await expect(stages.nth(0)).toContainText('Current stage')
   await expect(stages.nth(1)).toContainText('0 of 6')
+  await expect(stages.nth(1)).not.toContainText('Current stage')
+})
+
+test('once a stage is full the next one becomes current', async ({ page }) => {
+  const start = new Date(2026, 10, 9, 9, 0, 0).getTime()
+  const days = [9, 10, 11, 12, 13, 14] // six sessions fill stage 1
+  await setup(page, { now: new Date(2026, 10, 16, 10, 0, 0), startedAt: start, entries: days.map((d) => entry(`e${d}`, at(d))) })
+  await page.goto('/?stage=myprogramme')
+  await expect(page.getByTestId('programme-status')).toHaveText('Week 2 of 4 · Stage 2: Build')
+  const stages = page.getByTestId('stage-list').getByRole('listitem')
+  await expect(stages.nth(0)).toContainText('6 of 6')
   await expect(stages.nth(1)).toContainText('Current stage')
-  await expect(stages.nth(0)).not.toContainText('Current stage')
 })
 
 test('a finished programme says so', async ({ page }) => {

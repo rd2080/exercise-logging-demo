@@ -92,7 +92,7 @@ export function MyProgrammeScreen({ programme, chosen, entries, now, onBack, onS
         </section>
 
         <dl
-          className="m-0 grid grid-cols-[auto_auto_minmax(0,1fr)] border-y border-line"
+          className="m-0 grid grid-cols-[auto_auto_minmax(0,1fr)] border-y border-line max-[360px]:grid-cols-2"
           data-testid="stats"
         >
           {[
@@ -100,9 +100,14 @@ export function MyProgrammeScreen({ programme, chosen, entries, now, onBack, onS
             [String(programme.perWeek), 'sessions a week'],
             [programme.level, 'level'],
           ].map(([value, label], i) => (
-            <div key={label} className={`flex min-w-0 flex-col gap-0.5 px-3 py-3 ${i > 0 ? 'border-l border-line' : 'pl-0'}`}>
+            <div
+              key={label}
+              className={`flex min-w-0 flex-col gap-0.5 px-3 py-3 ${i > 0 ? 'border-l border-line' : 'pl-0'} ${
+                i === 2 ? 'max-[360px]:col-span-2 max-[360px]:border-t max-[360px]:border-l-0 max-[360px]:pl-0' : ''
+              }`}
+            >
               <dd
-                className={`font-display m-0 leading-none font-bold [overflow-wrap:break-word] ${
+                className={`font-display m-0 leading-none font-bold ${
                   /^\d+$/.test(value) ? 'text-[28px]' : 'text-xl leading-tight'
                 }`}
               >

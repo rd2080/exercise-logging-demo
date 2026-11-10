@@ -37,11 +37,12 @@ export function TodayScreen({ session, onStart, onChoose, onOpen, programme, onP
           data-testid="programme-row"
         >
           <span className="flex min-w-0 flex-1 flex-col">
-            <span className="text-[15px] text-muted">{programme ? 'Your programme' : 'Programme'}</span>
             <span className="font-display line-clamp-2 text-xl leading-tight font-semibold [overflow-wrap:anywhere]">
               {programme ? programme.name : 'Choose a programme'}
             </span>
-            {programme && <span className="text-[17px] text-pretty text-muted">{programme.status}</span>}
+            <span className="text-[17px] text-pretty text-muted">
+              {programme ? programme.status : 'Weeks, stages and training days'}
+            </span>
           </span>
           <ChevronRight size={24} className="shrink-0 text-muted" aria-hidden="true" />
         </button>
