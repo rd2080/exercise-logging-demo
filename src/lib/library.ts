@@ -1,4 +1,4 @@
-import type { EquipmentId, Exercise, LevelId, TrackingType } from '../types'
+import type { CategoryId, EquipmentId, Exercise, LevelId, TrackingType } from '../types'
 import { TYPE_META } from './tracking'
 
 export const EQUIPMENT_LABELS: Record<EquipmentId, string> = {
@@ -14,18 +14,29 @@ export const LEVEL_LABELS: Record<LevelId, string> = {
   advanced: 'Advanced',
 }
 
+export const CATEGORY_LABELS: Record<CategoryId, string> = {
+  push: 'Push',
+  pull: 'Pull',
+  legs: 'Legs',
+  core: 'Core',
+  skill: 'Skill',
+}
+
 export interface Filters {
   query: string
   types: TrackingType[]
   equipment: EquipmentId[]
   levels: LevelId[]
+  categories: CategoryId[]
+  /** Only exercises the person has saved. */
+  saved: boolean
 }
 
-export const NO_FILTERS: Filters = { query: '', types: [], equipment: [], levels: [] }
+export const NO_FILTERS: Filters = { query: '', types: [], equipment: [], levels: [], categories: [], saved: false }
 
 /** How many filter groups have a choice made. The search text is not counted: it has its own field. */
 export function activeFilterCount(f: Filters): number {
-  return f.types.length + f.equipment.length + f.levels.length
+  return f.types.length + f.equipment.length + f.levels.length + f.categories.length + (f.saved ? 1 : 0)
 }
 
 export function hasAnyFilter(f: Filters): boolean {
@@ -48,6 +59,7 @@ export function matches(e: Exercise, f: Filters): boolean {
   }
   if (f.types.length && !f.types.includes(e.trackingType)) return false
   if (f.equipment.length && !(e.equipment && f.equipment.includes(e.equipment))) return false
+  if (f.categories.length && !(e.category && f.categories.includes(e.category))) return false
   if (f.levels.length && !(e.level && f.levels.includes(e.level))) return false
   return true
 }

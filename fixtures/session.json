@@ -21,7 +21,8 @@
         "chest",
         "shoulders",
         "triceps"
-      ]
+      ],
+      "category": "push"
     },
     {
       "id": "reverse-lunge",
@@ -42,7 +43,8 @@
       ],
       "demands": [
         "space"
-      ]
+      ],
+      "category": "legs"
     },
     {
       "id": "plank",
@@ -60,7 +62,8 @@
       "level": "beginner",
       "muscles": [
         "core"
-      ]
+      ],
+      "category": "core"
     },
     {
       "id": "goblet-squat",
@@ -81,7 +84,8 @@
       "muscles": [
         "quads",
         "glutes"
-      ]
+      ],
+      "category": "legs"
     }
   ]
 }

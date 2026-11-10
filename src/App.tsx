@@ -3,6 +3,7 @@ import { DataToggle } from './components/DataToggle'
 import { library, session } from './data/fixtures'
 import type { Entry } from './entries'
 import { loadChosen, programmeById, progressFor, saveChosen, type Chosen } from './lib/programme'
+import { loadSaved, saveSaved } from './lib/saved'
 import { loadLimits, saveLimits } from './lib/limits'
 import { loadEntries, saveEntries, ENTRIES_KEY } from './lib/storage'
 import { EMPTY_ANSWERS, type Answers } from './onboarding'
@@ -51,6 +52,13 @@ function Screen() {
   }
   const [answers, setAnswers] = useState<Answers>(() => ({ ...EMPTY_ANSWERS, limits: loadLimits() }))
   const [entries, setEntries] = useState<Entry[]>(loadEntries)
+  const [savedIds, setSavedIds] = useState<string[]>(loadSaved)
+  const toggleSaved = (id: string) =>
+    setSavedIds((list) => {
+      const next = list.includes(id) ? list.filter((x) => x !== id) : [...list, id]
+      saveSaved(next)
+      return next
+    })
   const [saveFailed, setSaveFailed] = useState(false)
   const [chosen, setChosen] = useState<Chosen | null>(loadChosen)
   const chosenProgramme = programmeById(chosen?.id)
@@ -158,7 +166,7 @@ function Screen() {
         />
       )}
       {stage === 'exercises' && (
-        <ExercisesScreen exercises={library} limits={answers.limits} onStart={() => setStage('setup')} onOpen={openExercise('exercises')} />
+        <ExercisesScreen exercises={library} limits={answers.limits} savedIds={savedIds} onStart={() => setStage('setup')} onOpen={openExercise('exercises')} />
       )}
       {stage === 'exercise' && (
         <ExerciseDetailScreen
@@ -166,6 +174,8 @@ function Screen() {
           plan={session.exercises}
           entries={entries}
           onAdd={addEntry}
+          saved={savedIds.includes(detailId)}
+          onToggleSaved={() => toggleSaved(detailId)}
           onBack={() => setStage(detailFrom)}
         />
       )}

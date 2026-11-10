@@ -21,7 +21,7 @@ test('the whole library shows with a count, a search box and a Filters button', 
   await expect(search(page)).toBeVisible()
   await expect(page.getByTestId('open-filters')).toHaveAccessibleName('Filters')
   await expect(page.getByTestId('filter-badge')).toHaveCount(0)
-  await expect(rows(page).first()).toContainText('Bodyweight · Beginner')
+  await expect(rows(page).first()).toContainText('Push · Bodyweight · Beginner')
   await page.screenshot({ path: 'screenshots/exercises-library.png' })
 })
 

@@ -1,7 +1,7 @@
-import { ChevronRight } from 'lucide-react'
+import { Bookmark, ChevronRight } from 'lucide-react'
 import type { CSSProperties } from 'react'
 import type { Exercise } from '../types'
-import { EQUIPMENT_LABELS, LEVEL_LABELS } from '../lib/library'
+import { CATEGORY_LABELS, EQUIPMENT_LABELS, LEVEL_LABELS } from '../lib/library'
 import { TYPE_META, rowSummary } from '../lib/tracking'
 
 interface ExerciseRowProps {
@@ -14,10 +14,12 @@ interface ExerciseRowProps {
   onOpen?: (id: string) => void
   /** Also show the equipment and level (the library list). */
   showAttributes?: boolean
+  /** The person has saved this exercise. */
+  saved?: boolean
 }
 
 /** One exercise as a flat row: a slanted slot, its name, its type and its target. */
-export function ExerciseRow({ exercise, keyed = false, clamp = false, onOpen, showAttributes = false }: ExerciseRowProps) {
+export function ExerciseRow({ exercise, keyed = false, clamp = false, onOpen, showAttributes = false, saved = false }: ExerciseRowProps) {
   const meta = TYPE_META[exercise.trackingType]
   const inner = (
     <>
@@ -31,12 +33,19 @@ export function ExerciseRow({ exercise, keyed = false, clamp = false, onOpen, sh
           title={clamp ? exercise.name : undefined}
         >
           {exercise.name}
+          {saved && (
+            <>
+              <Bookmark size={18} className="ml-2 inline-block align-[-2px] text-muted" fill="currentColor" aria-hidden="true" />
+              <span className="sr-only"> (saved)</span>
+            </>
+          )}
         </span>
         <span className="text-[17px] text-pretty text-muted">
           {meta.label} · {rowSummary(exercise)}
         </span>
         {showAttributes && exercise.equipment && exercise.level && (
           <span className="text-[15px] text-muted">
+            {exercise.category ? `${CATEGORY_LABELS[exercise.category]} · ` : ''}
             {EQUIPMENT_LABELS[exercise.equipment]} · {LEVEL_LABELS[exercise.level]}
           </span>
         )}

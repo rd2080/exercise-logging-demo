@@ -19,7 +19,8 @@
         "chest",
         "shoulders",
         "triceps"
-      ]
+      ],
+      "category": "push"
     },
     {
       "id": "incline-push-up",
@@ -36,7 +37,8 @@
       "muscles": [
         "chest",
         "triceps"
-      ]
+      ],
+      "category": "push"
     },
     {
       "id": "pike-push-up",
@@ -53,7 +55,8 @@
       "muscles": [
         "shoulders",
         "triceps"
-      ]
+      ],
+      "category": "push"
     },
     {
       "id": "diamond-push-up",
@@ -70,7 +73,8 @@
       "muscles": [
         "triceps",
         "chest"
-      ]
+      ],
+      "category": "push"
     },
     {
       "id": "bodyweight-squat",
@@ -87,7 +91,8 @@
       "muscles": [
         "quads",
         "glutes"
-      ]
+      ],
+      "category": "legs"
     },
     {
       "id": "glute-bridge",
@@ -104,7 +109,8 @@
       "muscles": [
         "glutes",
         "hamstrings"
-      ]
+      ],
+      "category": "legs"
     },
     {
       "id": "reverse-lunge",
@@ -125,7 +131,8 @@
       ],
       "demands": [
         "space"
-      ]
+      ],
+      "category": "legs"
     },
     {
       "id": "split-squat",
@@ -146,7 +153,8 @@
       ],
       "demands": [
         "space"
-      ]
+      ],
+      "category": "legs"
     },
     {
       "id": "plank",
@@ -164,7 +172,8 @@
       "level": "beginner",
       "muscles": [
         "core"
-      ]
+      ],
+      "category": "core"
     },
     {
       "id": "side-plank",
@@ -181,7 +190,8 @@
       "muscles": [
         "core",
         "obliques"
-      ]
+      ],
+      "category": "core"
     },
     {
       "id": "hollow-hold",
@@ -197,7 +207,8 @@
       "level": "advanced",
       "muscles": [
         "core"
-      ]
+      ],
+      "category": "core"
     },
     {
       "id": "handstand-wall-hold",
@@ -217,7 +228,8 @@
       ],
       "demands": [
         "loud"
-      ]
+      ],
+      "category": "skill"
     },
     {
       "id": "goblet-squat",
@@ -238,7 +250,8 @@
       "muscles": [
         "quads",
         "glutes"
-      ]
+      ],
+      "category": "legs"
     },
     {
       "id": "dumbbell-row",
@@ -256,7 +269,8 @@
       "muscles": [
         "back",
         "biceps"
-      ]
+      ],
+      "category": "pull"
     },
     {
       "id": "kettlebell-swing",
@@ -279,7 +293,8 @@
       "demands": [
         "loud",
         "space"
-      ]
+      ],
+      "category": "legs"
     },
     {
       "id": "band-pull-apart",
@@ -296,7 +311,8 @@
       "muscles": [
         "upper back",
         "shoulders"
-      ]
+      ],
+      "category": "pull"
     },
     {
       "id": "pull-up",
@@ -316,7 +332,8 @@
       ],
       "demands": [
         "space"
-      ]
+      ],
+      "category": "pull"
     },
     {
       "id": "chin-up",
@@ -333,7 +350,8 @@
       "muscles": [
         "biceps",
         "back"
-      ]
+      ],
+      "category": "pull"
     },
     {
       "id": "hanging-knee-raise",
@@ -350,7 +368,8 @@
       "muscles": [
         "core",
         "grip"
-      ]
+      ],
+      "category": "core"
     }
   ]
 }

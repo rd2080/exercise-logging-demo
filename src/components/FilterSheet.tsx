@@ -1,5 +1,5 @@
-import type { EquipmentId, LevelId, TrackingType } from '../types'
-import { EQUIPMENT_LABELS, LEVEL_LABELS, NO_FILTERS, activeFilterCount, type Filters } from '../lib/library'
+import type { CategoryId, EquipmentId, LevelId, TrackingType } from '../types'
+import { CATEGORY_LABELS, EQUIPMENT_LABELS, LEVEL_LABELS, NO_FILTERS, activeFilterCount, type Filters } from '../lib/library'
 import { TYPE_META } from '../lib/tracking'
 import { AnswerSheet } from './AnswerSheet'
 
@@ -12,6 +12,7 @@ interface FilterSheetProps {
   count: number
 }
 
+const CATEGORIES = Object.keys(CATEGORY_LABELS) as CategoryId[]
 const TYPES = Object.keys(TYPE_META) as TrackingType[]
 const EQUIPMENT = Object.keys(EQUIPMENT_LABELS) as EquipmentId[]
 const LEVELS = Object.keys(LEVEL_LABELS) as LevelId[]
@@ -74,6 +75,19 @@ export function FilterSheet({ open, onOpenChange, filters, onChange, count }: Fi
               label={TYPE_META[t].label}
               on={filters.types.includes(t)}
               onClick={() => onChange({ ...filters, types: toggle(filters.types, t) })}
+            />
+          ))}
+        </Group>
+        <Group title="Saved">
+          <Chip label="Saved only" on={filters.saved} onClick={() => onChange({ ...filters, saved: !filters.saved })} />
+        </Group>
+        <Group title="Category">
+          {CATEGORIES.map((c) => (
+            <Chip
+              key={c}
+              label={CATEGORY_LABELS[c]}
+              on={filters.categories.includes(c)}
+              onClick={() => onChange({ ...filters, categories: toggle(filters.categories, c) })}
             />
           ))}
         </Group>

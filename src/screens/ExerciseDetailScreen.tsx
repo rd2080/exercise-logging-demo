@@ -1,5 +1,5 @@
-import { ArrowLeft } from 'lucide-react'
-import { useState, type CSSProperties } from 'react'
+import { ArrowLeft, Bookmark } from 'lucide-react'
+import { useEffect, useState, type CSSProperties } from 'react'
 import { AddExerciseSheet } from '../components/AddExerciseSheet'
 import { DemoFigure } from '../components/DemoFigure'
 import { EmptySlots } from '../components/EmptySlots'
@@ -15,6 +15,8 @@ interface ExerciseDetailScreenProps {
   plan: Exercise[]
   entries: Entry[]
   onAdd: (entry: Omit<Entry, 'id'>) => void
+  saved: boolean
+  onToggleSaved: () => void
   onBack: () => void
 }
 
@@ -41,8 +43,15 @@ function BackButton({ onBack }: { onBack: () => void }) {
   )
 }
 
-export function ExerciseDetailScreen({ exercise, plan, entries, onAdd, onBack }: ExerciseDetailScreenProps) {
+export function ExerciseDetailScreen({ exercise, plan, entries, onAdd, saved, onToggleSaved, onBack }: ExerciseDetailScreenProps) {
   const [logging, setLogging] = useState(false)
+  // The toast answers a tap on the bookmark. It is never shown just for opening the screen.
+  const [toast, setToast] = useState<string | null>(null)
+  useEffect(() => {
+    if (!toast) return
+    const t = window.setTimeout(() => setToast(null), 2200)
+    return () => window.clearTimeout(t)
+  }, [toast])
   const shell = 'mx-auto flex min-h-dvh w-full max-w-[480px] flex-col'
   const main = 'flex flex-1 flex-col gap-6 px-4 pt-[max(0.75rem,env(safe-area-inset-top))] pb-28'
 
@@ -68,7 +77,31 @@ export function ExerciseDetailScreen({ exercise, plan, entries, onAdd, onBack }:
   return (
     <div className={shell} style={{ '--tape': meta.tape } as CSSProperties} data-testid="exercise-detail">
       <main className={main}>
-        <BackButton onBack={onBack} />
+        <div className="flex items-center justify-between">
+          <BackButton onBack={onBack} />
+          <button
+            type="button"
+            className="press grid size-12 place-items-center rounded-full bg-surface-2"
+            aria-label={saved ? 'Remove from saved' : 'Save exercise'}
+            aria-pressed={saved}
+            onClick={() => {
+              onToggleSaved()
+              setToast(saved ? 'Removed from saved' : 'Saved to your exercises')
+            }}
+            data-testid="bookmark"
+          >
+            <Bookmark size={24} strokeWidth={2.5} fill={saved ? 'currentColor' : 'none'} aria-hidden="true" />
+          </button>
+        </div>
+        <div
+          className="pointer-events-none fixed inset-x-0 top-[max(0.75rem,env(safe-area-inset-top))] z-30 mx-auto flex w-full max-w-[480px] justify-center px-4"
+          role="status"
+          data-testid="save-toast"
+        >
+          {toast && (
+            <p className="m-0 rounded-full bg-ink px-5 py-3 text-lg font-semibold text-on-tape">{toast}</p>
+          )}
+        </div>
         <DemoFigure exerciseId={exercise.id} name={exercise.name} compact />
         <header className="flex flex-col gap-2">
           <h1 className="font-display m-0 text-[36px] leading-[1.05] font-bold text-balance [overflow-wrap:anywhere]">

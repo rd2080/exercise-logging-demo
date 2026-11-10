@@ -12,17 +12,22 @@ interface ExercisesScreenProps {
   exercises: Exercise[]
   /** Limit ids from set up. Exercises that clash with them are hidden unless the person asks. */
   limits: string[]
+  /** Ids of saved exercises. */
+  savedIds: string[]
   onStart: () => void
   onOpen: (id: string) => void
 }
 
-export function ExercisesScreen({ exercises: all, limits, onStart, onOpen }: ExercisesScreenProps) {
+export function ExercisesScreen({ exercises: all, limits, savedIds, onStart, onOpen }: ExercisesScreenProps) {
   const [showAll, setShowAll] = useState(false)
   const exercises = useMemo(() => (showAll ? all : all.filter((e) => fitsLimits(e, limits))), [all, limits, showAll])
   const hidden = all.length - all.filter((e) => fitsLimits(e, limits)).length
   const [filters, setFilters] = useState<Filters>(NO_FILTERS)
   const [sheet, setSheet] = useState(false)
-  const shown = useMemo(() => filterExercises(exercises, filters), [exercises, filters])
+  const shown = useMemo(
+    () => filterExercises(exercises, filters).filter((e) => !filters.saved || savedIds.includes(e.id)),
+    [exercises, filters, savedIds],
+  )
   const total = exercises.length
   const active = activeFilterCount(filters)
   const filtered = hasAnyFilter(filters)
@@ -121,7 +126,7 @@ export function ExercisesScreen({ exercises: all, limits, onStart, onOpen }: Exe
             ) : (
               <ul className="m-0 flex list-none flex-col p-0" data-testid="exercise-list">
                 {shown.map((e) => (
-                  <ExerciseRow key={e.id} exercise={e} keyed showAttributes onOpen={onOpen} />
+                  <ExerciseRow key={e.id} exercise={e} keyed showAttributes saved={savedIds.includes(e.id)} onOpen={onOpen} />
                 ))}
               </ul>
             )}

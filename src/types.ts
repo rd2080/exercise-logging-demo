@@ -10,6 +10,7 @@ export interface SetValues {
 
 export type EquipmentId = 'none' | 'dumbbells' | 'band' | 'kettlebell' | 'pullup'
 export type LevelId = 'beginner' | 'intermediate' | 'advanced'
+export type CategoryId = 'push' | 'pull' | 'legs' | 'core' | 'skill'
 
 /** What an exercise asks of the room: noise or impact, floor space, or running. Placeholder tags. */
 export type Demand = 'loud' | 'space' | 'running'
@@ -24,6 +25,7 @@ export interface Exercise {
   cue: string
   equipment?: EquipmentId
   level?: LevelId
+  category?: CategoryId
   /** Placeholder muscles worked, in sentence case. */
   muscles?: string[]
   demands?: Demand[]

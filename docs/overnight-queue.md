@@ -20,8 +20,8 @@ Rules: one commit per feature, push after each, tests after each feature, one re
 - [ ] Batch C review and fixes
 
 ## Batch D: Exercise list
-- [ ] Category chips on exercise rows (row 32)
-- [ ] Bookmarks with a save toast that fires only on the action (rows 30, 39)
+- [x] Category chips on exercise rows (row 32)
+- [x] Bookmarks with a save toast that fires only on the action (rows 30, 39)
 - [ ] Thumbnails: drawn figure where one exists, marked placeholder tile otherwise (row 41)
 - [ ] Batch D review and fixes
 

@@ -19,7 +19,8 @@
         "chest",
         "shoulders",
         "triceps"
-      ]
+      ],
+      "category": "push"
     },
     {
       "id": "reverse-lunge",
@@ -38,7 +39,8 @@
       ],
       "demands": [
         "space"
-      ]
+      ],
+      "category": "legs"
     },
     {
       "id": "plank",
@@ -54,7 +56,8 @@
       "cue": "Squeeze your glutes and keep your hips level.",
       "muscles": [
         "core"
-      ]
+      ],
+      "category": "core"
     },
     {
       "id": "goblet-squat",
@@ -73,7 +76,8 @@
       "muscles": [
         "quads",
         "glutes"
-      ]
+      ],
+      "category": "legs"
     }
   ]
 }
