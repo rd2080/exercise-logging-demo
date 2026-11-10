@@ -52,6 +52,12 @@ function Screen() {
   }
   const [answers, setAnswers] = useState<Answers>(() => ({ ...EMPTY_ANSWERS, limits: loadLimits() }))
   const [entries, setEntries] = useState<Entry[]>(loadEntries)
+  // A 5-4-3-2-1 countdown runs when a workout is started from a button, not when the screen is opened by address.
+  const [getReady, setGetReady] = useState(false)
+  const startWorkout = () => {
+    setGetReady(true)
+    setStage('player')
+  }
   const [savedIds, setSavedIds] = useState<string[]>(loadSaved)
   const toggleSaved = (id: string) =>
     setSavedIds((list) => {
@@ -121,6 +127,7 @@ function Screen() {
     return (
       <PlayerScreen
         session={session}
+        getReady={getReady}
         onExit={() => setStage('progress')}
         onFinish={() => setStage('today')}
         onLog={(list) => list.forEach(addEntry)}
@@ -130,7 +137,7 @@ function Screen() {
     <>
       {stage === 'today' && <TodayScreen
           session={session}
-          onStart={() => setStage('player')}
+          onStart={startWorkout}
           onChoose={() => setStage('setup')}
           onOpen={openExercise('today')}
           programme={programmeRow}
@@ -146,7 +153,7 @@ function Screen() {
           entries={entries}
           now={now}
           onBack={() => setStage('today')}
-          onStart={() => setStage('player')}
+          onStart={startWorkout}
           onChange={() => setStage('setup')}
           onRestart={() => {
             if (!chosen) return
@@ -181,7 +188,7 @@ function Screen() {
       )}
       {stage === 'progress' && (
         <ProgressScreen
-          onStart={() => setStage('player')}
+          onStart={startWorkout}
           plan={session.exercises}
           entries={entries}
           saveFailed={saveFailed}

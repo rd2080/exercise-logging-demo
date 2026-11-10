@@ -23,9 +23,11 @@ type Phase =
   | { kind: 'rest'; endsAt: number; total: number }
   | { kind: 'lead'; endsAt: number }
   | { kind: 'hold'; startedAt: number; endsAt: number }
+  | { kind: 'ready'; endsAt: number }
   | { kind: 'exercise-done' }
 
 const LEAD_SECONDS = 3
+const READY_SECONDS = 5
 
 /** Ticks on its own so the whole screen does not re-render every 200ms. */
 function Clock({ endsAt, mode }: { endsAt: number; mode: 'clock' | 'seconds' }) {
@@ -75,8 +77,11 @@ export function PlayerScreen({
   onExit,
   onFinish,
   onLog,
+  getReady = false,
 }: {
   session: Session
+  /** Start with a 5-4-3-2-1 countdown. It is not a work timer and can be skipped. */
+  getReady?: boolean
   onExit?: () => void
   onFinish?: () => void
   onLog?: (entries: Omit<Entry, 'id'>[]) => void
@@ -98,15 +103,17 @@ export function PlayerScreen({
       </div>
     )
   }
-  return <Player session={session} onFinish={onFinish} onLog={onLog} />
+  return <Player session={session} onFinish={onFinish} onLog={onLog} getReady={getReady} />
 }
 
 function Player({
   session,
   onFinish,
   onLog,
+  getReady,
 }: {
   session: Session
+  getReady: boolean
   onFinish?: () => void
   onLog?: (entries: Omit<Entry, 'id'>[]) => void
 }) {
@@ -115,7 +122,7 @@ function Player({
   const [logs, setLogs] = useState<SetValues[][]>(() => exercises.map(() => []))
   const [draft, setDraft] = useState<SetValues>(() => initialDraft(exercises[0]).values)
   const [source, setSource] = useState<PrefillSource>(() => initialDraft(exercises[0]).source)
-  const [phase, setPhase] = useState<Phase>({ kind: 'log' })
+  const [phase, setPhase] = useState<Phase>(() => (getReady ? { kind: 'ready', endsAt: Date.now() + READY_SECONDS * 1000 } : { kind: 'log' }))
   const [finished, setFinished] = useState(false)
   const [announce, setAnnounce] = useState('')
   const [confirmEnd, setConfirmEnd] = useState(false)
@@ -169,7 +176,11 @@ function Player({
           setAnnounce('Rest over')
           navigator.vibrate?.(20)
         }
-        else if (phase.kind === 'lead') {
+        else if (phase.kind === 'ready') {
+          setPhase({ kind: 'log' })
+          setAnnounce('Go. Log your first set when you finish it.')
+          navigator.vibrate?.(20)
+        } else if (phase.kind === 'lead') {
           const seconds = draft.seconds ?? ex.target.seconds ?? 30
           setPhase({ kind: 'hold', startedAt: phase.endsAt, endsAt: phase.endsAt + seconds * 1000 })
           setAnnounce(`Hold started, ${seconds} seconds`)
@@ -247,6 +258,8 @@ function Player({
     switch (phase.kind) {
       case 'log':
         return { label: 'Log set', onClick: logSet }
+      case 'ready':
+        return { label: 'Skip countdown', onClick: () => setPhase({ kind: 'log' }) }
       case 'rest':
         return { label: 'Skip rest', onClick: () => setPhase({ kind: 'log' }) }
       case 'lead':
@@ -318,6 +331,19 @@ function Player({
           </h2>
           <SetSlots exercise={ex} logged={logged} active={phase.kind !== 'exercise-done'} />
         </section>
+
+        {phase.kind === 'ready' && (
+          <section
+            className="flex flex-col gap-3 rounded-3xl bg-surface p-4"
+            aria-label="Get ready"
+            data-testid="ready"
+          >
+            <h2 className="font-display m-0 text-2xl font-semibold">Get ready</h2>
+            <p className="num m-0 text-[72px] leading-none font-bold" data-testid="timer">
+              <Clock endsAt={phase.endsAt} mode="seconds" />
+            </p>
+          </section>
+        )}
 
         {phase.kind === 'log' && (
           <section
