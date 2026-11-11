@@ -97,6 +97,7 @@ test('button labels name the result in sentence case', async ({ page }) => {
   await expect(create(page)).toHaveText('Create my plan')
   await answerAll(page)
   await create(page).click()
+  await page.getByTestId('skill-no').click()
   await expect(page.getByTestId('start-programme')).toHaveText('Start programme')
 })
 
@@ -104,6 +105,7 @@ test('a lightly active user is recommended foundation strength and can start it'
   await answerAll(page, 'Lightly active')
   await expect(create(page)).toBeEnabled()
   await create(page).click()
+  await page.getByTestId('skill-no').click()
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Choose your programme')
   await expect(page.getByRole('radio', { name: /Foundation strength/ })).toBeChecked()
   await expect(page.getByText('Recommended for you')).toBeVisible()
@@ -111,59 +113,10 @@ test('a lightly active user is recommended foundation strength and can start it'
   await expect(page.getByRole('radio', { name: /Handstand push-up/ })).toBeChecked()
 })
 
-test('a skill goal is picked on its own page, not in the goals list, and recommends the handstand programme', async ({ page }) => {
-  await openRow(page, /^Goals/)
-  await expect(page.getByRole('checkbox', { name: /handstand/i })).toHaveCount(0)
-  await page.keyboard.press('Escape')
-  await page.waitForTimeout(400)
-  await expect(page.getByTestId('answer-skill')).toHaveText('Add')
-  await page.getByRole('button', { name: /^Skill goal/ }).click()
-  await expect(page.getByTestId('skill-goal')).toBeVisible()
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Pick a skill goal')
-  await expect(page.getByRole('radio', { name: 'No skill goal right now' })).toHaveAttribute('aria-checked', 'true')
-  await page.getByRole('radio', { name: /Handstand push-up/ }).click()
-  await page.getByTestId('skill-save').click()
-  await expect(page.getByTestId('setup')).toBeVisible()
-  await expect(page.getByTestId('answer-skill')).toHaveText('Handstand push-up')
-  await openRow(page, /^Goals/)
-  await page.getByRole('checkbox', { name: /Improve fitness/ }).click()
-  await page.getByRole('button', { name: 'Save goals' }).click()
-  await openRow(page, /^Activity level/)
-  await page.getByRole('radio', { name: /Mostly sitting/ }).click()
-  await openRow(page, /^Equipment/)
-  await page.getByRole('checkbox', { name: /None, bodyweight only/ }).click()
-  await page.getByRole('button', { name: 'Save equipment' }).click()
-  await create(page).click()
-  await expect(page.getByRole('radio', { name: /Handstand push-up/ })).toBeChecked()
-  await expect(page.getByText('Matches your skill goal: handstand push-up')).toBeVisible()
-})
-
-test('the skill page can go back unchanged and can clear the choice again', async ({ page }) => {
-  await page.getByRole('button', { name: /^Skill goal/ }).click()
-  await page.getByTestId('skill-back').click()
-  await expect(page.getByTestId('answer-skill')).toHaveText('Add')
-  await page.getByRole('button', { name: /^Skill goal/ }).click()
-  await page.getByRole('radio', { name: /Handstand push-up/ }).click()
-  await page.getByTestId('skill-save').click()
-  await page.getByRole('button', { name: /^Skill goal/ }).click()
-  await page.getByRole('radio', { name: 'No skill goal right now' }).click()
-  await page.getByTestId('skill-save').click()
-  await expect(page.getByTestId('answer-skill')).toHaveText('Add')
-})
-
-test('the skill page holds up at 320 with a long skill name', async ({ page }) => {
-  await page.setViewportSize({ width: 320, height: 640 })
-  await page.goto('/?stage=skillgoal&data=worst')
-  await expect(page.getByTestId('skill-goal')).toBeVisible()
-  expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true)
-  for (const b of await page.getByTestId('skill-goal').getByRole('radio').all()) {
-    expect((await b.boundingBox())!.height).toBeGreaterThanOrEqual(48)
-  }
-})
-
 test('an eight week programme draws a strip twice as long as a four week one', async ({ page }) => {
   await answerAll(page)
   await create(page).click()
+  await page.getByTestId('skill-no').click()
   const widths = await page.getByRole('img', { name: /weeks$/ }).evaluateAll((els) =>
     els.map((e) => (e.firstElementChild as HTMLElement).getBoundingClientRect().width),
   )
@@ -174,12 +127,14 @@ test('an eight week programme draws a strip twice as long as a four week one', a
 test('a very active user is recommended the handstand push-up programme', async ({ page }) => {
   await answerAll(page, 'Very active')
   await create(page).click()
+  await page.getByTestId('skill-no').click()
   await expect(page.getByRole('radio', { name: /Handstand push-up/ })).toBeChecked()
 })
 
 test('the flow ends on the empty progress page, then the player', async ({ page }) => {
   await answerAll(page)
   await create(page).click()
+  await page.getByTestId('skill-no').click()
   await page.getByTestId('start-programme').click()
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Get reminders on your training days?')
   await page.getByRole('button', { name: 'Not now' }).click()
@@ -218,6 +173,7 @@ test('every control is at least 48px, nothing overflows, and screens are capture
   await page.waitForTimeout(500)
   await check('setup-ready')
   await create(page).click()
+  await page.getByTestId('skill-no').click()
   await check('programmes')
   await page.getByTestId('start-programme').click()
   await check('reminders')
@@ -275,6 +231,7 @@ test('ranking training styles changes the recommendation and says why', async ({
   await page.getByRole('dialog').getByRole('button', { name: 'Save training style' }).click()
   await expect(page.getByTestId('answer-style')).toHaveText('Skills, Bodyweight')
   await create(page).click()
+  await page.getByTestId('skill-no').click()
   await expect(page.getByRole('radio', { name: /Handstand push-up/ })).toBeChecked()
   await expect(page.getByText('Matches your favourite training style: skills')).toBeVisible()
 })
@@ -283,6 +240,7 @@ test('without a training style the recommendation is unchanged', async ({ page }
   await answerAll(page, 'Lightly active')
   await expect(page.getByTestId('answer-style')).toHaveText('Add')
   await create(page).click()
+  await page.getByTestId('skill-no').click()
   await expect(page.getByRole('radio', { name: /Foundation strength/ })).toBeChecked()
 })
 

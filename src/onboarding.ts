@@ -1,4 +1,5 @@
 import { onboarding as data } from './data/fixtures'
+import { skillById } from './lib/skills'
 import { bodySummary, DEFAULT_UNITS, type Units } from './lib/body'
 
 export interface Option {
@@ -23,11 +24,6 @@ export interface Programme {
 
 export const GOALS = data.goals as Option[]
 
-/** A specific skill someone can aim for. Each points at the programme built for it. */
-export interface SkillGoal extends Option {
-  programmeId: string
-}
-export const SKILL_GOALS = ((data as { skillGoals?: SkillGoal[] }).skillGoals ?? []) as SkillGoal[]
 export const ACTIVITY = data.activity as Option[]
 export const EQUIPMENT = data.equipment as Option[]
 export const LIMITS = data.limits as Option[]
@@ -56,7 +52,7 @@ export interface Answers {
   heightCm: number | null
   /** Training styles in order of preference. Optional. */
   styles: string[]
-  /** One optional skill goal, chosen on its own page. It decides the recommended programme. */
+  /** The skill goal, chosen after set up. It decides the recommended programme. */
   skillGoal: string | null
 }
 
@@ -73,7 +69,7 @@ export const EMPTY_ANSWERS: Answers = {
   skillGoal: null,
 }
 
-export type RowId = 'goals' | 'activity' | 'equipment' | 'limits' | 'style' | 'body' | 'skill'
+export type RowId = 'goals' | 'activity' | 'equipment' | 'limits' | 'style' | 'body'
 
 export function labelOf(options: Option[], id: string): string {
   const o = options.find((x) => x.id === id)
@@ -96,8 +92,6 @@ export function summaryText(a: Answers, row: RowId, units: Units = DEFAULT_UNITS
       return a.activity ? labelOf(ACTIVITY, a.activity) : null
     case 'equipment':
       return a.equipment.length ? a.equipment.map((e) => labelOf(EQUIPMENT, e)).join(', ') : null
-    case 'skill':
-      return a.skillGoal ? labelOf(SKILL_GOALS, a.skillGoal) : null
     case 'style':
       return a.styles.length ? a.styles.map((x) => labelOf(STYLES, x)).join(', ') : null
     case 'body':
@@ -127,8 +121,8 @@ export function pullupConsequence(p: Answers['pullup']): string {
 
 export function recommended(a: Answers): { id: string; reason: string } | null {
   if (PROGRAMMES.length === 0) return null
-  const skill = SKILL_GOALS.find((s) => s.id === a.skillGoal)
-  if (skill && PROGRAMMES.some((p) => p.id === skill.programmeId)) {
+  const skill = skillById(a.skillGoal)
+  if (skill?.programmeId && PROGRAMMES.some((p) => p.id === skill.programmeId)) {
     return { id: skill.programmeId, reason: `Matches your skill goal: ${skill.label.toLowerCase()}` }
   }
   const level = a.activity ?? 'sitting'

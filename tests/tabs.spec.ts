@@ -3,11 +3,11 @@ import { expect, test, type Page } from '@playwright/test'
 const bar = (page: Page) => page.getByTestId('tab-bar')
 const tab = (page: Page, name: string) => bar(page).getByRole('button', { name })
 
-test('four tabs, sentence case, the current one marked, each at least 48px', async ({ page }) => {
+test('five tabs, sentence case, the current one marked, each at least 48px', async ({ page }) => {
   await page.goto('/?stage=today')
   await expect(bar(page)).toBeVisible()
   const names = await bar(page).getByRole('button').allInnerTexts()
-  expect(names).toEqual(['Today', 'Exercises', 'Progress', 'Achievements'])
+  expect(names).toEqual(['Today', 'Exercises', 'Progress', 'Awards', 'Skill'])
   await expect(tab(page, 'Today')).toHaveAttribute('aria-current', 'page')
   await expect(tab(page, 'Exercises')).not.toHaveAttribute('aria-current', 'page')
   for (const b of await bar(page).getByRole('button').all()) {
@@ -128,6 +128,7 @@ test('with no programmes, the programme step shows an empty state with a way bac
   await page.getByRole('checkbox', { name: /None, bodyweight only/ }).click()
   await page.getByRole('button', { name: 'Save equipment' }).click()
   await page.getByTestId('create-plan').click()
+  await page.getByTestId('skill-no').click()
   await expect(page.getByRole('heading', { name: 'No programmes yet' })).toBeVisible()
   await page.getByRole('button', { name: 'Back to set up' }).click()
   await expect(page.getByTestId('setup')).toBeVisible()
@@ -144,6 +145,7 @@ test('finishing set up with programmes brings the tab bar back on Progress', asy
   await page.getByRole('checkbox', { name: /None, bodyweight only/ }).click()
   await page.getByRole('button', { name: 'Save equipment' }).click()
   await page.getByTestId('create-plan').click()
+  await page.getByTestId('skill-no').click()
   await page.getByTestId('start-programme').click()
   await page.getByRole('button', { name: 'Not now' }).click()
   await expect(page.getByTestId('progress')).toBeVisible()

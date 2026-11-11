@@ -1,0 +1,75 @@
+{
+  "_note": "Fixture data. Skills, their groups and which have a programme are authored placeholders.",
+  "classifications": [
+    {
+      "id": "strength",
+      "label": "Strength skills"
+    },
+    {
+      "id": "balance",
+      "label": "Balance skills"
+    },
+    {
+      "id": "endurance",
+      "label": "Endurance"
+    }
+  ],
+  "skills": [
+    {
+      "id": "handstand",
+      "label": "Handstand push-up",
+      "detail": "Press into a handstand and lower with control",
+      "classification": "strength",
+      "programmeId": "handstand"
+    },
+    {
+      "id": "first-pull-up",
+      "label": "First pull-up",
+      "detail": "One full pull-up from a dead hang",
+      "classification": "strength"
+    },
+    {
+      "id": "muscle-up",
+      "label": "First muscle-up",
+      "detail": "Pull over the bar and press into a dip",
+      "classification": "strength"
+    },
+    {
+      "id": "pistol",
+      "label": "Pistol squat",
+      "detail": "A squat on one leg, down to full depth",
+      "classification": "balance"
+    },
+    {
+      "id": "crow",
+      "label": "Crow pose",
+      "detail": "Balance on your hands with your knees on your elbows",
+      "classification": "balance"
+    },
+    {
+      "id": "free-handstand",
+      "label": "Freestanding handstand",
+      "detail": "Hold a handstand away from the wall",
+      "classification": "balance"
+    },
+    {
+      "id": "first-10k",
+      "label": "First 10k run",
+      "detail": "Run ten kilometres without stopping",
+      "classification": "endurance"
+    },
+    {
+      "id": "first-5k",
+      "label": "Run 5k without stopping",
+      "detail": "Build up to running five kilometres",
+      "classification": "endurance"
+    },
+    {
+      "id": "long",
+      "label": "A skill with a very long name that keeps going: unbreakableunbreakableunbreakableunbreakableunbreakableunbreakableunbreakable",
+      "detail": "A long description that wraps onto several lines to check the row holds up at 320 pixels wide without any sideways scroll",
+      "classification": "strength",
+      "programmeId": "none"
+    }
+  ]
+}

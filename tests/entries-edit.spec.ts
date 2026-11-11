@@ -84,7 +84,7 @@ for (const width of [320, 390]) {
       await expect(rows(page).first()).toContainText('Push-up')
       const doc = await page.evaluate(() => document.documentElement.scrollWidth)
       expect(doc).toBeLessThanOrEqual(width)
-      await page.getByTestId('tab-bar').getByRole('button', { name: 'Achievements' }).click()
+      await page.getByTestId('tab-bar').getByRole('button', { name: 'Awards' }).click()
       await expect(page.getByRole('listitem', { name: /First set: .* Unlocked/ })).toBeVisible()
     })
   })

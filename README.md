@@ -63,7 +63,8 @@ Open a screen directly with `?stage=`:
 - `exercise` (add `&id=push-up`)
 - `myprogramme`
 - `routine` (the warm-up flow)
-- `skillgoal`
+- `skillask`, `skills`, `skillconfirm` (the skill steps after set up)
+- `skill` (the Skill tab)
 - `achievements`
 
 ## Dev data modes

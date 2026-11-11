@@ -9,13 +9,10 @@ interface SetupScreenProps {
   answers: Answers
   onChange: (next: Answers) => void
   onCreate: () => void
-  /** Opens the page for picking a skill goal. */
-  onOpenSkillGoal: () => void
 }
 
 const ROWS: { id: RowId; label: string; why: string; sheet: string }[] = [
   { id: 'goals', label: 'Goals', why: 'Decides which programmes we suggest', sheet: 'Choose goals' },
-  { id: 'skill', label: 'Skill goal', why: 'Optional. Picks a programme built for it', sheet: 'Pick a skill goal' },
   { id: 'activity', label: 'Activity level', why: 'Sets how hard your first weeks start', sheet: 'Choose activity level' },
   { id: 'equipment', label: 'Equipment', why: 'So we only plan what you can do', sheet: 'Choose equipment' },
   { id: 'limits', label: 'Limits', why: 'Optional. Rules exercises out', sheet: 'Choose limits' },
@@ -23,7 +20,7 @@ const ROWS: { id: RowId; label: string; why: string; sheet: string }[] = [
   { id: 'body', label: 'Weight and height', why: 'Optional. Stays on this device', sheet: 'Add measurements' },
 ]
 
-export function SetupScreen({ answers, onChange, onCreate, onOpenSkillGoal }: SetupScreenProps) {
+export function SetupScreen({ answers, onChange, onCreate }: SetupScreenProps) {
   const [open, setOpen] = useState<RowId | null>(null)
   const [units, setUnits] = useState<Units>(loadUnits)
   const changeUnits = (u: Units) => {
@@ -62,7 +59,7 @@ export function SetupScreen({ answers, onChange, onCreate, onOpenSkillGoal }: Se
                 <button
                   type="button"
                   className="press flex min-h-[88px] w-full items-center gap-3 py-3 text-left short:min-h-[76px]"
-                  onClick={() => (row.id === 'skill' ? onOpenSkillGoal() : setOpen(row.id))}
+                  onClick={() => setOpen(row.id)}
                 >
                   <Slot n={i + 1} filled={filled} />
                   <span className="flex min-w-0 flex-1 flex-col gap-0.5">
@@ -72,7 +69,7 @@ export function SetupScreen({ answers, onChange, onCreate, onOpenSkillGoal }: Se
                       className={`line-clamp-2 text-lg [overflow-wrap:anywhere] ${value ? 'text-ink' : 'font-semibold text-(--tape)'}`}
                       data-testid={`answer-${row.id}`}
                     >
-                      {value ?? (row.id === 'body' || row.id === 'style' || row.id === 'skill' ? 'Add' : 'Choose')}
+                      {value ?? (row.id === 'body' || row.id === 'style' ? 'Add' : 'Choose')}
                     </span>
                   </span>
                   <ChevronRight size={24} className="shrink-0 text-muted" aria-hidden="true" />

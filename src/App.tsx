@@ -3,6 +3,7 @@ import { DataToggle } from './components/DataToggle'
 import { library, session } from './data/fixtures'
 import type { Entry } from './entries'
 import { loadChosen, programmeById, progressFor, saveChosen, type Chosen } from './lib/programme'
+import { loadSkill, saveSkill, skillById, type SkillChoice } from './lib/skills'
 import { loadRoutines, saveRoutines, type RoutineId } from './lib/routines'
 import { workoutDoneToday } from './lib/today'
 import { loadSaved, saveSaved } from './lib/saved'
@@ -20,14 +21,17 @@ import { TabBar, type TabId } from './components/TabBar'
 const ExerciseDetailScreen = lazy(() => import('./screens/ExerciseDetailScreen').then((m) => ({ default: m.ExerciseDetailScreen })))
 const ExercisesScreen = lazy(() => import('./screens/ExercisesScreen').then((m) => ({ default: m.ExercisesScreen })))
 const MyProgrammeScreen = lazy(() => import('./screens/MyProgrammeScreen').then((m) => ({ default: m.MyProgrammeScreen })))
-const SkillGoalScreen = lazy(() => import('./screens/SkillGoalScreen').then((m) => ({ default: m.SkillGoalScreen })))
+const SkillAskScreen = lazy(() => import('./screens/SkillAskScreen').then((m) => ({ default: m.SkillAskScreen })))
+const SkillsScreen = lazy(() => import('./screens/SkillsScreen').then((m) => ({ default: m.SkillsScreen })))
+const SkillConfirmScreen = lazy(() => import('./screens/SkillConfirmScreen').then((m) => ({ default: m.SkillConfirmScreen })))
+const SkillTabScreen = lazy(() => import('./screens/SkillTabScreen').then((m) => ({ default: m.SkillTabScreen })))
 const RoutineScreen = lazy(() => import('./screens/RoutineScreen').then((m) => ({ default: m.RoutineScreen })))
 const PlayerScreen = lazy(() => import('./screens/PlayerScreen').then((m) => ({ default: m.PlayerScreen })))
 const AchievementsScreen = lazy(() => import('./screens/AchievementsScreen').then((m) => ({ default: m.AchievementsScreen })))
 const ProgressScreen = lazy(() => import('./screens/ProgressScreen').then((m) => ({ default: m.ProgressScreen })))
 
-type Stage = 'setup' | 'skillgoal' | 'programme' | 'reminders' | TabId | 'player' | 'routine' | 'exercise' | 'myprogramme'
-const STAGES: Stage[] = ['skillgoal', 'programme', 'reminders', 'today', 'exercises', 'progress', 'achievements', 'player', 'routine', 'exercise', 'myprogramme']
+type Stage = 'setup' | 'skillask' | 'skills' | 'skillconfirm' | 'programme' | 'reminders' | TabId | 'player' | 'routine' | 'exercise' | 'myprogramme'
+const STAGES: Stage[] = ['skillask', 'skills', 'skillconfirm', 'skill', 'programme', 'reminders', 'today', 'exercises', 'progress', 'achievements', 'player', 'routine', 'exercise', 'myprogramme']
 
 function initialStage(): Stage {
   const s = new URLSearchParams(window.location.search).get('stage')
@@ -60,7 +64,7 @@ function Screen() {
     setStage('exercise')
     window.scrollTo(0, 0)
   }
-  const [answers, setAnswers] = useState<Answers>(() => ({ ...EMPTY_ANSWERS, limits: loadLimits() }))
+  const [answers, setAnswers] = useState<Answers>(() => ({ ...EMPTY_ANSWERS, limits: loadLimits(), skillGoal: loadSkill()?.id ?? null }))
   const [entries, setEntries] = useState<Entry[]>(loadEntries)
   // Started from a button, the workout is guided: each exercise opens on Start exercise, goes full screen
   // and counts down. Opened by address (a dev shortcut) it goes straight to logging.
@@ -68,6 +72,15 @@ function Screen() {
   const startWorkout = () => {
     setGuided(true)
     setStage('player')
+  }
+  // One skill goal. It is saved here, and the recommended programme reads it from the answers.
+  const [skill, setSkill] = useState<SkillChoice | null>(loadSkill)
+  const [skillOrigin, setSkillOrigin] = useState<'flow' | 'tab'>('flow')
+  const [pendingSkill, setPendingSkill] = useState<string | null>(null)
+  const chooseSkill = (next: SkillChoice | null) => {
+    setSkill(next)
+    saveSkill(next)
+    setAnswers((a) => ({ ...a, skillGoal: next?.id ?? null }))
   }
   // The warm-up and cool-down are their own flows, finished or not for today.
   const [routine, setRoutine] = useState<RoutineId>('warmup')
@@ -137,12 +150,47 @@ function Screen() {
       <SetupScreen
         answers={answers}
         onChange={setAnswers}
-        onCreate={() => setStage('programme')}
-        onOpenSkillGoal={() => setStage('skillgoal')}
+        onCreate={() => {
+          // The skill question comes right after the basics, once, unless a skill is already chosen.
+          setSkillOrigin('flow')
+          setStage(skill ? 'programme' : 'skillask')
+        }}
       />
     )
-  if (stage === 'skillgoal')
-    return <SkillGoalScreen answers={answers} onChange={setAnswers} onBack={() => setStage('setup')} />
+  if (stage === 'skillask')
+    return (
+      <SkillAskScreen
+        onChoose={() => setStage('skills')}
+        onSkip={() => setStage('programme')}
+        onBack={() => setStage('setup')}
+      />
+    )
+  if (stage === 'skills')
+    return (
+      <SkillsScreen
+        current={pendingSkill ?? skill?.id ?? null}
+        backLabel={skillOrigin === 'flow' ? 'Back to the skill question' : 'Back to the Skill tab'}
+        onBack={() => setStage(skillOrigin === 'flow' ? 'skillask' : 'skill')}
+        onContinue={(id) => {
+          setPendingSkill(id)
+          setStage('skillconfirm')
+        }}
+      />
+    )
+  if (stage === 'skillconfirm')
+    return (
+      <SkillConfirmScreen
+        skill={skillById(pendingSkill ?? skill?.id)}
+        onBack={() => setStage('skills')}
+        onDecide={(adjust) => {
+          const id = pendingSkill ?? skill?.id
+          if (!id) return
+          chooseSkill({ id, adjust })
+          setPendingSkill(null)
+          setStage(skillOrigin === 'flow' ? 'programme' : 'skill')
+        }}
+      />
+    )
   if (stage === 'programme')
     return (
       <ProgrammeScreen
@@ -236,6 +284,18 @@ function Screen() {
           saved={savedIds.includes(detailId)}
           onToggleSaved={() => toggleSaved(detailId)}
           onBack={() => setStage(detailFrom)}
+        />
+      )}
+      {stage === 'skill' && (
+        <SkillTabScreen
+          skill={skillById(skill?.id)}
+          choice={skill}
+          onChoose={() => {
+            setSkillOrigin('tab')
+            setStage('skills')
+          }}
+          onAdjust={(adjust) => skill && chooseSkill({ ...skill, adjust })}
+          onRemove={() => chooseSkill(null)}
         />
       )}
       {stage === 'achievements' && <AchievementsScreen plan={session.exercises} entries={entries} />}

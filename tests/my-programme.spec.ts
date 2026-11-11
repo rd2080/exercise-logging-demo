@@ -201,6 +201,7 @@ test('choosing a programme in set up saves it and starts it now', async ({ page 
   await page.getByRole('checkbox', { name: /None, bodyweight only/ }).click()
   await page.getByRole('button', { name: 'Save equipment' }).click()
   await page.getByTestId('create-plan').click()
+  await page.getByTestId('skill-no').click()
   await page.getByTestId('start-programme').click() // handstand is recommended for very active
   await page.getByRole('button', { name: 'Not now' }).click()
   const saved = JSON.parse((await page.evaluate((k) => localStorage.getItem(k), PROG))!)

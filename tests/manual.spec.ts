@@ -109,13 +109,13 @@ test('Change exercise goes back to the pick step', async ({ page }) => {
 })
 
 test('the first entry unlocks the First set goal', async ({ page }) => {
-  await page.getByTestId('tab-bar').getByRole('button', { name: 'Achievements' }).click()
+  await page.getByTestId('tab-bar').getByRole('button', { name: 'Awards' }).click()
   await expect(page.getByRole('listitem', { name: /First set: .* Locked, 0 of 1/ })).toBeVisible()
   await page.getByTestId('tab-bar').getByRole('button', { name: 'Progress' }).click()
   await plus(page).click()
   await sheet(page).getByRole('button', { name: /Push-up/ }).click()
   await sheet(page).getByRole('button', { name: 'Log set' }).click()
-  await page.getByTestId('tab-bar').getByRole('button', { name: 'Achievements' }).click()
+  await page.getByTestId('tab-bar').getByRole('button', { name: 'Awards' }).click()
   await expect(page.getByRole('listitem', { name: /First set: .* Unlocked, 1 of 1/ })).toBeVisible()
 })
 

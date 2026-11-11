@@ -87,14 +87,14 @@ test('logged sets are grouped by date, newest day first, with Today and Yesterda
 
 test('Achievements is its own tab and stays in view however many sets are logged', async ({ page }) => {
   await page.goto('/?stage=progress')
-  await page.getByTestId('tab-bar').getByRole('button', { name: 'Achievements' }).click()
+  await page.getByTestId('tab-bar').getByRole('button', { name: 'Awards' }).click()
   await expect(page.getByTestId('achievements')).toBeVisible()
-  await expect(page.getByTestId('tab-bar').getByRole('button', { name: 'Achievements' })).toHaveAttribute('aria-current', 'page')
+  await expect(page.getByTestId('tab-bar').getByRole('button', { name: 'Awards' })).toHaveAttribute('aria-current', 'page')
   await expect(page.getByTestId('goal-list')).toBeVisible()
 })
 
 for (const width of [320, 390]) {
-  test(`four tabs fit at ${width} wide without clipping`, async ({ page }) => {
+  test(`five tabs fit at ${width} wide without clipping`, async ({ page }) => {
     await page.setViewportSize({ width, height: 700 })
     await page.goto('/?stage=today')
     await page.evaluate(() => document.fonts.ready)

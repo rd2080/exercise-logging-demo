@@ -1,6 +1,8 @@
 import onboardingDemo from '../../fixtures/onboarding.json'
 import sessionDemo from '../../fixtures/session.json'
 import goalsDemo from '../../fixtures/goals.json'
+import skillsDemo from '../../fixtures/skills.json'
+import skillsWorst from '../../fixtures/worst/skills.json'
 import onboardingWorst from '../../fixtures/worst/onboarding.json'
 import sessionWorst from '../../fixtures/worst/session.json'
 import goalsWorst from '../../fixtures/worst/goals.json'
@@ -75,6 +77,20 @@ function pickGoals() {
   }
 }
 
+function pickSkills() {
+  switch (dataMode) {
+    case 'worst':
+      return skillsWorst
+    case 'empty':
+      return { ...skillsDemo, skills: [] }
+    case 'huge':
+      return { ...skillsWorst, skills: repeat(skillsWorst.skills, 40) }
+    default:
+      return skillsDemo
+  }
+}
+
+export const skillsData = pickSkills()
 export const session = pickSession()
 export const onboarding = pickOnboarding()
 export const goalsData = pickGoals()

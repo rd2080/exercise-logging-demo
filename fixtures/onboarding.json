@@ -22,14 +22,6 @@
       "label": "Relieve stress"
     }
   ],
-  "skillGoals": [
-    {
-      "id": "handstand",
-      "label": "Handstand push-up",
-      "detail": "Press into a handstand and lower with control",
-      "programmeId": "handstand"
-    }
-  ],
   "activity": [
     {
       "id": "sitting",
