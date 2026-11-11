@@ -24,8 +24,8 @@ function session(at: number, fullTarget: boolean, skipLast = false) {
   return list
 }
 
-async function seed(page: import('@playwright/test').Page, entries: unknown[]) {
-  await page.clock.setFixedTime(new Date(DAY + 3600_000))
+async function seed(page: import('@playwright/test').Page, entries: unknown[], now = DAY + 3600_000) {
+  await page.clock.setFixedTime(new Date(now))
   await page.addInitScript(([k, e]) => {
     if (sessionStorage.getItem('seeded')) return
     sessionStorage.setItem('seeded', '1')
@@ -69,7 +69,7 @@ test('sets logged by hand do not count toward a full session', async ({ page }) 
 
 test('three sessions on different days in the first week unlock Week one', async ({ page }) => {
   const day = 24 * 3600_000
-  await seed(page, [...session(DAY, true), ...session(DAY + day, true), ...session(DAY + 2 * day, true)])
+  await seed(page, [...session(DAY, true), ...session(DAY + day, true), ...session(DAY + 2 * day, true)], DAY + 3 * day)
   await page.goto('/?stage=progress')
   await expect(state(page, 'Week one')).toHaveAttribute('aria-label', /Unlocked, 3 of 3/)
 })
