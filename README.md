@@ -43,9 +43,12 @@ Needs Node >=22.
 
 ```
 npm install
-npm run dev     # start the dev server
-npm test        # Playwright tests
+npm run dev     # start the dev server, then open the address it prints on a phone-sized window
+npx playwright install chromium   # once, before the first test run
+npm test        # Playwright tests (starts its own server)
 ```
+
+On a laptop, open the browser's device toolbar at 390 x 844. The row of buttons at the top of the page (demo, worst, empty, one, huge) is a dev-only data switch and is not part of the app.
 
 ## Screens and URL stages
 
@@ -57,6 +60,8 @@ Open a screen directly with `?stage=`:
 - `exercises`
 - `progress`
 - `player`
+- `exercise` (add `&id=push-up`)
+- `myprogramme`
 
 ## Dev data modes
 
