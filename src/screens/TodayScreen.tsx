@@ -1,4 +1,4 @@
-import { ChevronRight } from 'lucide-react'
+import { Check, ChevronRight } from 'lucide-react'
 import type { CSSProperties } from 'react'
 import { EmptySlots } from '../components/EmptySlots'
 import { EmptyState } from '../components/EmptyState'
@@ -20,9 +20,33 @@ function RoutineList({ items }: { items: Routine[] }) {
   )
 }
 
+function DoneHeading({ title, detail }: { title: string; detail: string }) {
+  return (
+    <div className="flex min-h-14 flex-col justify-center">
+      <h2 className="font-display m-0 flex items-center gap-2 text-2xl leading-tight font-bold">
+        <Check size={24} strokeWidth={3} className="shrink-0 text-(--tape)" aria-hidden="true" />
+        <span className="[overflow-wrap:anywhere]">{title}</span>
+      </h2>
+      <p className="m-0 text-[17px] text-muted">{detail}</p>
+    </div>
+  )
+}
+
+function DoneRow({ title, detail, testId }: { title: string; detail: string; testId: string }) {
+  return (
+    <section className="border-t border-line first:border-t-0" data-testid={testId}>
+      <DoneHeading title={title} detail={detail} />
+    </section>
+  )
+}
+
 interface TodayScreenProps {
   session: Session
   onStart: () => void
+  /** Start the warm-up or the cool-down, each its own short flow. */
+  onStartRoutine: (kind: 'warmup' | 'cooldown') => void
+  /** Finished today. A finished part shows no start button and no rows. */
+  done: { warmup: boolean; workout: boolean; cooldown: boolean }
   onChoose: () => void
   onOpen: (id: string) => void
   /** The chosen programme, or null when none is chosen yet. */
@@ -30,7 +54,7 @@ interface TodayScreenProps {
   onProgramme: () => void
 }
 
-export function TodayScreen({ session, onStart, onChoose, onOpen, programme, onProgramme }: TodayScreenProps) {
+export function TodayScreen({ session, onStart, onStartRoutine, done, onChoose, onOpen, programme, onProgramme }: TodayScreenProps) {
   const facts = sessionFacts(session)
   const sets = session.exercises.reduce((n, e) => n + e.sets, 0)
   return (
@@ -72,51 +96,99 @@ export function TodayScreen({ session, onStart, onChoose, onOpen, programme, onP
           />
         ) : (
           <>
-            <button
-              type="button"
-              className="press h-16 w-full rounded-full bg-(--tape) text-xl font-bold text-on-tape"
-              onClick={onStart}
-              data-testid="start-workout"
-            >
-              Start workout
-            </button>
             <div className="flex flex-col gap-2">
               {session.warmup && session.warmup.length > 0 && (
+                done.warmup ? (
+                  <DoneRow title="Warm-up" detail="Done today" testId="warmup-done" />
+                ) : (
+                  <Disclosure
+                    title="Warm-up"
+                    meta={`${session.warmup.length} moves, not logged`}
+                    testId="warmup"
+                    action={
+                      <button
+                        type="button"
+                        className="press h-14 w-full rounded-full bg-surface-2 text-xl font-semibold"
+                        onClick={() => onStartRoutine('warmup')}
+                        data-testid="start-warmup"
+                      >
+                        Start warm-up
+                      </button>
+                    }
+                  >
+                    <RoutineList items={session.warmup} />
+                  </Disclosure>
+                )
+              )}
+              {done.workout ? (
+                <section className="flex flex-col gap-2 border-t border-line pt-2" data-testid="workout-done">
+                  <DoneHeading
+                    title={`${session.exercises.length} ${session.exercises.length === 1 ? 'exercise' : 'exercises'}, ${sets} ${sets === 1 ? 'set' : 'sets'}`}
+                    detail="All logged today"
+                  />
+                  <button
+                    type="button"
+                    disabled
+                    className="flex h-16 w-full items-center justify-center gap-2 rounded-full bg-surface-2 text-xl font-bold text-muted"
+                    data-testid="start-workout"
+                  >
+                    <Check size={24} strokeWidth={3} aria-hidden="true" />
+                    Workout done today
+                  </button>
+                </section>
+              ) : (
                 <Disclosure
-                  title="Warm-up"
-                  meta={`${session.warmup.length} moves, not logged`}
-                  testId="warmup"
+                  title={`${session.exercises.length} ${session.exercises.length === 1 ? 'exercise' : 'exercises'}, ${sets} ${sets === 1 ? 'set' : 'sets'}`}
+                  meta={
+                    <>
+                      About <span className="num">{facts.minutes}</span> min
+                      {facts.muscles.length > 0 && ` · Works ${joinList(facts.muscles.slice(0, 4))}`}
+                      {` · ${facts.equipment}`}
+                    </>
+                  }
+                  metaTestId="session-facts"
+                  defaultOpen
+                  testId="workout"
+                  action={
+                    <button
+                      type="button"
+                      className="press h-16 w-full rounded-full bg-(--tape) text-xl font-bold text-on-tape"
+                      onClick={onStart}
+                      data-testid="start-workout"
+                    >
+                      Start workout
+                    </button>
+                  }
                 >
-                  <RoutineList items={session.warmup} />
+                  <ul className="m-0 flex list-none flex-col p-0">
+                    {session.exercises.map((e) => (
+                      <ExerciseRow key={e.id} exercise={e} clamp onOpen={onOpen} />
+                    ))}
+                  </ul>
                 </Disclosure>
               )}
-              <Disclosure
-                title={`${session.exercises.length} ${session.exercises.length === 1 ? 'exercise' : 'exercises'}, ${sets} ${sets === 1 ? 'set' : 'sets'}`}
-                meta={
-                  <>
-                    About <span className="num">{facts.minutes}</span> min
-                    {facts.muscles.length > 0 && ` · Works ${joinList(facts.muscles.slice(0, 4))}`}
-                    {` · ${facts.equipment}`}
-                  </>
-                }
-                metaTestId="session-facts"
-                defaultOpen
-                testId="workout"
-              >
-                <ul className="m-0 flex list-none flex-col p-0">
-                  {session.exercises.map((e) => (
-                    <ExerciseRow key={e.id} exercise={e} clamp onOpen={onOpen} />
-                  ))}
-                </ul>
-              </Disclosure>
               {session.cooldown && session.cooldown.length > 0 && (
-                <Disclosure
-                  title="Cool-down"
-                  meta={`${session.cooldown.length} moves, not logged`}
-                  testId="cooldown"
-                >
-                  <RoutineList items={session.cooldown} />
-                </Disclosure>
+                done.cooldown ? (
+                  <DoneRow title="Cool-down" detail="Done today" testId="cooldown-done" />
+                ) : (
+                  <Disclosure
+                    title="Cool-down"
+                    meta={`${session.cooldown.length} moves, not logged`}
+                    testId="cooldown"
+                    action={
+                      <button
+                        type="button"
+                        className="press h-14 w-full rounded-full bg-surface-2 text-xl font-semibold"
+                        onClick={() => onStartRoutine('cooldown')}
+                        data-testid="start-cooldown"
+                      >
+                        Start cool-down
+                      </button>
+                    }
+                  >
+                    <RoutineList items={session.cooldown} />
+                  </Disclosure>
+                )
               )}
             </div>
           </>

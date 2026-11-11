@@ -3,6 +3,8 @@ import { DataToggle } from './components/DataToggle'
 import { library, session } from './data/fixtures'
 import type { Entry } from './entries'
 import { loadChosen, programmeById, progressFor, saveChosen, type Chosen } from './lib/programme'
+import { loadRoutines, saveRoutines, type RoutineId } from './lib/routines'
+import { workoutDoneToday } from './lib/today'
 import { loadSaved, saveSaved } from './lib/saved'
 import { loadLimits, saveLimits } from './lib/limits'
 import { loadEntries, saveEntries, ENTRIES_KEY } from './lib/storage'
@@ -18,11 +20,12 @@ import { TabBar, type TabId } from './components/TabBar'
 const ExerciseDetailScreen = lazy(() => import('./screens/ExerciseDetailScreen').then((m) => ({ default: m.ExerciseDetailScreen })))
 const ExercisesScreen = lazy(() => import('./screens/ExercisesScreen').then((m) => ({ default: m.ExercisesScreen })))
 const MyProgrammeScreen = lazy(() => import('./screens/MyProgrammeScreen').then((m) => ({ default: m.MyProgrammeScreen })))
+const RoutineScreen = lazy(() => import('./screens/RoutineScreen').then((m) => ({ default: m.RoutineScreen })))
 const PlayerScreen = lazy(() => import('./screens/PlayerScreen').then((m) => ({ default: m.PlayerScreen })))
 const ProgressScreen = lazy(() => import('./screens/ProgressScreen').then((m) => ({ default: m.ProgressScreen })))
 
-type Stage = 'setup' | 'programme' | 'reminders' | TabId | 'player' | 'exercise' | 'myprogramme'
-const STAGES: Stage[] = ['programme', 'reminders', 'today', 'exercises', 'progress', 'player', 'exercise', 'myprogramme']
+type Stage = 'setup' | 'programme' | 'reminders' | TabId | 'player' | 'routine' | 'exercise' | 'myprogramme'
+const STAGES: Stage[] = ['programme', 'reminders', 'today', 'exercises', 'progress', 'player', 'routine', 'exercise', 'myprogramme']
 
 function initialStage(): Stage {
   const s = new URLSearchParams(window.location.search).get('stage')
@@ -57,11 +60,25 @@ function Screen() {
   }
   const [answers, setAnswers] = useState<Answers>(() => ({ ...EMPTY_ANSWERS, limits: loadLimits() }))
   const [entries, setEntries] = useState<Entry[]>(loadEntries)
-  // A 5-4-3-2-1 countdown runs when a workout is started from a button, not when the screen is opened by address.
-  const [getReady, setGetReady] = useState(false)
+  // Started from a button, the workout is guided: each exercise opens on Start exercise, goes full screen
+  // and counts down. Opened by address (a dev shortcut) it goes straight to logging.
+  const [guided, setGuided] = useState(false)
   const startWorkout = () => {
-    setGetReady(true)
+    setGuided(true)
     setStage('player')
+  }
+  // The warm-up and cool-down are their own flows, finished or not for today.
+  const [routine, setRoutine] = useState<RoutineId>('warmup')
+  const [routinesDone, setRoutinesDone] = useState<RoutineId[]>(() => loadRoutines(Date.now()))
+  const startRoutine = (kind: RoutineId) => {
+    setRoutine(kind)
+    setStage('routine')
+  }
+  const finishRoutine = () => {
+    const next = routinesDone.includes(routine) ? routinesDone : [...routinesDone, routine]
+    setRoutinesDone(next)
+    saveRoutines(next, Date.now())
+    setStage('today')
   }
   const [savedIds, setSavedIds] = useState<string[]>(loadSaved)
   /** Returns false when the browser refused to keep the change. */
@@ -74,6 +91,7 @@ function Screen() {
   const [chosen, setChosen] = useState<Chosen | null>(loadChosen)
   const chosenProgramme = programmeById(chosen?.id)
   const now = Date.now()
+  const workoutDone = workoutDoneToday(entries, session.exercises, now)
   const programmeRow = (() => {
     if (!chosen || !chosenProgramme) return null
     const pr = progressFor(chosenProgramme, chosen, entries, now)
@@ -128,11 +146,22 @@ function Screen() {
       />
     )
   if (stage === 'reminders') return <RemindersScreen onDone={() => setStage('progress')} />
+  if (stage === 'routine') {
+    const items = (routine === 'warmup' ? session.warmup : session.cooldown) ?? []
+    return (
+      <RoutineScreen
+        title={routine === 'warmup' ? 'Warm-up' : 'Cool-down'}
+        items={items}
+        onFinish={finishRoutine}
+        onExit={() => setStage('today')}
+      />
+    )
+  }
   if (stage === 'player')
     return (
       <PlayerScreen
         session={session}
-        getReady={getReady}
+        guided={guided}
         onExit={() => setStage('progress')}
         onFinish={() => setStage('today')}
         onLog={(list) => list.forEach(addEntry)}
@@ -143,6 +172,12 @@ function Screen() {
       {stage === 'today' && <TodayScreen
           session={session}
           onStart={startWorkout}
+          onStartRoutine={startRoutine}
+          done={{
+            warmup: routinesDone.includes('warmup'),
+            workout: workoutDone,
+            cooldown: routinesDone.includes('cooldown'),
+          }}
           onChoose={() => setStage('setup')}
           onOpen={openExercise('today')}
           programme={programmeRow}
@@ -159,6 +194,7 @@ function Screen() {
           now={now}
           onBack={() => setStage('today')}
           onStart={startWorkout}
+          doneToday={workoutDone}
           onChange={() => setStage('setup')}
           onRestart={() => {
             if (!chosen) return

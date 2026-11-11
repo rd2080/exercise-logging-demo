@@ -92,7 +92,8 @@
     {
       "id": "arm-circles",
       "name": "Arm circles",
-      "detail": "30 s"
+      "detail": "30 s",
+      "seconds": 30
     },
     {
       "id": "hip-hinge",
@@ -109,17 +110,20 @@
     {
       "id": "childs-pose",
       "name": "Child's pose",
-      "detail": "30 s"
+      "detail": "30 s",
+      "seconds": 30
     },
     {
       "id": "chest-stretch",
       "name": "Chest stretch",
-      "detail": "20 s each side"
+      "detail": "20 s each side",
+      "seconds": 20
     },
     {
       "id": "breathing",
       "name": "Slow breathing",
-      "detail": "1 min"
+      "detail": "1 min",
+      "seconds": 60
     }
   ]
 }

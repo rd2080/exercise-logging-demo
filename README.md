@@ -62,6 +62,7 @@ Open a screen directly with `?stage=`:
 - `player`
 - `exercise` (add `&id=push-up`)
 - `myprogramme`
+- `routine` (the warm-up flow)
 
 ## Dev data modes
 

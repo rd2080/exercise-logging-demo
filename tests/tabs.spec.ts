@@ -182,9 +182,12 @@ test('Today has Warm-up, Workout and Cool-down sections that open and close, the
   for (const b of await page.getByTestId('today').locator('h2 button').all()) {
     expect((await b.boundingBox())!.height).toBeGreaterThanOrEqual(48)
   }
-  // The workout rows are not warm-up moves: starting still goes to the four exercises.
+  // Each part has its own start button, so they are separate flows.
+  await expect(page.getByTestId('start-warmup')).toHaveText('Start warm-up')
+  await expect(page.getByTestId('start-workout')).toHaveText('Start workout')
+  await expect(page.getByTestId('start-cooldown')).toHaveText('Start cool-down')
   await page.getByTestId('start-workout').click()
-  await expect(page.getByTestId('ready')).toBeVisible()
+  await expect(page.getByTestId('intro')).toBeVisible()
 })
 
 test('worst-case warm-up names wrap at 320 without overflow', async ({ page }) => {

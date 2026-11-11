@@ -7,13 +7,15 @@ interface DisclosureProps {
   /** A short muted line under the title, such as "3 moves". */
   meta?: ReactNode
   metaTestId?: string
+  /** Always visible under the heading, even when the section is closed (for example a Start button). */
+  action?: ReactNode
   defaultOpen?: boolean
   children: ReactNode
   testId?: string
 }
 
 /** A section heading that is also the button that opens and closes its content. */
-export function Disclosure({ title, meta, metaTestId, defaultOpen = false, children, testId }: DisclosureProps) {
+export function Disclosure({ title, meta, metaTestId, action, defaultOpen = false, children, testId }: DisclosureProps) {
   const [open, setOpen] = useState(defaultOpen)
   const id = useId()
   const metaId = `${id}-meta`
@@ -43,6 +45,7 @@ export function Disclosure({ title, meta, metaTestId, defaultOpen = false, child
           />
         </button>
       </h2>
+      {action && <div className="py-2">{action}</div>}
       <div id={id} hidden={!open}>
         {children}
       </div>

@@ -15,6 +15,8 @@ interface MyProgrammeScreenProps {
   now: number
   onBack: () => void
   onStart: () => void
+  /** The workout was finished today, so it cannot be started again. */
+  doneToday: boolean
   onChange: () => void
   onAdvance: () => void
   onRestart: () => void
@@ -37,7 +39,7 @@ function Back({ onBack }: { onBack: () => void }) {
 const shell = 'mx-auto flex min-h-dvh w-full max-w-[480px] flex-col'
 const main = 'flex flex-1 flex-col gap-6 px-4 pt-[max(0.75rem,env(safe-area-inset-top))] pb-28'
 
-export function MyProgrammeScreen({ programme, chosen, entries, now, onBack, onStart, onChange, onAdvance, onRestart }: MyProgrammeScreenProps) {
+export function MyProgrammeScreen({ programme, chosen, entries, now, onBack, onStart, doneToday, onChange, onAdvance, onRestart }: MyProgrammeScreenProps) {
   const [confirming, setConfirming] = useState(false)
   const [restarting, setRestarting] = useState(false)
   const tape = { '--tape': 'var(--color-tape-reps)' } as CSSProperties
@@ -79,11 +81,12 @@ export function MyProgrammeScreen({ programme, chosen, entries, now, onBack, onS
 
         <button
           type="button"
-          className="press h-16 w-full rounded-full bg-(--tape) text-xl font-bold text-on-tape"
+          className="press h-16 w-full rounded-full bg-(--tape) text-xl font-bold text-on-tape disabled:bg-surface-2 disabled:text-muted"
           onClick={onStart}
+          disabled={doneToday}
           data-testid="programme-start"
         >
-          Start workout
+          {doneToday ? 'Workout done today' : 'Start workout'}
         </button>
 
         <section className="flex flex-col gap-3" aria-labelledby="week-heading">

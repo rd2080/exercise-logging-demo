@@ -36,6 +36,8 @@ export interface Routine {
   id: string
   name: string
   detail: string
+  /** Set for timed moves. They get a countdown; the others are counted in reps and have none. */
+  seconds?: number
 }
 
 export interface Session {

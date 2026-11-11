@@ -38,7 +38,9 @@ export function ProgressScreen({
   const [editing, setEditing] = useState<Entry | null>(null)
   const [clearing, setClearing] = useState(false)
   const [editOpen, setEditOpen] = useState(false)
-  const progress = { ...(goalData.progress as Record<string, number>), ...goalProgress(entries, plan) }
+  // What was logged decides the goals. The dev data modes can add fixed values on top to stress the screen.
+  const progress: Record<string, number> = { ...goalProgress(entries, plan) }
+  for (const [id, n] of Object.entries(goalData.progress as Record<string, number>)) progress[id] = Math.max(progress[id] ?? 0, n)
   return (
     <div
       className="mx-auto flex min-h-dvh w-full max-w-[480px] flex-col"

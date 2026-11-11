@@ -15,12 +15,14 @@ import {
   initialDraft,
   targetText,
 } from '../lib/tracking'
+import { enterFullscreen, exitFullscreen } from '../lib/fullscreen'
 import type { Entry } from '../entries'
 import type { PrefillSource, SetValues, Session } from '../types'
 
 type Phase =
   | { kind: 'log' }
-  | { kind: 'rest'; endsAt: number; total: number }
+  | { kind: 'intro' }
+  | { kind: 'rest'; endsAt: number; total: number; done?: boolean }
   | { kind: 'lead'; endsAt: number }
   | { kind: 'hold'; startedAt: number; endsAt: number }
   | { kind: 'ready'; endsAt: number }
@@ -77,11 +79,11 @@ export function PlayerScreen({
   onExit,
   onFinish,
   onLog,
-  getReady = false,
+  guided = false,
 }: {
   session: Session
-  /** Start with a 5-4-3-2-1 countdown. It is not a work timer and can be skipped. */
-  getReady?: boolean
+  /** Guided: each exercise opens on "Start exercise", goes full screen and counts 5-4-3-2-1 first. */
+  guided?: boolean
   onExit?: () => void
   onFinish?: () => void
   onLog?: (entries: Omit<Entry, 'id'>[]) => void
@@ -103,17 +105,17 @@ export function PlayerScreen({
       </div>
     )
   }
-  return <Player session={session} onFinish={onFinish} onLog={onLog} getReady={getReady} />
+  return <Player session={session} onFinish={onFinish} onLog={onLog} guided={guided} />
 }
 
 function Player({
   session,
   onFinish,
   onLog,
-  getReady,
+  guided,
 }: {
   session: Session
-  getReady: boolean
+  guided: boolean
   onFinish?: () => void
   onLog?: (entries: Omit<Entry, 'id'>[]) => void
 }) {
@@ -122,7 +124,7 @@ function Player({
   const [logs, setLogs] = useState<SetValues[][]>(() => exercises.map(() => []))
   const [draft, setDraft] = useState<SetValues>(() => initialDraft(exercises[0]).values)
   const [source, setSource] = useState<PrefillSource>(() => initialDraft(exercises[0]).source)
-  const [phase, setPhase] = useState<Phase>(() => (getReady ? { kind: 'ready', endsAt: Date.now() + READY_SECONDS * 1000 } : { kind: 'log' }))
+  const [phase, setPhase] = useState<Phase>(() => (guided ? { kind: 'intro' } : { kind: 'log' }))
   const [finished, setFinished] = useState(false)
   const [announce, setAnnounce] = useState('')
   const [confirmEnd, setConfirmEnd] = useState(false)
@@ -144,12 +146,11 @@ function Player({
   const readyRef = useRef<HTMLHeadingElement>(null)
   // A tap that lands just as the countdown ends must not also log the first set.
   const leftReadyAt = useRef(-1000)
+  // Leave full screen when an exercise is finished and when the workout screen goes away.
   useEffect(() => {
-    if (phase.kind !== 'ready') return
-    readyRef.current?.focus()
-    setAnnounce(`Get ready. ${exercises[0].name}. Your first set starts in ${READY_SECONDS} seconds.`)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    if (phase.kind === 'exercise-done') exitFullscreen()
+  }, [phase.kind])
+  useEffect(() => exitFullscreen, [])
 
   const ex = exercises[index]
   const meta = TYPE_META[ex.trackingType]
@@ -162,10 +163,14 @@ function Player({
       setIndex(i)
       setDraft(d.values)
       setSource(d.source)
-      setPhase({ kind: 'log' })
-      setAnnounce(`Exercise ${i + 1} of ${exercises.length}: ${exercises[i].name}`)
+      setPhase(guided ? { kind: 'intro' } : { kind: 'log' })
+      setAnnounce(
+        guided
+          ? `Exercise ${i + 1} of ${exercises.length}: ${exercises[i].name}. Tap Start exercise when you are ready.`
+          : `Exercise ${i + 1} of ${exercises.length}: ${exercises[i].name}`,
+      )
     },
-    [exercises],
+    [exercises, guided],
   )
 
   const finishHold = useCallback((seconds: number) => {
@@ -177,18 +182,20 @@ function Player({
   }, [])
 
   useEffect(() => {
-    if (phase.kind === 'log' || phase.kind === 'exercise-done') return
+    if (phase.kind === 'log' || phase.kind === 'exercise-done' || phase.kind === 'intro') return
+    if (phase.kind === 'rest' && phase.done) return
     const id = setTimeout(
       () => {
         if (phase.kind === 'rest') {
-          setPhase({ kind: 'log' })
-          setAnnounce('Rest over')
+          // The rest is over, but the next set only starts when the person taps Start set N.
+          setPhase({ ...phase, done: true })
+          setAnnounce(`Rest over. Start set ${logs[index].length + 1} when you are ready.`)
           navigator.vibrate?.(20)
         }
         else if (phase.kind === 'ready') {
           leftReadyAt.current = performance.now()
           setPhase({ kind: 'log' })
-          setAnnounce('Go. Log your first set when you finish it.')
+          setAnnounce('Go. Log the set when you finish it.')
           navigator.vibrate?.(20)
         } else if (phase.kind === 'lead') {
           const seconds = draft.seconds ?? ex.target.seconds ?? 30
@@ -200,7 +207,7 @@ function Player({
       Math.max(0, phase.endsAt - Date.now()),
     )
     return () => clearTimeout(id)
-  }, [phase, ex, draft.seconds, finishHold])
+  }, [phase, ex, draft.seconds, finishHold, logs, index])
 
   const logSet = () => {
     if (performance.now() - leftReadyAt.current < 400) return
@@ -269,17 +276,33 @@ function Player({
     switch (phase.kind) {
       case 'log':
         return { label: 'Log set', onClick: logSet }
+      case 'intro':
+        return {
+          label: 'Start exercise',
+          onClick: () => {
+            enterFullscreen()
+            setPhase({ kind: 'ready', endsAt: Date.now() + READY_SECONDS * 1000 })
+            setAnnounce(`Get ready. Set 1 of ${ex.sets} starts in ${READY_SECONDS} seconds.`)
+          },
+        }
       case 'ready':
         return {
           label: 'Skip countdown',
           onClick: () => {
             leftReadyAt.current = performance.now()
             setPhase({ kind: 'log' })
-            setAnnounce('Go. Log your first set when you finish it.')
+            setAnnounce('Go. Log the set when you finish it.')
           },
         }
       case 'rest':
-        return { label: 'Skip rest', onClick: () => setPhase({ kind: 'log' }) }
+        return {
+          label: phase.done ? `Start set ${logged.length + 1}` : 'Skip rest',
+          onClick: () => {
+            // Guided only: a double tap on Start set N must not also log the set that has not happened yet.
+            if (guided) leftReadyAt.current = performance.now()
+            setPhase({ kind: 'log' })
+          },
+        }
       case 'lead':
       case 'hold':
         return { label: 'End hold', onClick: endHold }
@@ -358,13 +381,22 @@ function Player({
           >
             <div className="flex items-baseline justify-between gap-3">
               <h2 ref={readyRef} tabIndex={-1} className="font-display m-0 text-2xl font-semibold outline-none">
-                Workout starts in
+                Exercise starts in
               </h2>
               <p className="num m-0 text-[44px] leading-none font-bold" data-testid="timer" aria-hidden="true">
                 <Clock endsAt={phase.endsAt} mode="seconds" />
               </p>
             </div>
-            <p className="m-0 text-muted">Get set up. Your first set comes next.</p>
+            <p className="m-0 text-muted">Get set up. Set 1 comes next.</p>
+          </section>
+        )}
+
+        {phase.kind === 'intro' && (
+          <section className="flex flex-col gap-2 rounded-3xl bg-surface p-4" aria-label="Start" data-testid="intro">
+            <h2 className="font-display m-0 text-2xl font-semibold">Ready when you are</h2>
+            <p className="m-0 text-muted">
+              Tap Start exercise. The screen goes full size and a 5 second countdown leads into set 1.
+            </p>
           </section>
         )}
 
@@ -401,9 +433,9 @@ function Player({
             data-testid="rest"
           >
             <div className="flex items-baseline justify-between gap-3">
-              <h2 className="font-display m-0 text-2xl font-semibold">Rest</h2>
+              <h2 className="font-display m-0 text-2xl font-semibold">{phase.done ? 'Rest over' : 'Rest'}</h2>
               <p className="num m-0 text-[44px] leading-none font-bold" data-testid="timer">
-                <Clock endsAt={phase.endsAt} mode="clock" />
+                {phase.done ? '0:00' : <Clock endsAt={phase.endsAt} mode="clock" />}
               </p>
             </div>
             <RestBar endsAt={phase.endsAt} total={phase.total} />
@@ -415,7 +447,11 @@ function Player({
                 type="button"
                 className="press h-12 rounded-2xl bg-surface-2 px-4 text-lg font-semibold whitespace-nowrap"
                 onClick={() =>
-                  setPhase({ ...phase, endsAt: phase.endsAt + 15000, total: phase.total + 15 })
+                  setPhase({
+                    kind: 'rest',
+                    endsAt: Math.max(phase.endsAt, Date.now()) + 15000,
+                    total: phase.total + 15,
+                  })
                 }
               >
                 Add 15 seconds

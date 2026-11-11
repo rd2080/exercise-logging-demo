@@ -141,35 +141,3 @@ for (const height of [667, 844]) {
     }
   })
 }
-
-test('starting from Today runs a skippable 5-4-3-2-1 get-ready countdown, then the first set', async ({ page }) => {
-  await page.goto('/?stage=today')
-  await page.getByTestId('start-workout').click()
-  const ready = page.getByTestId('ready')
-  await expect(ready).toBeVisible()
-  await expect(ready.getByTestId('timer')).toHaveText(/^[1-5]$/)
-  await expect(ready).toContainText('Workout starts in')
-  await expect(page.getByTestId('inputs')).toHaveCount(0)
-  await expect(page.getByTestId('primary')).toHaveText('Skip countdown')
-  await expect(page.getByTestId('inputs')).toBeVisible({ timeout: 8000 })
-  await expect(page.getByTestId('primary')).toHaveText('Log set')
-})
-
-test('skipping the countdown goes straight to logging, and opening the player by address has none', async ({ page }) => {
-  await page.goto('/?stage=today')
-  await page.getByTestId('start-workout').click()
-  await page.getByTestId('primary').click()
-  await expect(page.getByTestId('inputs')).toBeVisible()
-  await page.goto('/?stage=player')
-  await expect(page.getByTestId('ready')).toHaveCount(0)
-  await expect(page.getByTestId('inputs')).toBeVisible()
-})
-
-
-test('a tap that lands right as the countdown ends does not also log the first set', async ({ page }) => {
-  await page.goto('/?stage=today')
-  await page.getByTestId('start-workout').click()
-  await page.getByTestId('primary').dblclick()
-  await expect(page.getByTestId('inputs')).toBeVisible()
-  await expect(page.getByTestId('rest')).toHaveCount(0)
-})
