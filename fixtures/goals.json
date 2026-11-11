@@ -1,0 +1,10 @@
+{
+  "_note": "Fixture data, not real user data. Goal names and thresholds are authored placeholders.",
+  "goals": [
+    { "id": "first-set", "title": "First set", "requirement": "Log your first set", "target": 1 },
+    { "id": "full-session", "title": "Full session", "requirement": "Finish every exercise in a workout", "target": 1 },
+    { "id": "hit-plan", "title": "Hit the plan", "requirement": "Match your target on every set of a session", "target": 1 },
+    { "id": "week-one", "title": "Week one", "requirement": "Complete three sessions in your first week", "target": 3 }
+  ],
+  "progress": {}
+}

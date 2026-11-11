@@ -1,0 +1,125 @@
+{
+  "_note": "Fixture data, not real user data. Exercise names, targets, last-session values and form cues are authored placeholders.",
+  "name": "Full body starter",
+  "restSeconds": 60,
+  "exercises": [
+    {
+      "id": "push-up",
+      "name": "Push-up",
+      "trackingType": "reps",
+      "sets": 3,
+      "target": {
+        "reps": 10
+      },
+      "last": {
+        "reps": 12
+      },
+      "cue": "Keep your body in one straight line from head to heels.",
+      "equipment": "none",
+      "level": "beginner",
+      "muscles": [
+        "chest",
+        "shoulders",
+        "triceps"
+      ],
+      "category": "push"
+    },
+    {
+      "id": "reverse-lunge",
+      "name": "Reverse lunge",
+      "trackingType": "reps_per_side",
+      "sets": 3,
+      "target": {
+        "left": 8,
+        "right": 8
+      },
+      "last": null,
+      "cue": "Step back and keep your front knee over your ankle.",
+      "equipment": "none",
+      "level": "beginner",
+      "muscles": [
+        "quads",
+        "glutes"
+      ],
+      "demands": [
+        "space"
+      ],
+      "category": "legs"
+    },
+    {
+      "id": "plank",
+      "name": "Plank",
+      "trackingType": "time",
+      "sets": 2,
+      "target": {
+        "seconds": 30
+      },
+      "last": {
+        "seconds": 25
+      },
+      "cue": "Squeeze your glutes and keep your hips level.",
+      "equipment": "none",
+      "level": "beginner",
+      "muscles": [
+        "core"
+      ],
+      "category": "core"
+    },
+    {
+      "id": "goblet-squat",
+      "name": "Goblet squat",
+      "trackingType": "weight_reps",
+      "sets": 3,
+      "target": {
+        "kg": 12,
+        "reps": 10
+      },
+      "last": {
+        "kg": 10,
+        "reps": 10
+      },
+      "cue": "Keep your elbows inside your knees and your chest tall.",
+      "equipment": "dumbbells",
+      "level": "beginner",
+      "muscles": [
+        "quads",
+        "glutes"
+      ],
+      "category": "legs"
+    }
+  ],
+  "warmup": [
+    {
+      "id": "arm-circles",
+      "name": "Arm circles",
+      "detail": "30 s"
+    },
+    {
+      "id": "hip-hinge",
+      "name": "Hip hinges",
+      "detail": "10 reps"
+    },
+    {
+      "id": "cat-cow",
+      "name": "Cat-cow",
+      "detail": "10 reps"
+    }
+  ],
+  "cooldown": [
+    {
+      "id": "childs-pose",
+      "name": "Child's pose",
+      "detail": "30 s"
+    },
+    {
+      "id": "chest-stretch",
+      "name": "Chest stretch",
+      "detail": "20 s each side"
+    },
+    {
+      "id": "breathing",
+      "name": "Slow breathing",
+      "detail": "1 min"
+    }
+  ]
+}

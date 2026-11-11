@@ -1,0 +1,173 @@
+{
+  "_note": "Worst-case fixture for break-ui. Plausible values, not real user data.",
+  "goals": [
+    {
+      "id": "fitness",
+      "label": "Improve my general fitness and feel less out of breath on stairs"
+    },
+    {
+      "id": "muscle",
+      "label": "Build muscle"
+    },
+    {
+      "id": "endurance",
+      "label": "Increase endurance for a half marathon next spring"
+    },
+    {
+      "id": "skill",
+      "label": "Learn a skill, like a handstand push-up"
+    },
+    {
+      "id": "fat",
+      "label": "Burn fat"
+    },
+    {
+      "id": "stress",
+      "label": "Relieve stress"
+    }
+  ],
+  "activity": [
+    {
+      "id": "sitting",
+      "label": "Mostly sitting",
+      "detail": "Desk or study day, little exercise, and a long commute by train or car"
+    },
+    {
+      "id": "light",
+      "label": "Lightly active",
+      "detail": "A walk or one workout most weeks"
+    },
+    {
+      "id": "moderate",
+      "label": "Moderately active",
+      "detail": "Two to four workouts a week"
+    },
+    {
+      "id": "very",
+      "label": "Very active",
+      "detail": "Five or more workouts a week"
+    }
+  ],
+  "equipment": [
+    {
+      "id": "none",
+      "label": "None, bodyweight only",
+      "short": "Bodyweight only"
+    },
+    {
+      "id": "dumbbells",
+      "label": "Adjustable dumbbells (5 to 25 kg)"
+    },
+    {
+      "id": "band",
+      "label": "Resistance bands"
+    },
+    {
+      "id": "kettlebell",
+      "label": "Kettlebell"
+    },
+    {
+      "id": "pullup",
+      "label": "Pull-up bar"
+    }
+  ],
+  "limits": [
+    {
+      "id": "quiet",
+      "label": "Train quietly",
+      "detail": "No jumping or loud landings because I live in a flat"
+    },
+    {
+      "id": "space",
+      "label": "Limited space",
+      "detail": "Exercises that fit beside a bed"
+    },
+    {
+      "id": "norun",
+      "label": "No running or sprints",
+      "detail": "Skip runs and sprint intervals"
+    }
+  ],
+  "pullupChecks": [
+    {
+      "id": "hang",
+      "label": "I can hang from the bar with my body fully extended, with my feet off the floor"
+    },
+    {
+      "id": "secure",
+      "label": "My bar is secure enough for jumps and swings"
+    }
+  ],
+  "programmes": [
+    {
+      "id": "foundation",
+      "name": "Foundation strength and mobility",
+      "weeks": 12,
+      "perWeek": 6,
+      "needs": "Bodyweight, a free wall, parallettes and a resistance band",
+      "summary": "Push-ups, lunges, planks and squats, built up week by week with a deload every fourth week.",
+      "forLevels": [
+        "sitting",
+        "light"
+      ],
+      "level": "Beginner to intermediate",
+      "tags": [
+        "Strength",
+        "Mobility",
+        "Bodyweight",
+        "Deload weeks"
+      ],
+      "stages": [
+        {
+          "name": "Learn the movements and find your starting numbers carefully",
+          "weeks": 4,
+          "focus": "Slow tempo and full range on every rep, with a short mobility block before each session."
+        },
+        {
+          "name": "Build",
+          "weeks": 4,
+          "focus": "Add reps each week."
+        },
+        {
+          "name": "Test",
+          "weeks": 4,
+          "focus": "Retest your numbers and plan what comes next."
+        }
+      ]
+    },
+    {
+      "id": "handstand",
+      "name": "Handstand push-up",
+      "weeks": 8,
+      "perWeek": 3,
+      "needs": "Bodyweight and a free wall",
+      "summary": "Wall holds, pike push-ups and negatives toward a full handstand push-up.",
+      "forLevels": [
+        "moderate",
+        "very"
+      ],
+      "level": "Intermediate",
+      "tags": [
+        "Skill",
+        "Strength"
+      ],
+      "stages": [
+        {
+          "name": "Wall holds",
+          "weeks": 3,
+          "focus": "Get comfortable upside down against a wall."
+        },
+        {
+          "name": "Pike push-ups",
+          "weeks": 3,
+          "focus": "Build the pushing strength for the press."
+        },
+        {
+          "name": "Negatives",
+          "weeks": 2,
+          "focus": "Lower slowly from a handstand and own the bottom."
+        }
+      ]
+    }
+  ]
+}

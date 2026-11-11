@@ -1,0 +1,375 @@
+{
+  "_note": "Fixture data, not real user data. Exercise names, targets and cues are authored placeholders.",
+  "exercises": [
+    {
+      "id": "push-up",
+      "name": "Push-up",
+      "trackingType": "reps",
+      "sets": 3,
+      "target": {
+        "reps": 10
+      },
+      "last": {
+        "reps": 12
+      },
+      "cue": "Keep your body in one straight line from head to heels.",
+      "equipment": "none",
+      "level": "beginner",
+      "muscles": [
+        "chest",
+        "shoulders",
+        "triceps"
+      ],
+      "category": "push"
+    },
+    {
+      "id": "incline-push-up",
+      "name": "Incline push-up",
+      "trackingType": "reps",
+      "sets": 3,
+      "target": {
+        "reps": 12
+      },
+      "last": null,
+      "cue": "Hands on a sturdy bench and your body in one line.",
+      "equipment": "none",
+      "level": "beginner",
+      "muscles": [
+        "chest",
+        "triceps"
+      ],
+      "category": "push"
+    },
+    {
+      "id": "pike-push-up",
+      "name": "Pike push-up",
+      "trackingType": "reps",
+      "sets": 3,
+      "target": {
+        "reps": 8
+      },
+      "last": null,
+      "cue": "Hips high, and lower the top of your head between your hands.",
+      "equipment": "none",
+      "level": "intermediate",
+      "muscles": [
+        "shoulders",
+        "triceps"
+      ],
+      "category": "push"
+    },
+    {
+      "id": "diamond-push-up",
+      "name": "Diamond push-up",
+      "trackingType": "reps",
+      "sets": 3,
+      "target": {
+        "reps": 8
+      },
+      "last": null,
+      "cue": "Thumbs and fingers touching, elbows close to your ribs.",
+      "equipment": "none",
+      "level": "intermediate",
+      "muscles": [
+        "triceps",
+        "chest"
+      ],
+      "category": "push"
+    },
+    {
+      "id": "bodyweight-squat",
+      "name": "Bodyweight squat",
+      "trackingType": "reps",
+      "sets": 3,
+      "target": {
+        "reps": 15
+      },
+      "last": null,
+      "cue": "Sit back and down, heels flat, chest tall.",
+      "equipment": "none",
+      "level": "beginner",
+      "muscles": [
+        "quads",
+        "glutes"
+      ],
+      "category": "legs"
+    },
+    {
+      "id": "glute-bridge",
+      "name": "Glute bridge",
+      "trackingType": "reps",
+      "sets": 3,
+      "target": {
+        "reps": 15
+      },
+      "last": null,
+      "cue": "Press through your heels and squeeze at the top.",
+      "equipment": "none",
+      "level": "beginner",
+      "muscles": [
+        "glutes",
+        "hamstrings"
+      ],
+      "category": "legs"
+    },
+    {
+      "id": "reverse-lunge",
+      "name": "Reverse lunge",
+      "trackingType": "reps_per_side",
+      "sets": 3,
+      "target": {
+        "left": 8,
+        "right": 8
+      },
+      "last": null,
+      "cue": "Step back and keep your front knee over your ankle.",
+      "equipment": "none",
+      "level": "beginner",
+      "muscles": [
+        "quads",
+        "glutes"
+      ],
+      "demands": [
+        "space"
+      ],
+      "category": "legs"
+    },
+    {
+      "id": "split-squat",
+      "name": "Split squat",
+      "trackingType": "reps_per_side",
+      "sets": 3,
+      "target": {
+        "left": 8,
+        "right": 8
+      },
+      "last": null,
+      "cue": "Stay tall and lower straight down.",
+      "equipment": "none",
+      "level": "beginner",
+      "muscles": [
+        "quads",
+        "glutes"
+      ],
+      "demands": [
+        "space"
+      ],
+      "category": "legs"
+    },
+    {
+      "id": "plank",
+      "name": "Plank",
+      "trackingType": "time",
+      "sets": 2,
+      "target": {
+        "seconds": 30
+      },
+      "last": {
+        "seconds": 25
+      },
+      "cue": "Squeeze your glutes and keep your hips level.",
+      "equipment": "none",
+      "level": "beginner",
+      "muscles": [
+        "core"
+      ],
+      "category": "core"
+    },
+    {
+      "id": "side-plank",
+      "name": "Side plank",
+      "trackingType": "time",
+      "sets": 2,
+      "target": {
+        "seconds": 20
+      },
+      "last": null,
+      "cue": "Stack your feet and push the floor away.",
+      "equipment": "none",
+      "level": "intermediate",
+      "muscles": [
+        "core",
+        "obliques"
+      ],
+      "category": "core"
+    },
+    {
+      "id": "hollow-hold",
+      "name": "Hollow hold",
+      "trackingType": "time",
+      "sets": 3,
+      "target": {
+        "seconds": 20
+      },
+      "last": null,
+      "cue": "Press your lower back down and reach long.",
+      "equipment": "none",
+      "level": "advanced",
+      "muscles": [
+        "core"
+      ],
+      "category": "core"
+    },
+    {
+      "id": "handstand-wall-hold",
+      "name": "Wall handstand hold",
+      "trackingType": "time",
+      "sets": 3,
+      "target": {
+        "seconds": 20
+      },
+      "last": null,
+      "cue": "Push tall through your shoulders and keep your ribs in.",
+      "equipment": "none",
+      "level": "advanced",
+      "muscles": [
+        "shoulders",
+        "core"
+      ],
+      "demands": [
+        "loud"
+      ],
+      "category": "skill"
+    },
+    {
+      "id": "goblet-squat",
+      "name": "Goblet squat",
+      "trackingType": "weight_reps",
+      "sets": 3,
+      "target": {
+        "kg": 12,
+        "reps": 10
+      },
+      "last": {
+        "kg": 10,
+        "reps": 10
+      },
+      "cue": "Keep your elbows inside your knees and your chest tall.",
+      "equipment": "dumbbells",
+      "level": "beginner",
+      "muscles": [
+        "quads",
+        "glutes"
+      ],
+      "category": "legs"
+    },
+    {
+      "id": "dumbbell-row",
+      "name": "Dumbbell row",
+      "trackingType": "weight_reps",
+      "sets": 3,
+      "target": {
+        "kg": 10,
+        "reps": 10
+      },
+      "last": null,
+      "cue": "Pull your elbow to your hip and keep your back flat.",
+      "equipment": "dumbbells",
+      "level": "beginner",
+      "muscles": [
+        "back",
+        "biceps"
+      ],
+      "category": "pull"
+    },
+    {
+      "id": "kettlebell-swing",
+      "name": "Kettlebell swing",
+      "trackingType": "weight_reps",
+      "sets": 3,
+      "target": {
+        "kg": 16,
+        "reps": 15
+      },
+      "last": null,
+      "cue": "Snap your hips and let the bell float to chest height.",
+      "equipment": "kettlebell",
+      "level": "intermediate",
+      "muscles": [
+        "glutes",
+        "hamstrings",
+        "back"
+      ],
+      "demands": [
+        "loud",
+        "space"
+      ],
+      "category": "legs"
+    },
+    {
+      "id": "band-pull-apart",
+      "name": "Band pull-apart",
+      "trackingType": "reps",
+      "sets": 3,
+      "target": {
+        "reps": 15
+      },
+      "last": null,
+      "cue": "Reach long and squeeze your shoulder blades together.",
+      "equipment": "band",
+      "level": "beginner",
+      "muscles": [
+        "upper back",
+        "shoulders"
+      ],
+      "category": "pull"
+    },
+    {
+      "id": "pull-up",
+      "name": "Pull-up",
+      "trackingType": "reps",
+      "sets": 3,
+      "target": {
+        "reps": 5
+      },
+      "last": null,
+      "cue": "Start from a full hang and lead with your chest.",
+      "equipment": "pullup",
+      "level": "intermediate",
+      "muscles": [
+        "back",
+        "biceps"
+      ],
+      "demands": [
+        "space"
+      ],
+      "category": "pull"
+    },
+    {
+      "id": "chin-up",
+      "name": "Chin-up",
+      "trackingType": "reps",
+      "sets": 3,
+      "target": {
+        "reps": 5
+      },
+      "last": null,
+      "cue": "Palms toward you and elbows pulled down.",
+      "equipment": "pullup",
+      "level": "intermediate",
+      "muscles": [
+        "biceps",
+        "back"
+      ],
+      "category": "pull"
+    },
+    {
+      "id": "hanging-knee-raise",
+      "name": "Hanging knee raise",
+      "trackingType": "reps",
+      "sets": 3,
+      "target": {
+        "reps": 10
+      },
+      "last": null,
+      "cue": "Control the swing and curl your pelvis up.",
+      "equipment": "pullup",
+      "level": "intermediate",
+      "muscles": [
+        "core",
+        "grip"
+      ],
+      "category": "core"
+    }
+  ]
+}

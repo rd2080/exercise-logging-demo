@@ -1,0 +1,358 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-10T07:14:00.398481Z",
+  "title": "Design System: Exercise Player",
+  "extensions": {
+    "colorMeta": {
+      "ground": {
+        "role": "neutral",
+        "displayName": "Gym Wall Black",
+        "canonical": "#161412",
+        "tonalRamp": [
+          "#292623",
+          "#4a433d",
+          "#6a6157",
+          "#8a7e71",
+          "#a59b91",
+          "#bfb8b1",
+          "#d9d5d2",
+          "#f3f2f1"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Chalkboard Brown",
+        "canonical": "#1d1b18",
+        "tonalRamp": [
+          "#292723",
+          "#4a453d",
+          "#6a6257",
+          "#8a8072",
+          "#a49d91",
+          "#bfb9b1",
+          "#d8d6d2",
+          "#f3f2f2"
+        ]
+      },
+      "surface-2": {
+        "role": "neutral",
+        "displayName": "Worn Mat Brown",
+        "canonical": "#292622",
+        "tonalRamp": [
+          "#292723",
+          "#4a443d",
+          "#6a6258",
+          "#897f72",
+          "#a49c91",
+          "#bfb9b1",
+          "#d8d6d2",
+          "#f3f2f2"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Seam Brown",
+        "canonical": "#3f3a33",
+        "tonalRamp": [
+          "#292723",
+          "#4a453c",
+          "#6b6256",
+          "#8b8070",
+          "#a59d90",
+          "#bfb9b0",
+          "#d9d6d1",
+          "#f3f2f1"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Chalk Ivory",
+        "canonical": "#f2f1ea",
+        "tonalRamp": [
+          "#2d2c1f",
+          "#534f34",
+          "#77724a",
+          "#9b9460",
+          "#b2ac83",
+          "#c9c4a7",
+          "#dddbcd",
+          "#f4f4f0"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Dust Grey",
+        "canonical": "#b1ada1",
+        "tonalRamp": [
+          "#292823",
+          "#4a473d",
+          "#6a6558",
+          "#898472",
+          "#a49f92",
+          "#bfbbb1",
+          "#d8d7d2",
+          "#f3f3f2"
+        ]
+      },
+      "on-tape": {
+        "role": "neutral",
+        "displayName": "Tape Ink",
+        "canonical": "#14150f",
+        "tonalRamp": [
+          "#2a2b21",
+          "#4b4f38",
+          "#6b7150",
+          "#8c9369",
+          "#a6ac8a",
+          "#c0c4ac",
+          "#d9dbcf",
+          "#f3f4f1"
+        ]
+      },
+      "tape-reps": {
+        "role": "primary",
+        "displayName": "Reps Yellow Tape",
+        "canonical": "#f5c518",
+        "tonalRamp": [
+          "#42360a",
+          "#816606",
+          "#b99308",
+          "#f1bf0a",
+          "#f7cf3f",
+          "#f9dd77",
+          "#f5e7b5",
+          "#f9f6eb"
+        ]
+      },
+      "tape-side": {
+        "role": "secondary",
+        "displayName": "Side Orange Tape",
+        "canonical": "#ff8a3d",
+        "tonalRamp": [
+          "#452008",
+          "#873500",
+          "#c14d00",
+          "#fb6400",
+          "#ff8637",
+          "#ffa971",
+          "#f8ceb2",
+          "#faf1eb"
+        ]
+      },
+      "tape-time": {
+        "role": "secondary",
+        "displayName": "Hold Sky Tape",
+        "canonical": "#5bb8ff",
+        "tonalRamp": [
+          "#082a45",
+          "#004c87",
+          "#006dc1",
+          "#008ffb",
+          "#37a8ff",
+          "#71c1ff",
+          "#b2daf8",
+          "#ebf3fa"
+        ]
+      },
+      "tape-weight": {
+        "role": "secondary",
+        "displayName": "Weight Pink Tape",
+        "canonical": "#ff6fb1",
+        "tonalRamp": [
+          "#450824",
+          "#87003e",
+          "#c10058",
+          "#fb0073",
+          "#ff3792",
+          "#ff71b2",
+          "#f8b2d2",
+          "#faebf2"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Hold countdown only."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Exercise name."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Panel headings."
+      },
+      "numeral": {
+        "displayName": "Numeral",
+        "purpose": "Stepper readouts and rest countdown, tabular."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Target text, tag text, form cue."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Stepper labels and prefill note."
+      }
+    },
+    "shadows": [
+      {
+        "name": "current-slot-ring",
+        "value": "inset 0 0 0 2px var(--tape)",
+        "purpose": "Marks the next set to log; the only non-tonal emphasis."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out-expo",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Press feedback, tape-roll wipe, session strip fill."
+      },
+      {
+        "name": "press",
+        "value": "160ms; scale 0.97 on active, brightness 1.08 on hover",
+        "purpose": "All buttons; removed under prefers-reduced-motion."
+      },
+      {
+        "name": "tape-roll",
+        "value": "220ms clip-path wipe with slanted leading edge",
+        "purpose": "Logged set slot reveal; instant under reduced motion."
+      },
+      {
+        "name": "strip-fill",
+        "value": "300ms scaleX",
+        "purpose": "Session segment fill."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "column-max",
+        "value": "480px"
+      },
+      {
+        "name": "first-viewport",
+        "value": "390px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Pinned 64px pill in the exercise's tape colour; one per screen, label names the result.",
+      "html": "<button class=\"ds-press ds-btn-primary\">Log set</button>",
+      "css": ".ds-press{transition:transform 160ms cubic-bezier(.16,1,.3,1),filter 160ms cubic-bezier(.16,1,.3,1);cursor:pointer;border:0;font:inherit}.ds-press:hover{filter:brightness(1.08)}.ds-press:active{transform:scale(.97)}.ds-press:focus-visible{outline:3px solid var(--tape,#f5c518);outline-offset:3px;border-radius:12px}.ds-btn-primary{height:64px;width:100%;border-radius:9999px;background:var(--tape,#f5c518);color:#14150f;font-size:20px;font-weight:700}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Worn Mat Brown action inside a panel.",
+      "html": "<button class=\"ds-press ds-btn-secondary\">Add 15 seconds</button>",
+      "css": ".ds-press{transition:transform 160ms cubic-bezier(.16,1,.3,1),filter 160ms cubic-bezier(.16,1,.3,1);cursor:pointer;border:0;font:inherit}.ds-press:hover{filter:brightness(1.08)}.ds-press:active{transform:scale(.97)}.ds-press:focus-visible{outline:3px solid var(--tape,#f5c518);outline-offset:3px;border-radius:12px}.ds-btn-secondary{height:56px;padding:0 16px;border-radius:16px;background:#292622;color:#f2f1ea;font-size:18px;font-weight:600}"
+    },
+    {
+      "name": "Close Button",
+      "kind": "button",
+      "refersTo": "button-icon-close",
+      "description": "48px circular icon button that ends the workout.",
+      "html": "<button class=\"ds-press ds-close\" aria-label=\"End workout\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\"><path d=\"M6 6l12 12M18 6L6 18\"/></svg></button>",
+      "css": ".ds-press{transition:transform 160ms cubic-bezier(.16,1,.3,1),filter 160ms cubic-bezier(.16,1,.3,1);cursor:pointer;border:0;font:inherit}.ds-press:hover{filter:brightness(1.08)}.ds-press:active{transform:scale(.97)}.ds-press:focus-visible{outline:3px solid var(--tape,#f5c518);outline-offset:3px;border-radius:12px}.ds-close{width:48px;height:48px;border-radius:9999px;background:#292622;color:#f2f1ea;display:grid;place-items:center}"
+    },
+    {
+      "name": "Stepper",
+      "kind": "input",
+      "refersTo": "stepper-button",
+      "description": "Label, 44px tabular readout and 56px minus and plus buttons.",
+      "html": "<div class=\"ds-stepper\"><span class=\"ds-stepper-label\">Reps</span><div class=\"ds-stepper-row\"><button class=\"ds-press ds-step\" aria-label=\"Decrease reps\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\"><path d=\"M5 12h14\"/></svg></button><output class=\"ds-readout\">8</output><button class=\"ds-press ds-step\" aria-label=\"Increase reps\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\"><path d=\"M5 12h14M12 5v14\"/></svg></button></div></div>",
+      "css": ".ds-press{transition:transform 160ms cubic-bezier(.16,1,.3,1),filter 160ms cubic-bezier(.16,1,.3,1);cursor:pointer;border:0;font:inherit}.ds-press:hover{filter:brightness(1.08)}.ds-press:active{transform:scale(.97)}.ds-press:focus-visible{outline:3px solid var(--tape,#f5c518);outline-offset:3px;border-radius:12px}.ds-stepper{display:flex;flex-direction:column;gap:8px;color:#f2f1ea}.ds-stepper-label{font-size:15px;font-weight:500;color:#b1ada1}.ds-stepper-row{display:flex;align-items:center;justify-content:space-between;gap:8px}.ds-step{width:56px;height:56px;border-radius:16px;background:#292622;color:#f2f1ea;display:grid;place-items:center}.ds-readout{font-family:'Barlow Semi Condensed',Barlow,sans-serif;font-variant-numeric:tabular-nums;font-size:44px;line-height:1;font-weight:700;min-width:3.2ch;text-align:center}"
+    },
+    {
+      "name": "Set Slots",
+      "kind": "custom",
+      "refersTo": "set-slot-logged",
+      "description": "Empty, current and logged slots; logged slots are grain tape with the value in Tape Ink.",
+      "html": "<ol class=\"ds-slots\"><li class=\"ds-slot ds-tape ds-slot-done\">8</li><li class=\"ds-slot ds-slot-current\">2</li><li class=\"ds-slot\">3</li></ol>",
+      "css": ".ds-tape{background-color:var(--tape,#f5c518);background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='96'%3E%3Cfilter id='f' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.02 0.9' numOctaves='2' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.9 0 0 0 -0.32'/%3E%3C/filter%3E%3Crect width='160' height='96' filter='url(%23f)' opacity='0.55'/%3E%3C/svg%3E\");background-size:160px 96px}.ds-slots{display:flex;gap:8px;list-style:none;margin:0;padding:0}.ds-slot{flex:1;min-width:72px;height:56px;border-radius:16px;background:#292622;color:#b1ada1;display:flex;align-items:center;justify-content:center;font-family:'Barlow Semi Condensed',Barlow,sans-serif;font-variant-numeric:tabular-nums;font-size:18px;font-weight:600}.ds-slot-current{box-shadow:inset 0 0 0 2px var(--tape,#f5c518)}.ds-slot-done{color:#14150f;font-size:20px;font-weight:700}"
+    },
+    {
+      "name": "Session Strip",
+      "kind": "nav",
+      "refersTo": "card",
+      "description": "One slanted tape segment per exercise; fill keeps that exercise's own tape colour.",
+      "html": "<ol class=\"ds-strip\"><li class=\"ds-seg\"><div class=\"ds-fill\" style=\"--tape:#f5c518;transform:scaleX(1)\"></div></li><li class=\"ds-seg ds-seg-cur\" style=\"background:color-mix(in oklab,#ff8a3d 42%,#292622)\"><div class=\"ds-fill\" style=\"--tape:#ff8a3d;transform:scaleX(.5)\"></div></li><li class=\"ds-seg\"><div class=\"ds-fill\" style=\"--tape:#5bb8ff;transform:scaleX(0)\"></div></li><li class=\"ds-seg\"><div class=\"ds-fill\" style=\"--tape:#ff6fb1;transform:scaleX(0)\"></div></li></ol>",
+      "css": ".ds-tape{background-color:var(--tape,#f5c518);background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='96'%3E%3Cfilter id='f' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.02 0.9' numOctaves='2' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.9 0 0 0 -0.32'/%3E%3C/filter%3E%3Crect width='160' height='96' filter='url(%23f)' opacity='0.55'/%3E%3C/svg%3E\");background-size:160px 96px}.ds-strip{display:flex;gap:4px;list-style:none;margin:0;padding:0}.ds-seg{flex:1;align-self:center;height:12px;overflow:hidden;background:#292622;clip-path:polygon(7px 0,100% 0,calc(100% - 7px) 100%,0 100%)}.ds-seg-cur{height:16px}.ds-fill{height:100%;transform-origin:left;background-color:var(--tape);background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='96'%3E%3Cfilter id='f' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.02 0.9' numOctaves='2' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.9 0 0 0 -0.32'/%3E%3C/filter%3E%3Crect width='160' height='96' filter='url(%23f)' opacity='0.55'/%3E%3C/svg%3E\");background-size:160px 96px}"
+    },
+    {
+      "name": "Type Tag",
+      "kind": "chip",
+      "refersTo": "type-tag",
+      "description": "Pill naming the tracking type with a tape-colour dot.",
+      "html": "<span class=\"ds-tag\"><span class=\"ds-dot\"></span>Reps per side</span>",
+      "css": ".ds-tag{display:inline-flex;align-items:center;gap:8px;padding:6px 14px 6px 10px;border-radius:9999px;background:#292622;color:#f2f1ea;font-size:17px;font-weight:600}.ds-dot{width:12px;height:12px;border-radius:9999px;background:var(--tape,#ff8a3d)}"
+    },
+    {
+      "name": "Panel Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Chalkboard Brown 24px panel for inputs, rest, hold and done states.",
+      "html": "<section class=\"ds-card\"><h2>Rest</h2><p>Next: set 2 of 3</p></section>",
+      "css": ".ds-card{background:#1d1b18;border-radius:24px;padding:16px;color:#f2f1ea}.ds-card h2{margin:0;font-family:'Barlow Semi Condensed',Barlow,sans-serif;font-size:24px;font-weight:600}.ds-card p{margin:4px 0 0;color:#b1ada1}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Route Tape",
+    "overview": "The session is a strip of gym route tape and every logged set is a tick on the send list. The screen is a warm brown-black wall with ivory text and one workhorse condensed grotesk. Colour is not decoration: each tracking type owns one tape colour, and that colour is the only saturated thing on screen. Logging is the one job, so everything else is quiet, large and close to the thumb.\n\nDensity is low and targets are big (48 to 64px). Depth is tonal, not lifted. The single signature gesture is the tape roll: when a set is logged, a strip of grain-textured tape sweeps across its slot on a slanted leading edge in about 220ms and the session strip fills.",
+    "keyCharacteristics": [
+      "Dark only, warm near-black, ivory ink, no pure black or white.",
+      "One saturated hue at a time, set per screen through the --tape variable.",
+      "Tape is a material: fine horizontal fibre grain over the colour, never a flat fill.",
+      "Condensed display face with tabular numerals for everything the user reads mid-set.",
+      "56px minimum control height, 64px pinned primary button."
+    ],
+    "rules": [
+      {
+        "name": "The One Tape Rule",
+        "body": "A screen shows one exercise's tape colour at a time through --tape. Other tape colours appear only as completed or pending segments in the session strip. Components read var(--tape); they never hard-code a tape hex.",
+        "section": "colors"
+      },
+      {
+        "name": "The Tape Ink Rule",
+        "body": "Text on tape is always Tape Ink (#14150f), never ivory or black.",
+        "section": "colors"
+      },
+      {
+        "name": "The Warm Neutral Rule",
+        "body": "Every neutral leans brown (red channel above blue). No cool grey, no pure #000 or #fff.",
+        "section": "colors"
+      },
+      {
+        "name": "The Tabular Number Rule",
+        "body": "Any value that changes or is compared uses the .num class.",
+        "section": "typography"
+      },
+      {
+        "name": "The Sentence Case Rule",
+        "body": "All labels and button text are sentence case and name the result. There is no uppercase styling anywhere in the build.",
+        "section": "typography"
+      }
+    ],
+    "dos": [
+      "Do drive every accent from --tape set on the screen root from the exercise's tracking type.",
+      "Do lay text on tape in Tape Ink (#14150f) and give tape surfaces the grain fill, not a flat colour.",
+      "Do keep controls at 48px or taller, the primary at 64px, and pin it to the bottom.",
+      "Do use .num for every number and sentence-case labels that name the result.",
+      "Do keep depth tonal (ground, surface, surface-2) and use the inset tape ring for the current item.",
+      "Do honour reduced motion: no scale, no wipe, still start and end demo frames."
+    ],
+    "donts": [
+      "Don't introduce a fifth saturated hue or put two tape colours in the working area at once.",
+      "Don't use cool greys, pure black or pure white.",
+      "Don't use drop shadows or glows to lift surfaces.",
+      "Don't show a work timer for reps or reps per side; countdowns belong only to rest and timed holds.",
+      "Don't add promotion, decoration or interruptions during an exercise."
+    ]
+  }
+}
