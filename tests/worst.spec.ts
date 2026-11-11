@@ -59,6 +59,8 @@ for (const width of [320, 390]) {
     test('setup, programmes and progress do not overflow', async ({ page }) => {
       await page.goto('/?stage=progress&data=worst')
       await noSidewaysScroll(page, 'progress')
+      await page.goto('/?stage=achievements&data=worst')
+      await noSidewaysScroll(page, 'achievements')
       await expect(page.getByText('7 of 10')).toBeVisible()
       await page.goto('/?data=worst')
       await noSidewaysScroll(page, 'setup')

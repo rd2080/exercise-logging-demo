@@ -3,11 +3,11 @@ import { expect, test, type Page } from '@playwright/test'
 const bar = (page: Page) => page.getByTestId('tab-bar')
 const tab = (page: Page, name: string) => bar(page).getByRole('button', { name })
 
-test('three tabs, sentence case, the current one marked, each at least 48px', async ({ page }) => {
+test('four tabs, sentence case, the current one marked, each at least 48px', async ({ page }) => {
   await page.goto('/?stage=today')
   await expect(bar(page)).toBeVisible()
   const names = await bar(page).getByRole('button').allInnerTexts()
-  expect(names).toEqual(['Today', 'Exercises', 'Progress'])
+  expect(names).toEqual(['Today', 'Exercises', 'Progress', 'Achievements'])
   await expect(tab(page, 'Today')).toHaveAttribute('aria-current', 'page')
   await expect(tab(page, 'Exercises')).not.toHaveAttribute('aria-current', 'page')
   for (const b of await bar(page).getByRole('button').all()) {

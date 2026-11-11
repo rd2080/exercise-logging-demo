@@ -82,9 +82,10 @@ for (const width of [320, 390]) {
       await sheet(page).getByRole('button', { name: 'Delete entry' }).click()
       await expect(rows(page)).toHaveCount(1)
       await expect(rows(page).first()).toContainText('Push-up')
-      await expect(page.getByRole('listitem', { name: /First set: .* Unlocked/ })).toBeVisible()
       const doc = await page.evaluate(() => document.documentElement.scrollWidth)
       expect(doc).toBeLessThanOrEqual(width)
+      await page.getByTestId('tab-bar').getByRole('button', { name: 'Achievements' }).click()
+      await expect(page.getByRole('listitem', { name: /First set: .* Unlocked/ })).toBeVisible()
     })
   })
 }

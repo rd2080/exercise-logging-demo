@@ -6,9 +6,8 @@ import { EditEntrySheet } from '../components/EditEntrySheet'
 import { EmptySlots } from '../components/EmptySlots'
 import { EmptyState } from '../components/EmptyState'
 import { EntryRow } from '../components/EntryRow'
-import { GoalList, type Goal } from '../components/GoalList'
-import { goalProgress } from '../lib/goals'
-import { goalsData as goalData } from '../data/fixtures'
+import { Disclosure } from '../components/Disclosure'
+import { groupByDay } from '../lib/dates'
 import type { Entry } from '../entries'
 import type { Exercise, SetValues } from '../types'
 
@@ -38,9 +37,7 @@ export function ProgressScreen({
   const [editing, setEditing] = useState<Entry | null>(null)
   const [clearing, setClearing] = useState(false)
   const [editOpen, setEditOpen] = useState(false)
-  // What was logged decides the goals. The dev data modes can add fixed values on top to stress the screen.
-  const progress: Record<string, number> = { ...goalProgress(entries, plan) }
-  for (const [id, n] of Object.entries(goalData.progress as Record<string, number>)) progress[id] = Math.max(progress[id] ?? 0, n)
+  const groups = groupByDay(entries, Date.now())
   return (
     <div
       className="mx-auto flex min-h-dvh w-full max-w-[480px] flex-col"
@@ -76,11 +73,24 @@ export function ProgressScreen({
             <h2 id="logged-heading" className="font-display m-0 text-2xl leading-tight font-bold">
               Logged sets
             </h2>
-            <ul className="m-0 flex list-none flex-col p-0" data-testid="entry-list">
-              {entries.map((e) => (
-                <EntryRow key={e.id} entry={e} onSelect={(en) => { setEditing(en); setEditOpen(true) }} />
+            <div className="flex flex-col gap-1" data-testid="entry-list">
+              {groups.map((g, i) => (
+                <Disclosure
+                  key={g.day ?? 'earlier'}
+                  level={3}
+                  title={g.label}
+                  meta={`${g.entries.length} ${g.entries.length === 1 ? 'set' : 'sets'}`}
+                  defaultOpen={i === 0}
+                  testId={`day-${g.day ?? 'earlier'}`}
+                >
+                  <ul className="m-0 flex list-none flex-col p-0">
+                    {g.entries.map((e) => (
+                      <EntryRow key={e.id} entry={e} onSelect={(en) => { setEditing(en); setEditOpen(true) }} />
+                    ))}
+                  </ul>
+                </Disclosure>
               ))}
-            </ul>
+            </div>
           </section>
         )}
 
@@ -89,13 +99,6 @@ export function ProgressScreen({
             Not saved on this device. Your entries will be lost when you close this page.
           </p>
         )}
-
-        <section className="flex flex-col gap-1" aria-labelledby="goals-heading">
-          <h2 id="goals-heading" className="font-display m-0 text-2xl leading-tight font-bold">
-            Goals to unlock
-          </h2>
-          <GoalList goals={goalData.goals as Goal[]} progress={progress} />
-        </section>
 
         {entries.length > 0 && (
           <>

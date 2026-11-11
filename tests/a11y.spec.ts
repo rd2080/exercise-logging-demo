@@ -15,7 +15,7 @@ async function scan(page: Page, label: string) {
   expect(found, `${label} has axe violations`).toEqual([])
 }
 
-const stages = ['setup', 'programme', 'reminders', 'today', 'exercises', 'progress', 'player', 'myprogramme']
+const stages = ['setup', 'skillgoal', 'programme', 'reminders', 'today', 'exercises', 'progress', 'achievements', 'player', 'routine', 'myprogramme']
 
 for (const width of [390, 320]) {
   test.describe(`width ${width}`, () => {

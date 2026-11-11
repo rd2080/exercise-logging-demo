@@ -26,6 +26,7 @@ test('entries survive a reload, newest first, with the First set goal still unlo
   await expect(rows(page).nth(0)).toContainText('30 s')
   await expect(rows(page).nth(1)).toContainText('Push-up')
   await expect(page.getByTestId('empty-state')).toHaveCount(0)
+  await page.getByTestId('tab-bar').getByRole('button', { name: 'Achievements' }).click()
   await expect(page.getByRole('listitem', { name: /First set: .* Unlocked, 1 of 1/ })).toBeVisible()
 })
 

@@ -63,6 +63,8 @@ Open a screen directly with `?stage=`:
 - `exercise` (add `&id=push-up`)
 - `myprogramme`
 - `routine` (the warm-up flow)
+- `skillgoal`
+- `achievements`
 
 ## Dev data modes
 

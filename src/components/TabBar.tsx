@@ -1,14 +1,15 @@
-import { CalendarCheck, ChartNoAxesColumn, Dumbbell } from 'lucide-react'
+import { CalendarCheck, ChartNoAxesColumn, Dumbbell, Trophy } from 'lucide-react'
 import { motion, useReducedMotion } from 'motion/react'
 import type { CSSProperties, ReactNode } from 'react'
 import { TAPE_S } from '../lib/motion'
 
-export type TabId = 'today' | 'exercises' | 'progress'
+export type TabId = 'today' | 'exercises' | 'progress' | 'achievements'
 
 const TABS: { id: TabId; label: string; icon: ReactNode }[] = [
   { id: 'today', label: 'Today', icon: <CalendarCheck size={24} aria-hidden="true" /> },
   { id: 'exercises', label: 'Exercises', icon: <Dumbbell size={24} aria-hidden="true" /> },
   { id: 'progress', label: 'Progress', icon: <ChartNoAxesColumn size={24} aria-hidden="true" /> },
+  { id: 'achievements', label: 'Achievements', icon: <Trophy size={24} aria-hidden="true" /> },
 ]
 
 interface TabBarProps {
@@ -26,7 +27,7 @@ export function TabBar({ current, onChange }: TabBarProps) {
       style={{ '--tape': 'var(--color-tape-reps)' } as CSSProperties}
       data-testid="tab-bar"
     >
-      <ul className="m-0 grid list-none grid-cols-3 p-0">
+      <ul className="m-0 grid list-none grid-cols-4 p-0">
         {TABS.map((t) => {
           const on = t.id === current
           return (
@@ -57,7 +58,7 @@ export function TabBar({ current, onChange }: TabBarProps) {
                   </span>
                 )}
                 {t.icon}
-                <span className="text-[15px] leading-none font-semibold">{t.label}</span>
+                <span className="text-[15px] leading-none font-semibold max-[420px]:text-[13px] max-[340px]:text-[12px]">{t.label}</span>
               </button>
             </li>
           )

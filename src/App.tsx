@@ -23,10 +23,11 @@ const MyProgrammeScreen = lazy(() => import('./screens/MyProgrammeScreen').then(
 const SkillGoalScreen = lazy(() => import('./screens/SkillGoalScreen').then((m) => ({ default: m.SkillGoalScreen })))
 const RoutineScreen = lazy(() => import('./screens/RoutineScreen').then((m) => ({ default: m.RoutineScreen })))
 const PlayerScreen = lazy(() => import('./screens/PlayerScreen').then((m) => ({ default: m.PlayerScreen })))
+const AchievementsScreen = lazy(() => import('./screens/AchievementsScreen').then((m) => ({ default: m.AchievementsScreen })))
 const ProgressScreen = lazy(() => import('./screens/ProgressScreen').then((m) => ({ default: m.ProgressScreen })))
 
 type Stage = 'setup' | 'skillgoal' | 'programme' | 'reminders' | TabId | 'player' | 'routine' | 'exercise' | 'myprogramme'
-const STAGES: Stage[] = ['skillgoal', 'programme', 'reminders', 'today', 'exercises', 'progress', 'player', 'routine', 'exercise', 'myprogramme']
+const STAGES: Stage[] = ['skillgoal', 'programme', 'reminders', 'today', 'exercises', 'progress', 'achievements', 'player', 'routine', 'exercise', 'myprogramme']
 
 function initialStage(): Stage {
   const s = new URLSearchParams(window.location.search).get('stage')
@@ -237,6 +238,7 @@ function Screen() {
           onBack={() => setStage(detailFrom)}
         />
       )}
+      {stage === 'achievements' && <AchievementsScreen plan={session.exercises} entries={entries} />}
       {stage === 'progress' && (
         <ProgressScreen
           onStart={startWorkout}

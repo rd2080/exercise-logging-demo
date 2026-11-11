@@ -38,7 +38,7 @@ const state = (page: import('@playwright/test').Page, title: string) =>
 
 test('logging every set of every exercise unlocks Full session, and Hit the plan when the targets were met', async ({ page }) => {
   await seed(page, session(DAY, true))
-  await page.goto('/?stage=progress')
+  await page.goto('/?stage=achievements')
   await expect(state(page, 'First set')).toHaveAttribute('aria-label', /Unlocked/)
   await expect(state(page, 'Full session')).toHaveAttribute('aria-label', /Unlocked, 1 of 1/)
   await expect(state(page, 'Hit the plan')).toHaveAttribute('aria-label', /Unlocked, 1 of 1/)
@@ -47,14 +47,14 @@ test('logging every set of every exercise unlocks Full session, and Hit the plan
 
 test('a session that missed some targets unlocks Full session but not Hit the plan', async ({ page }) => {
   await seed(page, session(DAY, false))
-  await page.goto('/?stage=progress')
+  await page.goto('/?stage=achievements')
   await expect(state(page, 'Full session')).toHaveAttribute('aria-label', /Unlocked/)
   await expect(state(page, 'Hit the plan')).toHaveAttribute('aria-label', /Locked/)
 })
 
 test('one set short of the whole session leaves Full session locked', async ({ page }) => {
   await seed(page, session(DAY, true, true))
-  await page.goto('/?stage=progress')
+  await page.goto('/?stage=achievements')
   await expect(state(page, 'First set')).toHaveAttribute('aria-label', /Unlocked/)
   await expect(state(page, 'Full session')).toHaveAttribute('aria-label', /Locked/)
 })
@@ -62,7 +62,7 @@ test('one set short of the whole session leaves Full session locked', async ({ p
 test('sets logged by hand do not count toward a full session', async ({ page }) => {
   const hand = session(DAY, true).map((e) => ({ ...(e as object), source: 'hand' }))
   await seed(page, hand)
-  await page.goto('/?stage=progress')
+  await page.goto('/?stage=achievements')
   await expect(state(page, 'Full session')).toHaveAttribute('aria-label', /Locked/)
   await expect(state(page, 'Week one')).toHaveAttribute('aria-label', /Locked, 0 of 3/)
 })
@@ -70,6 +70,6 @@ test('sets logged by hand do not count toward a full session', async ({ page }) 
 test('three sessions on different days in the first week unlock Week one', async ({ page }) => {
   const day = 24 * 3600_000
   await seed(page, [...session(DAY, true), ...session(DAY + day, true), ...session(DAY + 2 * day, true)], DAY + 3 * day)
-  await page.goto('/?stage=progress')
+  await page.goto('/?stage=achievements')
   await expect(state(page, 'Week one')).toHaveAttribute('aria-label', /Unlocked, 3 of 3/)
 })

@@ -12,16 +12,19 @@ interface DisclosureProps {
   defaultOpen?: boolean
   children: ReactNode
   testId?: string
+  /** Heading level of the title. 2 by default; 3 when the section sits under another heading. */
+  level?: 2 | 3
 }
 
 /** A section heading that is also the button that opens and closes its content. */
-export function Disclosure({ title, meta, metaTestId, action, defaultOpen = false, children, testId }: DisclosureProps) {
+export function Disclosure({ title, meta, metaTestId, action, defaultOpen = false, children, testId, level = 2 }: DisclosureProps) {
   const [open, setOpen] = useState(defaultOpen)
   const id = useId()
   const metaId = `${id}-meta`
+  const Heading = level === 3 ? 'h3' : 'h2'
   return (
     <section className="flex flex-col border-t border-line first:border-t-0" data-testid={testId}>
-      <h2 className="m-0">
+      <Heading className="m-0">
         <button
           type="button"
           className="press flex min-h-14 w-full items-center justify-between gap-3 text-left"
@@ -44,7 +47,7 @@ export function Disclosure({ title, meta, metaTestId, action, defaultOpen = fals
             className={`shrink-0 text-muted transition-transform duration-150 motion-reduce:transition-none ${open ? 'rotate-180' : ''}`}
           />
         </button>
-      </h2>
+      </Heading>
       {action && <div className="py-2">{action}</div>}
       <div id={id} hidden={!open}>
         {children}
