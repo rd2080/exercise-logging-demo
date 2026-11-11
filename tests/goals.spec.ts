@@ -18,7 +18,7 @@ function session(at: number, fullTarget: boolean, skipLast = false) {
     const count = skipLast && id === 'goblet-squat' ? sets - 1 : sets
     for (let i = 0; i < count; i++) {
       const values = fullTarget ? { ...target } : Object.fromEntries(Object.entries(target).map(([k, v]) => [k, (v as number) - 1]))
-      list.push({ id: `${id}-${n++}`, name, trackingType: type, values, exerciseId: id, at: at + n * 1000, source: 'workout' })
+      list.push({ id: `${id}-${at}-${n++}`, name, trackingType: type, values, exerciseId: id, at: at + n * 1000, source: 'workout' })
     }
   }
   return list
