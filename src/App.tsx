@@ -20,12 +20,13 @@ import { TabBar, type TabId } from './components/TabBar'
 const ExerciseDetailScreen = lazy(() => import('./screens/ExerciseDetailScreen').then((m) => ({ default: m.ExerciseDetailScreen })))
 const ExercisesScreen = lazy(() => import('./screens/ExercisesScreen').then((m) => ({ default: m.ExercisesScreen })))
 const MyProgrammeScreen = lazy(() => import('./screens/MyProgrammeScreen').then((m) => ({ default: m.MyProgrammeScreen })))
+const SkillGoalScreen = lazy(() => import('./screens/SkillGoalScreen').then((m) => ({ default: m.SkillGoalScreen })))
 const RoutineScreen = lazy(() => import('./screens/RoutineScreen').then((m) => ({ default: m.RoutineScreen })))
 const PlayerScreen = lazy(() => import('./screens/PlayerScreen').then((m) => ({ default: m.PlayerScreen })))
 const ProgressScreen = lazy(() => import('./screens/ProgressScreen').then((m) => ({ default: m.ProgressScreen })))
 
-type Stage = 'setup' | 'programme' | 'reminders' | TabId | 'player' | 'routine' | 'exercise' | 'myprogramme'
-const STAGES: Stage[] = ['programme', 'reminders', 'today', 'exercises', 'progress', 'player', 'routine', 'exercise', 'myprogramme']
+type Stage = 'setup' | 'skillgoal' | 'programme' | 'reminders' | TabId | 'player' | 'routine' | 'exercise' | 'myprogramme'
+const STAGES: Stage[] = ['skillgoal', 'programme', 'reminders', 'today', 'exercises', 'progress', 'player', 'routine', 'exercise', 'myprogramme']
 
 function initialStage(): Stage {
   const s = new URLSearchParams(window.location.search).get('stage')
@@ -131,7 +132,16 @@ function Screen() {
   }, [])
 
   if (stage === 'setup')
-    return <SetupScreen answers={answers} onChange={setAnswers} onCreate={() => setStage('programme')} />
+    return (
+      <SetupScreen
+        answers={answers}
+        onChange={setAnswers}
+        onCreate={() => setStage('programme')}
+        onOpenSkillGoal={() => setStage('skillgoal')}
+      />
+    )
+  if (stage === 'skillgoal')
+    return <SkillGoalScreen answers={answers} onChange={setAnswers} onBack={() => setStage('setup')} />
   if (stage === 'programme')
     return (
       <ProgrammeScreen

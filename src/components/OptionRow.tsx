@@ -26,8 +26,8 @@ export function OptionRow({ role, checked, disabled, label, detail, icon, rank, 
       <Slot n={0} filled={checked} rank={rank} />
       {icon && <span className="grid size-6 shrink-0 place-items-center text-muted">{icon}</span>}
       <span className="flex min-w-0 flex-1 flex-col">
-        <span className="text-xl leading-tight font-semibold">{label}</span>
-        {detail && <span className="text-[15px] text-muted">{detail}</span>}
+        <span className="text-xl leading-tight font-semibold [overflow-wrap:anywhere]">{label}</span>
+        {detail && <span className="text-[15px] text-muted [overflow-wrap:anywhere]">{detail}</span>}
       </span>
     </button>
   )

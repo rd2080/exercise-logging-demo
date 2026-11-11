@@ -111,18 +111,54 @@ test('a lightly active user is recommended foundation strength and can start it'
   await expect(page.getByRole('radio', { name: /Handstand push-up/ })).toBeChecked()
 })
 
-test('a first goal of learning a skill recommends the handstand programme, with the reason', async ({ page }) => {
+test('a skill goal is picked on its own page, not in the goals list, and recommends the handstand programme', async ({ page }) => {
   await openRow(page, /^Goals/)
-  await page.getByRole('checkbox', { name: /Learn a skill/ }).click()
+  await expect(page.getByRole('checkbox', { name: /handstand/i })).toHaveCount(0)
+  await page.keyboard.press('Escape')
+  await page.waitForTimeout(400)
+  await expect(page.getByTestId('answer-skill')).toHaveText('Add')
+  await page.getByRole('button', { name: /^Skill goal/ }).click()
+  await expect(page.getByTestId('skill-goal')).toBeVisible()
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Pick a skill goal')
+  await expect(page.getByRole('radio', { name: 'No skill goal right now' })).toHaveAttribute('aria-checked', 'true')
+  await page.getByRole('radio', { name: /Handstand push-up/ }).click()
+  await page.getByTestId('skill-save').click()
+  await expect(page.getByTestId('setup')).toBeVisible()
+  await expect(page.getByTestId('answer-skill')).toHaveText('Handstand push-up')
+  await openRow(page, /^Goals/)
+  await page.getByRole('checkbox', { name: /Improve fitness/ }).click()
   await page.getByRole('button', { name: 'Save goals' }).click()
   await openRow(page, /^Activity level/)
-  await page.getByRole('radio', { name: /Lightly active/ }).click()
+  await page.getByRole('radio', { name: /Mostly sitting/ }).click()
   await openRow(page, /^Equipment/)
   await page.getByRole('checkbox', { name: /None, bodyweight only/ }).click()
   await page.getByRole('button', { name: 'Save equipment' }).click()
   await create(page).click()
   await expect(page.getByRole('radio', { name: /Handstand push-up/ })).toBeChecked()
-  await expect(page.getByText('Matches your first goal: learn a skill')).toBeVisible()
+  await expect(page.getByText('Matches your skill goal: handstand push-up')).toBeVisible()
+})
+
+test('the skill page can go back unchanged and can clear the choice again', async ({ page }) => {
+  await page.getByRole('button', { name: /^Skill goal/ }).click()
+  await page.getByTestId('skill-back').click()
+  await expect(page.getByTestId('answer-skill')).toHaveText('Add')
+  await page.getByRole('button', { name: /^Skill goal/ }).click()
+  await page.getByRole('radio', { name: /Handstand push-up/ }).click()
+  await page.getByTestId('skill-save').click()
+  await page.getByRole('button', { name: /^Skill goal/ }).click()
+  await page.getByRole('radio', { name: 'No skill goal right now' }).click()
+  await page.getByTestId('skill-save').click()
+  await expect(page.getByTestId('answer-skill')).toHaveText('Add')
+})
+
+test('the skill page holds up at 320 with a long skill name', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 640 })
+  await page.goto('/?stage=skillgoal&data=worst')
+  await expect(page.getByTestId('skill-goal')).toBeVisible()
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true)
+  for (const b of await page.getByTestId('skill-goal').getByRole('radio').all()) {
+    expect((await b.boundingBox())!.height).toBeGreaterThanOrEqual(48)
+  }
 })
 
 test('an eight week programme draws a strip twice as long as a four week one', async ({ page }) => {
