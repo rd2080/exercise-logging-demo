@@ -7,6 +7,7 @@ import { EmptySlots } from '../components/EmptySlots'
 import { EmptyState } from '../components/EmptyState'
 import { EntryRow } from '../components/EntryRow'
 import { GoalList, type Goal } from '../components/GoalList'
+import { goalProgress } from '../lib/goals'
 import { goalsData as goalData } from '../data/fixtures'
 import type { Entry } from '../entries'
 import type { Exercise, SetValues } from '../types'
@@ -37,13 +38,7 @@ export function ProgressScreen({
   const [editing, setEditing] = useState<Entry | null>(null)
   const [clearing, setClearing] = useState(false)
   const [editOpen, setEditOpen] = useState(false)
-  const progress = {
-    ...(goalData.progress as Record<string, number>),
-    'first-set': Math.max(
-      (goalData.progress as Record<string, number>)['first-set'] ?? 0,
-      entries.length > 0 ? 1 : 0,
-    ),
-  }
+  const progress = { ...(goalData.progress as Record<string, number>), ...goalProgress(entries, plan) }
   return (
     <div
       className="mx-auto flex min-h-dvh w-full max-w-[480px] flex-col"

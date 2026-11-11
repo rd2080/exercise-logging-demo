@@ -89,16 +89,17 @@ test('filters: choices in a group are alternatives, groups narrow each other, th
   await openFilters(page)
   const sheet = page.getByRole('dialog')
   await expect(sheet.getByRole('button', { name: /Show 19 exercises/ })).toBeVisible()
-  await sheet.getByRole('button', { name: 'Reps', exact: true }).click()
-  await expect(sheet.getByRole('button', { name: /Show 10 exercises/ })).toBeVisible()
-  await sheet.getByRole('button', { name: 'Timed hold' }).click() // reps OR time
-  await expect(sheet.getByRole('button', { name: /Show 14 exercises/ })).toBeVisible()
+  await expect(sheet.getByRole('group', { name: 'How it is counted' })).toHaveCount(0) // that group was removed
+  await sheet.getByRole('button', { name: 'Core', exact: true }).click()
+  await expect(sheet.getByRole('button', { name: /Show 4 exercises/ })).toBeVisible()
+  await sheet.getByRole('button', { name: 'Push', exact: true }).click() // core OR push
+  await expect(sheet.getByRole('button', { name: /Show 8 exercises/ })).toBeVisible()
   await sheet.getByRole('button', { name: 'Beginner' }).click() // and beginner
-  await expect(sheet.getByRole('button', { name: /Show 6 exercises/ })).toBeVisible()
+  await expect(sheet.getByRole('button', { name: /Show 3 exercises/ })).toBeVisible()
   await page.screenshot({ path: 'screenshots/exercises-filters.png' })
-  await sheet.getByRole('button', { name: /Show 6 exercises/ }).click()
-  await expect(count(page)).toHaveText('6 of 19 exercises')
-  await expect(rows(page)).toHaveCount(6)
+  await sheet.getByRole('button', { name: /Show 3 exercises/ }).click()
+  await expect(count(page)).toHaveText('3 of 19 exercises')
+  await expect(rows(page)).toHaveCount(3)
   await expect(page.getByTestId('open-filters')).toHaveAccessibleName('Filters, 3 selected')
   await expect(page.getByTestId('filter-badge')).toHaveText('3')
 })

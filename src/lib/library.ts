@@ -1,4 +1,4 @@
-import type { CategoryId, EquipmentId, Exercise, LevelId, TrackingType } from '../types'
+import type { CategoryId, EquipmentId, Exercise, LevelId } from '../types'
 import { TYPE_META } from './tracking'
 
 export const EQUIPMENT_LABELS: Record<EquipmentId, string> = {
@@ -24,7 +24,6 @@ export const CATEGORY_LABELS: Record<CategoryId, string> = {
 
 export interface Filters {
   query: string
-  types: TrackingType[]
   equipment: EquipmentId[]
   levels: LevelId[]
   categories: CategoryId[]
@@ -32,11 +31,11 @@ export interface Filters {
   saved: boolean
 }
 
-export const NO_FILTERS: Filters = { query: '', types: [], equipment: [], levels: [], categories: [], saved: false }
+export const NO_FILTERS: Filters = { query: '', equipment: [], levels: [], categories: [], saved: false }
 
 /** How many filter groups have a choice made. The search text is not counted: it has its own field. */
 export function activeFilterCount(f: Filters): number {
-  return f.types.length + f.equipment.length + f.levels.length + f.categories.length + (f.saved ? 1 : 0)
+  return f.equipment.length + f.levels.length + f.categories.length + (f.saved ? 1 : 0)
 }
 
 export function hasAnyFilter(f: Filters): boolean {
@@ -57,7 +56,6 @@ export function matches(e: Exercise, f: Filters): boolean {
       .toLowerCase()
     if (!q.split(/\s+/).every((word) => hay.includes(word))) return false
   }
-  if (f.types.length && !f.types.includes(e.trackingType)) return false
   if (f.equipment.length && !(e.equipment && f.equipment.includes(e.equipment))) return false
   if (f.categories.length && !(e.category && f.categories.includes(e.category))) return false
   if (f.levels.length && !(e.level && f.levels.includes(e.level))) return false

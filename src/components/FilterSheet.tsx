@@ -1,6 +1,5 @@
-import type { CategoryId, EquipmentId, LevelId, TrackingType } from '../types'
+import type { CategoryId, EquipmentId, LevelId } from '../types'
 import { CATEGORY_LABELS, EQUIPMENT_LABELS, LEVEL_LABELS, NO_FILTERS, activeFilterCount, type Filters } from '../lib/library'
-import { TYPE_META } from '../lib/tracking'
 import { AnswerSheet } from './AnswerSheet'
 
 interface FilterSheetProps {
@@ -13,7 +12,6 @@ interface FilterSheetProps {
 }
 
 const CATEGORIES = Object.keys(CATEGORY_LABELS) as CategoryId[]
-const TYPES = Object.keys(TYPE_META) as TrackingType[]
 const EQUIPMENT = Object.keys(EQUIPMENT_LABELS) as EquipmentId[]
 const LEVELS = Object.keys(LEVEL_LABELS) as LevelId[]
 
@@ -76,16 +74,6 @@ export function FilterSheet({ open, onOpenChange, filters, onChange, count }: Fi
         {count === 0 ? 'No exercises match' : `${count} ${count === 1 ? 'exercise matches' : 'exercises match'}`}
       </p>
       <div className="flex flex-col">
-        <Group title="How it is counted">
-          {TYPES.map((t) => (
-            <Chip
-              key={t}
-              label={TYPE_META[t].label}
-              on={filters.types.includes(t)}
-              onClick={() => onChange({ ...filters, types: toggle(filters.types, t) })}
-            />
-          ))}
-        </Group>
         <Group title="Saved">
           <Chip label="Saved only" on={filters.saved} onClick={() => onChange({ ...filters, saved: !filters.saved })} />
         </Group>
