@@ -6,7 +6,7 @@
 
 web
 
-Mobile web at phone width (390 x 844 first). No native app. Local only: no deployment, fixture data, no backend.
+Mobile web at phone width (390 x 844 first). No native app. Fixture data, no backend. Runs locally; a public static demo with no login can be deployed (see the README), and everything a user logs stays in their own browser.
 
 ## Stack
 

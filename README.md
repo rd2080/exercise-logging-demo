@@ -50,6 +50,20 @@ npm test        # Playwright tests (starts its own server)
 
 On a laptop, open the browser's device toolbar at 390 x 844. The row of buttons at the top of the page (demo, worst, empty, one, huge) is a dev-only data switch and is not part of the app.
 
+## Deploy the demo (no login)
+
+The app is a static site: `npm run build` writes plain files to `dist/`. There is no server, database or login, and what a visitor logs stays in their own browser (local storage).
+
+On Vercel:
+1. Import the GitHub repo (`rd2080/exercise-logging-demo`) as a new project and use the `main` branch as production.
+2. Framework preset Vite. Build command `npm run build`, output directory `dist`. Nothing else is needed (`vercel.json` already adds the headers below). No environment variables.
+3. Settings, Deployment Protection: set Vercel Authentication to **Disabled** so the production link and preview links open without a Vercel login.
+4. Deploy, then open the URL on a phone.
+
+The built site is marked "do not index": a `robots` meta tag, `public/robots.txt` and an `X-Robots-Tag` header, so search engines do not list the demo. Remove those three to allow indexing. The dev data switch (demo, worst, empty, one, huge) is not in the built site; `?stage=` links still open any screen. All content is placeholder.
+
+Netlify, Cloudflare Pages and GitHub Pages also work: the build uses relative paths, so any host or sub-path is fine.
+
 ## Screens and URL stages
 
 Open a screen directly with `?stage=`:
